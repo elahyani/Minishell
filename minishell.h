@@ -19,6 +19,7 @@ typedef struct	s_cmds
 int		get_next_line(int fd, char **line);
 void	get_cmd(t_cmds *cmds);
 void	cmd_cd(t_cmds *cmds);
+void	cmd_env(t_cmds *cmds);
 void	cmd_pwd();
 void	cmd_echo();
 void	cmd_exit();

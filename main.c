@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/10/27 19:39:32 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/10/28 11:43:42 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	get_cmd(t_cmds *cmds)
 	//printf("|%s|\n", cmds->cmd[0]);
 	if (ft_strcmp(cmds->cmd[0], "cd") == 0)
 		cmd_cd(cmds);
-	if (ft_strcmp(cmds->cmd[0], "echo") == 0)
+	else if (ft_strcmp(cmds->cmd[0], "echo") == 0)
 		cmd_echo(cmds);
 	else if (ft_strcmp(cmds->cmd[0], "pwd") == 0)
 		cmd_pwd();
@@ -25,12 +25,12 @@ void	get_cmd(t_cmds *cmds)
 	// 	cmd_export();
 	// else if (ft_strcmp(cmds->cmd[0], "unset") == 0)
 	// 	cmd_unset();
-	// else if (ft_strcmp(cmds->cmd[0], "env") == 0)
-	// 	cmd_env();
+	else if (ft_strcmp(cmds->cmd[0], "env") == 0)
+		cmd_env(cmds);
 	else if (ft_strcmp(cmds->cmd[0], "exit") == 0)
 		cmd_exit();
-	//else   
-		//execve();
+	// else   
+	// 	execve(cmds->cmd[0], cmds->cmd, cmds->envir);
 }
 
 void	parse_line(char	**line, t_cmds *cmds)
@@ -41,7 +41,9 @@ void	parse_line(char	**line, t_cmds *cmds)
 	
 	i = 0;
 	cmds->counter = 0;
-	len = ft_strlen(*line);	
+	if (!ft_strcmp(*line, ""))
+		return ;
+	len = ft_strlen(*line);
 	while (i++ <= len)
 		((*line)[i] == ' ') ? cmds->counter++ : 0;
 	cmds->cmd = ft_split(*line, ' ');
@@ -52,13 +54,14 @@ int		main(int argc, char **argv, char **envp)
 {
 	char	*line;
 	t_cmds	cmds;
+	int		status;
 
 	cmds.envir = envp;
-	dprintf(0, "minishell>");
-	while ((get_next_line(0, &line)) > 0)
+	ft_putstr_fd("minishell>", 1);
+	while ((status = get_next_line(0, &line)) > 0)
 	{
 		parse_line(&line, &cmds);
-		dprintf(0, "minishell>");
+		ft_putstr_fd("minishell>", 1);
 		free(line);
 	}
 	return (0);

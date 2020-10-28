@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 12:17:45 by elahyani          #+#    #+#             */
-/*   Updated: 2020/10/27 19:58:14 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/10/28 13:49:42 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,13 @@ void	cmd_cd(t_cmds *cmds)
 	int	i;
 
 	i = 0;
-	printf("path: [%s]\n", cmds->cmd[0]);
+	//printf("path: [%s]\n", cmds->cmd[0]);
+	//get_env(cmds);
+	if (cmds->cmd[1] == NULL)
+	{
+		chdir("");
+	}
+		return;
 	if (cmds->cmd[1][0] != '~')
 		chdir(cmds->cmd[cmds->counter]);
 	else if (cmds->cmd[1][0] == '~')
@@ -55,11 +61,19 @@ void	cmd_pwd()
 	if ((buff = getcwd(NULL, 0)) == NULL)
 		ft_putstr_fd("getcwd() error", 1);
 	else
+		ft_putendl_fd(buff, 1);
+}
+
+void	cmd_env(t_cmds *cmds)
+{
+	int	i;
+	
+	i = 0;
+	while (cmds->envir[i] != NULL)
 	{
-		buff = ft_strjoin(buff, "\n");
-		ft_putstr_fd(buff, 1);
+		ft_putendl_fd(cmds->envir[i], 1);
+		i++;
 	}
-	return ;
 }
 
 void	cmd_exit()
