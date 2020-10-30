@@ -12,6 +12,9 @@ typedef struct	s_cmds
 	char		**cmd;
 	int			counter;
 	char		**envir;
+	char		**env_line;
+	// char		*arg;
+	char		*oldpwd;
 
 }				t_cmds;
 

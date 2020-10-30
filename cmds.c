@@ -6,37 +6,43 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 12:17:45 by elahyani          #+#    #+#             */
-/*   Updated: 2020/10/28 13:49:42 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/10/30 18:35:12 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	get_env(t_cmds *cmds)
+{
+	int	i;
+	
+	i = 0;
+	while (cmds->envir[i] != NULL)
+	{
+		cmds->env_line = ft_split(cmds->envir[i], '=');
+		if (ft_strcmp(cmds->env_line[0], "HOME") == 0)
+			return ;
+		i++;
+	}
+}
 
 void	cmd_cd(t_cmds *cmds)
 {
 	int	i;
 
 	i = 0;
-	//printf("path: [%s]\n", cmds->cmd[0]);
-	//get_env(cmds);
+	get_env(cmds);
 	if (cmds->cmd[1] == NULL)
 	{
-		chdir("");
-	}
+		chdir(cmds->env_line[1]);
 		return;
+	}
 	if (cmds->cmd[1][0] != '~')
 		chdir(cmds->cmd[cmds->counter]);
 	else if (cmds->cmd[1][0] == '~')
 	{
-		while (cmds->envir[i] != NULL)
-		{
-			if (ft_strcmp(cmds->envir[i],"HOME=/Users/elahyani") == 0)
-			{
-				cmds->cmd[1] = ft_strjoin(cmds->envir[i] + 5, cmds->cmd[1] + 1);
-				chdir(cmds->cmd[cmds->counter]);
-			}
-			i++;
-		}
+		cmds->cmd[1] = ft_strjoin(cmds->env_line[1], cmds->cmd[1] + 1);
+		chdir(cmds->cmd[cmds->counter]);
 	}
 }
 
