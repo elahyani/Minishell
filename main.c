@@ -6,11 +6,37 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/10/30 18:18:34 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/10/31 12:04:32 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	write_to_file(char *s, char *num, int end)
+{
+	FILE *f;
+	int fd;
+
+	f = fopen("debug.txt", "a");
+	fd = fileno(f);
+	ft_putstr_fd(s, fd);
+	if (num)
+		ft_putstr_fd(num, fd);
+	if (end)
+		ft_putstr_fd("\n-------\n", fd);
+	fclose(f);
+}
+
+void	erase_file_debug()
+{
+	FILE *f;
+	int fd;
+
+	f = fopen("debug.txt", "w");
+	fd = fileno(f);
+	ft_putstr_fd("", fd);
+	fclose(f);
+}
 
 void	get_cmd(t_cmds *cmds)
 {
@@ -20,7 +46,7 @@ void	get_cmd(t_cmds *cmds)
 	else if (ft_strcmp(cmds->cmd[0], "echo") == 0)
 		cmd_echo(cmds);
 	else if (ft_strcmp(cmds->cmd[0], "pwd") == 0)
-		cmd_pwd();
+		cmd_pwd(cmds);
 	// else if (ft_strcmp(cmds->cmd[0], "export") == 0)
 	// 	cmd_export();
 	// else if (ft_strcmp(cmds->cmd[0], "unset") == 0)
@@ -47,6 +73,7 @@ void	parse_line(char	**line, t_cmds *cmds)
 	while (i++ <= len)
 		((*line)[i] == ' ') ? cmds->counter++ : 0;
 	cmds->cmd = ft_split(*line, ' ');
+	cmds->arg = cmds->cmd[1];
 	get_cmd(cmds);
 }
 
@@ -56,7 +83,9 @@ int		main(int argc, char **argv, char **envp)
 	t_cmds	cmds;
 	int		status;
 
+	erase_file_debug();
 	cmds.envir = envp;
+	cmds.start = 0;
 	ft_putstr_fd("minishell>", 1);
 	while ((status = get_next_line(0, &line)) > 0)
 	{

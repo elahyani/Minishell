@@ -13,13 +13,18 @@ typedef struct	s_cmds
 	int			counter;
 	char		**envir;
 	char		**env_line;
-	// char		*arg;
-	char		*oldpwd;
+	char		*arg;
+	char		*buff;
+	char		*pwd;
+	char		**oldpwd;
+	int			start;
 
 }				t_cmds;
 
 
 int		get_next_line(int fd, char **line);
+void	erase_file_debug();
+void	write_to_file(char *s, char *num, int end);
 void	get_cmd(t_cmds *cmds);
 void	cmd_cd(t_cmds *cmds);
 void	cmd_env(t_cmds *cmds);
