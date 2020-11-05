@@ -7,18 +7,30 @@
 # include "get_next_line/get_next_line.h"
 # include "libft/libft.h"
 
+typedef struct		s_cmd_list
+{
+	char				*data;
+	struct s_cmd_list	*next;
+	struct s_cmd_list	*prev;
+}					t_cmd_list;
+
 typedef struct	s_cmds
 {
 	char		**cmd;
 	int			counter;
+	int			sep;
 	char		**envir;
 	char		**env_line;
+	char		*cmd_line;
 	char		*arg;
 	char		*buff;
 	char		*pwd;
 	char		**oldpwd;
 	int			start;
-
+	int			end;
+	char		*data;
+	char		**split_cmd;
+	t_cmd_list	*cmd_list;
 }				t_cmds;
 
 
