@@ -22,7 +22,7 @@ typedef struct	s_cmds
 	char		**envir;
 	char		**env_line;
 	char		*cmd_line;
-	char		*arg;
+	char		**args;
 	char		*buff;
 	char		*pwd;
 	char		**oldpwd;
@@ -37,7 +37,7 @@ typedef struct	s_cmds
 int		get_next_line(int fd, char **line);
 void	erase_file_debug();
 void	write_to_file(char *s, char *num, int end);
-void	get_cmd(t_cmds *cmds);
+void	get_cmd(t_cmds *cmds, char	*arg);
 void	cmd_cd(t_cmds *cmds);
 void	cmd_env(t_cmds *cmds);
 void	cmd_pwd();
