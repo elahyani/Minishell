@@ -118,19 +118,22 @@ void	parse_line(char	**line, t_cmds *cmds)
 int		main(int argc, char **argv, char **envp)
 {
 	char	*line;
-	t_cmds	cmds;
+	t_cmds	*cmds;
 	int		status;
 
-	cmds.envir = envp;
-	cmds.cmd_list->start = 0;
-	cmds.cmd_list->end = 0;
-	cmds.cmd_list->redir = 0;
+	cmds = (t_cmds *)malloc(sizeof(t_cmds));
+	cmds->cmd_list = malloc(sizeof(t_cmd_list));
+	cmds->envir = envp;
+	cmds->cmd_list->start = 0;
+	cmds->cmd_list->end = 0;
+	cmds->cmd_list->redir = 0;
 	ft_putstr_fd("minishell>", 1);
+
 	while ((status = get_next_line(0, &line)) > 0)
 	{
-		parse_line(&line, &cmds);
-		get_cmd(&cmds, cmds.cmd_list);
-		print_cmds(cmds.cmd_list);
+		parse_line(&line, cmds);
+		get_cmd(cmds, cmds->cmd_list);
+		print_cmds(cmds->cmd_list);
 		ft_putstr_fd("minishell>", 1);
 		free(line);
 	}
