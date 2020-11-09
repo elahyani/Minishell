@@ -6,13 +6,13 @@
 #    By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/10/27 16:20:15 by elahyani         ###   ########.fr        #
+#    Updated: 2020/11/09 12:58:39 by elahyani         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell.a
 
-SRCS = cmds.c
+SRCS = cmds.c debug.c
 
 SRC_GNL = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
 

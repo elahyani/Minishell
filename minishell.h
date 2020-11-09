@@ -10,6 +10,10 @@
 typedef struct		s_cmd_list
 {
 	char				*data;
+	char				**args;
+	int					start;
+	int					end;
+	char				redir;
 	struct s_cmd_list	*next;
 	struct s_cmd_list	*prev;
 }					t_cmd_list;
@@ -22,12 +26,8 @@ typedef struct	s_cmds
 	char		**envir;
 	char		**env_line;
 	char		*cmd_line;
-	char		**args;
 	char		*buff;
 	char		*pwd;
-	char		**oldpwd;
-	int			start;
-	int			end;
 	char		*data;
 	char		**split_cmd;
 	t_cmd_list	*cmd_list;
@@ -35,13 +35,12 @@ typedef struct	s_cmds
 
 
 int		get_next_line(int fd, char **line);
-void	erase_file_debug();
-void	write_to_file(char *s, char *num, int end);
-void	get_cmd(t_cmds *cmds, char	*arg);
-void	cmd_cd(t_cmds *cmds);
-void	cmd_env(t_cmds *cmds);
+void	get_cmd(t_cmds *cmds, t_cmd_list *head);
+void	cmd_cd(t_cmd_list *cmds);
+void	cmd_env(t_cmd_list *cmds);
 void	cmd_pwd();
 void	cmd_echo();
 void	cmd_exit();
+void	print_cmds(t_cmd_list *cmds);
 
 #endif
