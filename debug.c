@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/09 12:22:59 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/09 13:17:29 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/11/10 10:03:57 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void        print_cmds(t_cmd_list *cmds)
         fputs("\nERROR: ==> cmds is NULL\n", f);
     while (cmds)
     {
-        fprintf(f,"\n==> CMD=|%s|\n--------------------------\nARGS: ", cmds->data);
+        fprintf(f,"\n===============================\n==> CMD=|%s|\n--------------------------\nARGS: ", cmds->data);
         print_tab(cmds->args, f);
         fprintf(f, "\n--------------------------\nStart=|%d|\tEnd=|%d|\tRedir=|%c|%d|\n===============================\n",
                     cmds->start, cmds->end, cmds->redir, cmds->redir);

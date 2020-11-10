@@ -16,27 +16,29 @@ void	get_cmd(t_cmds *cmds, t_cmd_list *head)
 {
 	while (head)
 	{
+		// if (!ft_strcmp(cmds->cmd_line, ""))
+		// 	return ;
 		head->args = ft_split(head->data, ' ');
 		puts("==========================");
 		printf("cmd->args[0] = |%s|\n", head->args[0]);
 		printf("cmd->args[1] = |%s|\n", head->args[1]);
 		puts("==========================");
-		if (ft_strcmp(head->args[0], "cd") == 0)
-			cmd_cd(head);
-		else if (ft_strcmp(head->args[0], "echo") == 0)
-			cmd_echo(head);
-		else if (ft_strcmp(head->args[0], "pwd") == 0)
-			cmd_pwd(head);
-		// else if (ft_strcmp(head->args[0], "export") == 0)
-		// 	cmd_export();
-		// else if (ft_strcmp(head->args[0], "unset") == 0)
-		// 	cmd_unset();
-		else if (ft_strcmp(head->args[0], "env") == 0)
-			cmd_env(head);
-		else if (ft_strcmp(head->args[0], "exit") == 0)
-			cmd_exit();
-		else   
-			execve(head->args[0], head->args, cmds->envir);
+		// if (ft_strcmp(head->args[0], "cd") == 0)
+		// 	cmd_cd(head);
+		// else if (ft_strcmp(head->args[0], "echo") == 0)
+		// 	cmd_echo(head);
+		// else if (ft_strcmp(head->args[0], "pwd") == 0)
+		// 	cmd_pwd(head);
+		// // else if (ft_strcmp(head->args[0], "export") == 0)
+		// // 	cmd_export();
+		// // else if (ft_strcmp(head->args[0], "unset") == 0)
+		// // 	cmd_unset();
+		// else if (ft_strcmp(head->args[0], "env") == 0)
+		// 	cmd_env(head);
+		// else if (ft_strcmp(head->args[0], "exit") == 0)
+		// 	cmd_exit();
+		// else   
+		// 	execve(head->args[0], head->args, cmds->envir);
 		head = head->next;
 	}
 }
@@ -60,10 +62,7 @@ int		ft_getsep(char *s, int c)
 	while (s[i])
 	{
 		if (s[i] == (char)c)
-		{
-			// s[i] = '\0';
 			return (1);
-		}
 		i++;
 	}
 	return (0);
@@ -78,6 +77,31 @@ void	add_front(t_cmd_list **head, t_cmd_list *new)
 	*head = new;
 }
 
+void	get_start_end(t_cmd_list *head, char **line, int *i)
+{
+	// need some custimize management of start & end to get the right result
+	if (head->end == 1)
+	{
+		puts("==> cnd 1");
+		head->start = 1;
+	}
+	if (head->next && head->end == 0)
+	{
+		puts("==> cnd 2");
+		head->start = 0;
+	}
+	if ((*line)[*i] == '|')
+	{
+		puts("==> cnd 0");
+		head->end = 0;
+	}
+	else if ((*line)[*i] == ';' || (*line)[*i] == '\0')
+	{
+		puts("==> cnd -1");
+		head->end = 1;
+	}
+}
+
 void	parse_line(char	**line, t_cmds *cmds)
 {	
 	t_cmd_list *head;
@@ -85,25 +109,25 @@ void	parse_line(char	**line, t_cmds *cmds)
 	int		len;
 	int		i;
 	
-	i = 0;
+	i = -1;
 	cmds->counter = 0;
 	cmds->sep = 0;
-	printf("line = |%s|\n", *line);
 	cmds->cmd_line = *line;
-	if (!ft_strcmp(*line, ""))
-		return ;
 	len = ft_strlen(*line);
 	if (ft_getsep(cmds->cmd_line, ';') == 1)
 		cmds->cmd = ft_split(*line, ';');
 	else if (ft_getsep(cmds->cmd_line, '|') == 1)
 		cmds->cmd = ft_split(*line, '|');
-	while (i++ <= len)
+	while (++i <= len)
 	{
 		if (cmds->sep == 0)
+		{
 			head = list_cmds(cmds->cmd_line);
-		if ((*line)[i] == ' ')
-			cmds->counter++;
-		else if ((*line)[i] == ';' || (*line)[i] == '|')
+			head->start = 1;
+		}
+		// put this function call in the right place
+		get_start_end(head, line, &i);
+		if ((*line)[i] == ';' || (*line)[i] == '|')
 		{
 			(*line)[i] = '\0';
 			add_front(&head, list_cmds(*(line) + i + 1));
@@ -131,11 +155,14 @@ int		main(int argc, char **argv, char **envp)
 
 	while ((status = get_next_line(0, &line)) > 0)
 	{
-		parse_line(&line, cmds);
-		get_cmd(cmds, cmds->cmd_list);
-		print_cmds(cmds->cmd_list);
+		if (ft_strcmp(line, ""))
+		{
+			parse_line(&line, cmds);
+			get_cmd(cmds, cmds->cmd_list);
+			print_cmds(cmds->cmd_list);
+			free(line);
+		}
 		ft_putstr_fd("minishell>", 1);
-		free(line);
 	}
 	return (0);
 }
