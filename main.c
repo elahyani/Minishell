@@ -51,6 +51,9 @@ t_cmd_list	*list_cmds(char *data)
 	list->data = data;
 	list->next = NULL;
 	list->prev = NULL;
+	list->start = 0;
+	list->end = 0;
+	list->redir = 0;
 	return (list);
 }
 
@@ -68,38 +71,12 @@ int		ft_getsep(char *s, int c)
 	return (0);
 }
 
-
 void	add_front(t_cmd_list **head, t_cmd_list *new)
 {
 	new->prev = *head;
 	new->next = NULL;
 	(*head)->next = new;
 	*head = new;
-}
-
-void	get_start_end(t_cmd_list *head, char **line, int *i)
-{
-	// need some custimize management of start & end to get the right result
-	if (head->end == 1)
-	{
-		puts("==> cnd 1");
-		head->start = 1;
-	}
-	if (head->next && head->end == 0)
-	{
-		puts("==> cnd 2");
-		head->start = 0;
-	}
-	if ((*line)[*i] == '|')
-	{
-		puts("==> cnd 0");
-		head->end = 0;
-	}
-	else if ((*line)[*i] == ';' || (*line)[*i] == '\0')
-	{
-		puts("==> cnd -1");
-		head->end = 1;
-	}
 }
 
 void	parse_line(char	**line, t_cmds *cmds)
@@ -110,28 +87,35 @@ void	parse_line(char	**line, t_cmds *cmds)
 	int		i;
 	
 	i = -1;
-	cmds->counter = 0;
-	cmds->sep = 0;
+	head = (t_cmd_list *)malloc(sizeof(t_cmd_list));
 	cmds->cmd_line = *line;
 	len = ft_strlen(*line);
+
 	if (ft_getsep(cmds->cmd_line, ';') == 1)
 		cmds->cmd = ft_split(*line, ';');
 	else if (ft_getsep(cmds->cmd_line, '|') == 1)
 		cmds->cmd = ft_split(*line, '|');
+
+	head = list_cmds(cmds->cmd_line);
 	while (++i <= len)
 	{
-		if (cmds->sep == 0)
+		if ((*line)[i] == ';' || (*line)[i] == '\0')
 		{
-			head = list_cmds(cmds->cmd_line);
-			head->start = 1;
+			if (!head->prev || (head->prev && head->prev->end))
+				head->start = 1;
+			head->end = 1;
+			if ((*line)[i] == ';')
+			{
+				(*line)[i] = '\0';
+				add_front(&head, list_cmds(*(line) + i + 1));
+			}
 		}
-		// put this function call in the right place
-		get_start_end(head, line, &i);
-		if ((*line)[i] == ';' || (*line)[i] == '|')
+		else if ((*line)[i] == '|')
 		{
+			if (!head->prev || (head->prev && head->prev->end))
+				head->start = 1;
 			(*line)[i] = '\0';
 			add_front(&head, list_cmds(*(line) + i + 1));
-			cmds->sep++;
 		}
 	}
 	while (head->prev != NULL)
@@ -148,9 +132,6 @@ int		main(int argc, char **argv, char **envp)
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmd_list = malloc(sizeof(t_cmd_list));
 	cmds->envir = envp;
-	cmds->cmd_list->start = 0;
-	cmds->cmd_list->end = 0;
-	cmds->cmd_list->redir = 0;
 	ft_putstr_fd("minishell>", 1);
 
 	while ((status = get_next_line(0, &line)) > 0)
