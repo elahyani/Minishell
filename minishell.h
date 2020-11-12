@@ -25,9 +25,12 @@ typedef struct	s_cmds
 	int			sep;
 	char		**envir;
 	char		**env_line;
+	char		*env_arg;
+	char		*env_val;
 	char		*cmd_line;
 	char		*buff;
 	char		*pwd;
+	char		*join_arg;
 	char		*data;
 	char		**split_cmd;
 	t_cmd_list	*cmd_list;
