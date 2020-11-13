@@ -12,14 +12,14 @@
 
 #include "minishell.h"
 
-char	*get_env_val(t_cmds *cmds, char *line)
+char	*get_env_val(t_cmds *cmds, char *join_arg)
 {
 	int		j;
 
 	j = 0;
 	if (cmds->env_val)
 		free(cmds->env_val);
-	cmds->env_val = ft_strdup(line + 1);
+	cmds->env_val = ft_strdup(join_arg + 1);
 	while (cmds->envir[j] != NULL)
 	{
 		cmds->env_line = ft_split(cmds->envir[j], '=');
@@ -35,7 +35,6 @@ int		b_point(char *arg)
 	int i;
 
 	i = 0;
-	printf("arg ==> |%s|\n", arg);
 	while (arg[++i])
 		if (ft_strchr("$\\\"'", arg[i]))
 			return (i);
@@ -54,12 +53,10 @@ void	get_cmd(t_cmds *cmds, t_cmd_list *head)
 
 	while (head)
 	{
-		// if (!ft_strcmp(cmds->cmd_line, ""))
-		// 	return ;
 		head->args = ft_split(head->data, ' ');
 		i = 0;
 		while (head->args[i])
-		{	
+		{
 			arg = ft_strdup("");
 			j = 0;
 			while (head->args[i][j])
@@ -69,14 +66,10 @@ void	get_cmd(t_cmds *cmds, t_cmd_list *head)
 					l = b_point(head->args[i] + j);
 					cmds->join_arg = ft_substr(head->args[i] + j, 0, l);
 					cmds->env_val = get_env_val(cmds, cmds->join_arg);
-					// printf("cmds->env_val = |%s|\n", cmds->env_val);
-					puts(cmds->join_arg);
-					puts(cmds->env_val);
-					puts("------------");
 					tmp = ft_strjoin(arg, cmds->env_val);
 					free(arg);
-					arg = tmp;
-					j += l -1;
+					arg = ft_strdup(tmp);
+					j += l - 1;
 				}
 				else
 				{
@@ -160,17 +153,11 @@ void	get_new_line(char **line, t_cmds *cmds, int *len, t_cmd_list **head)
 	{
 		if ((*line)[i] == '$')
 		{
-			puts("here 6");
 			cmds->env_arg = get_env_val(cmds, *line + i);
-			puts("here 5");
 			cmds->env_val = ft_substr(*line, 0, i);
-			puts("here 4");
 			*line = ft_strjoin(cmds->env_val, cmds->env_arg);
-			puts("here 3");
 			cmds->cmd_line = *line;
-			puts("here 2");
 			*head = list_cmds(cmds->cmd_line);
-			puts("here 1");
 			return ;
 		}
 	}
