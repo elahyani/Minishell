@@ -30,60 +30,12 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 	return (NULL);
 }
 
-int		b_point(char *arg)
-{
-	int i;
-
-	i = 0;
-	while (arg[++i])
-		if (ft_strchr("$\\\"'", arg[i]))
-			return (i);
-	return (i);
-}
 
 void	get_cmd(t_cmds *cmds, t_cmd_list *head)
 {
-	int		i;
-	int 	j;
-	int 	l;
-	char	*arg;
-	char	*tmp;
-	char	*tmp1;
-	char	tmp2[2];
-
 	while (head)
 	{
 		head->args = ft_split(head->data, ' ');
-		i = 0;
-		while (head->args[i])
-		{
-			arg = ft_strdup("");
-			j = 0;
-			while (head->args[i][j])
-			{
-				if (head->args[i][j] == '$')
-				{
-					l = b_point(head->args[i] + j);
-					cmds->join_arg = ft_substr(head->args[i] + j, 0, l);
-					cmds->env_val = get_env_val(cmds, cmds->join_arg);
-					tmp = ft_strjoin(arg, cmds->env_val);
-					free(arg);
-					arg = ft_strdup(tmp);
-					j += l - 1;
-				}
-				else
-				{
-					tmp2[0] = head->args[i][j];
-					tmp2[1] = '\0';
-					tmp1 = ft_strjoin(arg, tmp2);
-					free(arg);
-					arg = tmp1;
-				}
-				j++;
-			}
-			head->args[i] = arg;
-			i++;
-		}
 		puts("==========================");
 		printf("cmd->args[0] = |%s|\n", head->args[0]);
 		printf("cmd->args[1] = |%s|\n", head->args[1]);
@@ -122,20 +74,6 @@ t_cmd_list	*list_cmds(char *data)
 	return (list);
 }
 
-// int		ft_getsep(char *s, int c)
-// {
-// 	int		i;
-
-// 	i = 0;
-// 	while (s[i])
-// 	{
-// 		if (s[i] == (char)c)
-// 			return (1);
-// 		i++;
-// 	}
-// 	return (0);
-// }
-
 void	add_front(t_cmd_list **head, t_cmd_list *new)
 {
 	new->prev = *head;
@@ -144,23 +82,15 @@ void	add_front(t_cmd_list **head, t_cmd_list *new)
 	*head = new;
 }
 
-void	get_new_line(char **line, t_cmds *cmds, int *len, t_cmd_list **head)
+int		b_point(char *arg)
 {
 	int i;
-	
-	i = -1;
-	while (++i <= *len)
-	{
-		if ((*line)[i] == '$')
-		{
-			cmds->env_arg = get_env_val(cmds, *line + i);
-			cmds->env_val = ft_substr(*line, 0, i);
-			*line = ft_strjoin(cmds->env_val, cmds->env_arg);
-			cmds->cmd_line = *line;
-			*head = list_cmds(cmds->cmd_line);
-			return ;
-		}
-	}
+
+	i = 0;
+	while (arg[++i])
+		if (ft_strchr("$\\\"';| ", arg[i]))
+			return (i);
+	return (i);
 }
 
 void	parse_line(char	**line, t_cmds *cmds)
@@ -169,19 +99,46 @@ void	parse_line(char	**line, t_cmds *cmds)
 	t_cmd_list *new_node;
 	int		len;
 	int		i;
-	
+	int		l;
+	char	*tmp;
+	char	*tmp1;
+	char	tmp2[2];
+	char	*arg;
+
+	tmp = NULL;
+	tmp1 = NULL;
 	i = -1;
 	head = (t_cmd_list *)malloc(sizeof(t_cmd_list));
 	len = ft_strlen(*line);
-
-	// if (ft_getsep(cmds->cmd_line, ';') == 1)
-	// 	cmds->cmd = ft_split(*line, ';');
-	// else if (ft_getsep(cmds->cmd_line, '|') == 1)
-	// 	cmds->cmd = ft_split(*line, '|');
-	
-
+	arg = ft_strdup("");
+	while (++i <= len)
+	{
+		if ((*line)[i] == '$')
+		{
+			l = b_point(*line + i);
+			cmds->join_arg = ft_substr(*line + i, 0, l);
+			cmds->env_val = get_env_val(cmds, cmds->join_arg);
+			tmp = ft_strjoin(arg, cmds->env_val);
+			free(arg);
+			arg = ft_strdup(tmp);
+			i += l - 1;
+		}
+		else
+		{
+			tmp2[0] = (*line)[i];
+			tmp2[1] = '\0';
+			tmp1 = ft_strjoin(arg, tmp2);
+			free(arg);
+			arg = ft_strdup(tmp1);
+		}
+	}
+	*line = ft_strdup(arg);
+	(arg) ? free(arg) : 0;
+	(tmp) ? free(tmp) : 0;
+	(tmp1) ? free(tmp1) : 0;
 	i = -1;
 	cmds->cmd_line = *line;
+	len = ft_strlen(*line);
 	head = list_cmds(cmds->cmd_line);
 	while (++i <= len)
 	{
