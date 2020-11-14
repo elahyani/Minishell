@@ -13,6 +13,7 @@ typedef struct		s_cmd_list
 	char				**args;
 	int					start;
 	int					end;
+	
 	char				redir;
 	struct s_cmd_list	*next;
 	struct s_cmd_list	*prev;

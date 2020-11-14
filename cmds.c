@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 12:17:45 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/10 12:28:39 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/11/14 14:36:39 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void	get_env(t_cmds *cmds)
 void	cmd_cd(t_cmd_list *cmds)
 {
 	// int	i;
-
-	// i = 0;
+	
+	// i = 0;	
 	printf("\ncmd = |%s| <--------> arg = |%s|\n\n", cmds->args[0], cmds->args[1]);
 }
 
