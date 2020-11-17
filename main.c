@@ -83,8 +83,8 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 		}
 		j++;
 	}
-/* 	if (k == 0)
-		return (cmds->join_arg); */
+	if (k == 0)
+		return (cmds->join_arg);
 	return (NULL);
 }
 
@@ -123,11 +123,7 @@ void	parse_line(char	**line, t_cmds *cmds)
 		{
 			l = b_point(*line + i);
 			cmds->join_arg = ft_substr(*line + i, 0, l);
-			if (!(cmds->env_val = get_env_val(cmds, cmds->join_arg)))
-			{
-				cmds->env_val ? free(cmds->env_val) : 0;
-				cmds->env_val = ft_strdup("");
-			}
+			cmds->env_val = get_env_val(cmds, cmds->join_arg);
 			tmp = ft_strjoin(arg, cmds->env_val);
 			(arg) ? free(arg) : 0;
 			arg = ft_strdup(tmp);
@@ -142,7 +138,9 @@ void	parse_line(char	**line, t_cmds *cmds)
 			arg = ft_strdup(tmp1);
 		}
 	}
+	puts("hiii");
 	*line = ft_strdup(arg);
+	printf("line = |%s|\n", *line);
 	(arg) ? free(arg) : 0;
 	(tmp) ? free(tmp) : 0;
 	(tmp1) ? free(tmp1) : 0;
