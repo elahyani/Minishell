@@ -25,7 +25,7 @@ typedef struct	s_cmds
 	int			counter;
 	int			sep;
 	char		**envir;
-	char		**env_line;
+	char		**env_line;   //uninitialized
 	char		*env_arg;
 	char		*env_val;
 	char		*cmd_line;
@@ -40,9 +40,9 @@ typedef struct	s_cmds
 
 int		get_next_line(int fd, char **line);
 void	get_cmd(t_cmds *cmds, t_cmd_list *head);
-void	cmd_cd(t_cmd_list *cmds);
-void	cmd_env(t_cmd_list *cmds);
-void	cmd_pwd();
+void	cmd_cd(t_cmd_list *list, t_cmds *cmds);
+void	cmd_env(t_cmds *cmds);
+void	cmd_pwd(t_cmds *cmds);
 void	cmd_echo();
 void	cmd_exit();
 void	print_cmds(t_cmd_list *cmds);

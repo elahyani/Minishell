@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+         #
+#    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/11/14 14:36:21 by elahyani         ###   ########.fr        #
+#    Updated: 2020/11/17 09:56:39 by ichejra          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell.a
 
-SRCS =	cmds.c \
+SRCS =	execution.c \
 		debug.c
 
 SRC_GNL = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c

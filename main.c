@@ -17,24 +17,24 @@ void	get_cmd(t_cmds *cmds, t_cmd_list *head)
 	while (head)
 	{
 		head->args = ft_split(head->data, ' ');
-		puts("==========================");
-		printf("cmd->args[0] = |%s|\n", head->args[0]);
-		printf("cmd->args[1] = |%s|\n", head->args[1]);
-		puts("==========================");
+		// puts("==========================");
+		// printf("cmd->args[0] = |%s|\n", head->args[0]);
+		// printf("cmd->args[1] = |%s|\n", head->args[1]);
+		// puts("==========================");
 		if (ft_strcmp(head->args[0], "cd") == 0)
-			cmd_cd(head);
+			cmd_cd(head, cmds);
+		else if (ft_strcmp(head->args[0], "pwd") == 0)
+			cmd_pwd(cmds);
+		else if (ft_strcmp(head->args[0], "exit") == 0)
+			cmd_exit();
 		// else if (ft_strcmp(head->args[0], "echo") == 0)
 		// 	cmd_echo(head);
-		// else if (ft_strcmp(head->args[0], "pwd") == 0)
-		// 	cmd_pwd(head);
 		// // else if (ft_strcmp(head->args[0], "export") == 0)
 		// // 	cmd_export();
 		// // else if (ft_strcmp(head->args[0], "unset") == 0)
 		// // 	cmd_unset();
-		// else if (ft_strcmp(head->args[0], "env") == 0)
-		// 	cmd_env(head);
-		// else if (ft_strcmp(head->args[0], "exit") == 0)
-		// 	cmd_exit();
+		else if (ft_strcmp(head->args[0], "env") == 0)
+			cmd_env(cmds);
 		// else   
 		// 	execve(head->args[0], head->args, cmds->envir);
 		head = head->next;
