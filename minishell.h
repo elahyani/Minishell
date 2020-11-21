@@ -39,7 +39,7 @@ typedef struct	s_cmds
 
 
 int		get_next_line(int fd, char **line);
-void	get_cmd(t_cmds *cmds, t_cmd_list *head);
+t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head);
 void	cmd_cd(t_cmd_list *cmds);
 void	cmd_env(t_cmd_list *cmds);
 void	cmd_pwd();

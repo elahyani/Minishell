@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	get_cmd(t_cmds *cmds, t_cmd_list *head)
+t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 {
 	while (head)
 	{
@@ -44,37 +44,46 @@ void	get_cmd(t_cmds *cmds, t_cmd_list *head)
 		}
 		head = head->next;
 	}
-	return ;
+	return head;
 }
 
-t_cmd_list	*list_cmds(char *data)
+t_cmd_list	*list_cmds(t_cmd_list *list, char *data, int k)
 {
-	t_cmd_list	*list;
+	t_cmd_list	*head;
 
-	list = (t_cmd_list *)malloc(sizeof(t_cmd_list));
-	list->data = data;
-	list->next = NULL;
-	list->prev = NULL;
-	list->start = 0;
-	list->end = 0;
-	list->redir = 0;
-	return (list);
+	if (!list)
+		head = (t_cmd_list *)malloc(sizeof(t_cmd_list));
+	else
+		head = list;
+	if (k)
+		head->data = data;
+	else
+		head->line = data;
+	head->next = head->next ? head->next : NULL;
+	head->prev = list ? head->prev : NULL;
+	head->start = list ? head->start : 0;
+	head->end = list ? head->end : 0;
+	head->redir = list ? head->redir : 0;
+	return (head);
 }
 
 void	add_front(t_cmd_list **head, t_cmd_list *new)
 {
 	new->prev = *head;
-	new->next = NULL;
+	new->next = (*head)->next ? (*head)->next : NULL;
 	(*head)->next = new;
 	*head = new;
 }
 
-void	update_list(t_cmd_list **head, t_cmd_list *new)
+void	update_list(t_cmd_list **head, t_cmd_list **next ,t_cmd_list *new)
 {
-	new->prev = *head;
-	new->next = NULL;
-	(*head)->next = new;
-	*head = new;
+	new->prev = (*next)->prev;
+	(*next)->prev = new;
+	new->next = *next;
+	if (new->prev != NULL)
+		new->prev->next = new;
+	else
+		*head = new;
 }
 
 char	*get_env_val(t_cmds *cmds, char *join_arg)
@@ -112,7 +121,6 @@ int		b_point(char *arg)
 			return (i);
 	return (i);
 }
-// --------------------------------------------------------------------
 
 void	parse_line(char	**line, t_cmds *cmds)
 {	
@@ -122,10 +130,9 @@ void	parse_line(char	**line, t_cmds *cmds)
 	int		i;
 
 	i = -1;
-	head = (t_cmd_list *)malloc(sizeof(t_cmd_list));
 	cmds->cmd_line = *line;
 	len = ft_strlen(*line);
-	head = list_cmds(cmds->cmd_line);
+	head = list_cmds(NULL, cmds->cmd_line, 0);
 	while (++i <= len)
 	{
 		if ((*line)[i] == ';' || (*line)[i] == '\0')
@@ -133,7 +140,7 @@ void	parse_line(char	**line, t_cmds *cmds)
 			if ((*line)[i] == ';')
 			{
 				(*line)[i] = '\0';
-				add_front(&head, list_cmds(*(line) + i + 1));
+				add_front(&head, list_cmds(NULL, *line + i + 1, 0));
 			}
 		}
 	}
@@ -142,90 +149,83 @@ void	parse_line(char	**line, t_cmds *cmds)
 	cmds->cmd_list = head;
 }
 
-// --------------------------------------------------------------------
-void	parse_list_line(char	**line, t_cmds *cmds)
+void	parse_list_line(char **line_list, t_cmd_list *list, t_cmds *cmds)
 {	
-	t_cmd_list *head;
-	t_cmd_list *new_node;
-	int		len;
-	int		i;
-	int		l;
-	char	*tmp;
-	char	*tmp1;
-	char	tmp2[2];
-	char	*arg;
+	int			len;
+	int			i;
+	int			l;
+	char		*tmp;
+	char		*tmp1;
+	char		tmp2[2];
+	char		*arg;
+	t_cmd_list	*head;
 
 	tmp = NULL;
 	tmp1 = NULL;
+	// i = -1;
+	// len = ft_strlen(*line_list);
+	// arg = ft_strdup("");
+	// while (++i <= len)
+	// { 
+	// 	if ((*line_list)[i] == '$')
+	// 	{
+	// 		l = b_point(*line_list + i);
+	// 		cmds->join_arg = ft_substr(*line_list + i, 0, l);
+	// 		cmds->env_val = get_env_val(cmds, cmds->join_arg);
+	// 		tmp = ft_strjoin(arg, cmds->env_val);
+	// 		(arg) ? free(arg) : 0;
+	// 		arg = ft_strdup(tmp);
+	// 		i += l - 1;
+	// 	}
+	// 	else
+	// 	{
+	// 		tmp2[0] = (*line_list)[i];
+	// 		tmp2[1] = '\0';
+	// 		tmp1 = ft_strjoin(arg, tmp2);
+	// 		(arg) ? free(arg) : 0;
+	// 		arg = ft_strdup(tmp1);
+	// 	}
+	// }
+	// *line_list = ft_strdup(arg);
+	// (arg) ? free(arg) : 0;
+	// (tmp) ? free(tmp) : 0;
+	// (tmp1) ? free(tmp1) : 0;
+	len = ft_strlen(*line_list);
+	head = list_cmds(list, *line_list, 1);
 	i = -1;
-	head = (t_cmd_list *)malloc(sizeof(t_cmd_list));
-	len = ft_strlen(*line);
-	arg = ft_strdup("");
-	while (++i <= len)
-	{ 
-		if ((*line)[i] == '$')
-		{
-			l = b_point(*line + i);
-			cmds->join_arg = ft_substr(*line + i, 0, l);
-			cmds->env_val = get_env_val(cmds, cmds->join_arg);
-			tmp = ft_strjoin(arg, cmds->env_val);
-			(arg) ? free(arg) : 0;
-			arg = ft_strdup(tmp);
-			i += l - 1;
-		}
-		else
-		{
-			tmp2[0] = (*line)[i];
-			tmp2[1] = '\0';
-			tmp1 = ft_strjoin(arg, tmp2);
-			(arg) ? free(arg) : 0;
-			arg = ft_strdup(tmp1);
-		}
-	}
-	*line = ft_strdup(arg);
-	(arg) ? free(arg) : 0;
-	(tmp) ? free(tmp) : 0;
-	(tmp1) ? free(tmp1) : 0;
-	i = -1;
-	cmds->cmd_line = *line;
-	len = ft_strlen(*line);
-	head = list_cmds(cmds->cmd_line);
 	while (++i <= len)
 	{
-		if ((*line)[i] == ';' || (*line)[i] == '\0')
+		if ((*line_list)[i] == ';' || (*line_list)[i] == '\0')
 		{
 			if (!head->prev || (head->prev && head->prev->end))
 				head->start = 1;
 			head->end = 1;
-			if ((*line)[i] == ';')
-			{
-				(*line)[i] = '\0';
-				update_list(&head, list_cmds(*(line) + i + 1));
-			}
+			if ((*line_list)[i] == ';' )
+				break ;
 		}
-		else if ((*line)[i] == '|')
+		else if ((*line_list)[i] == '|')
 		{
 			if (!head->prev || (head->prev && head->prev->end))
 				head->start = 1;
-			(*line)[i] = '\0';
-			update_list(&head, list_cmds(*(line) + i + 1));
+			(*line_list)[i] = '\0';
+			t_cmd_list *new;
+			new = list_cmds(NULL, ft_strdup(*line_list + i + 1), 1);
+			add_front(&head, new);
+			puts("----------------> here"); 
 		}
-		else if ((*line)[i] == '<')
-			head->redir = '<';
-		else if ((*line)[i] == '>')
-		{
-			if ((*line)[i + 1] == '>')
-			{
-				head->redir = 'a';
-				i++;
-			}
-			else
-				head->redir = '>';
-		}
+		// else if ((*line_list)[i] == '<')
+		// 	head->redir = '<';
+		// else if ((*line_list)[i] == '>')
+		// {
+		// 	if ((*line_list)[i + 1] == '>')
+		// 	{
+		// 		head->redir = 'a';
+		// 		i++;
+		// 	}
+		// 	else
+		// 		head->redir = '>';
+		// }
 	}
-	while (head->prev != NULL)
-		head = head->prev;
-	cmds->cmd_list = head;
 }
 
 int		main(int argc, char **argv, char **envp)
@@ -241,6 +241,7 @@ int		main(int argc, char **argv, char **envp)
 	cmds->envir = envp;
 	cmds->env_val = NULL;
 	cmds->env_arg = NULL;
+	list->line = NULL;
 	ft_putstr_fd("minishell>", 1);
 	while ((status = get_next_line(0, &line)) > 0)
 	{
@@ -250,9 +251,13 @@ int		main(int argc, char **argv, char **envp)
 			list = cmds->cmd_list;
 			while (list)
 			{
-				parse_list_line(&list->data, cmds);
-				get_cmd(cmds, cmds->cmd_list);
-				list = list->next;
+				printf("***** LINE %s\n", list->line);
+				if (!list->line)
+					break ;
+				parse_list_line(&list->line, list, cmds);
+				list = get_cmd(cmds, list);
+				if (list)
+					list = list->next;
 			}
 			print_cmds(cmds->cmd_list);
 			free(line);
