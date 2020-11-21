@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 10:14:42 by ichejra           #+#    #+#             */
-/*   Updated: 2020/11/21 13:13:58 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/11/21 15:00:47 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ void	get_env(t_cmds *cmds)
 			return ;
 		i++;
 	}
-}
-
+} 
 char  *skip_slash(char *line)
 {
 	char *path;
