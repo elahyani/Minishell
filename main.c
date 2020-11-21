@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 void	get_cmd(t_cmds *cmds, t_cmd_list *head)
-{
+{	
 	while (head)
 	{
 		head->args = ft_split(head->data, ' ');
@@ -25,16 +25,22 @@ void	get_cmd(t_cmds *cmds, t_cmd_list *head)
 			cmd_cd(head, cmds);
 		else if (ft_strcmp(head->args[0], "pwd") == 0)
 			cmd_pwd(cmds);
+		else if (ft_strcmp(head->args[0], "export") == 0)
+			cmd_export(head, cmds);
+		else if (ft_strcmp(head->args[0], "unset") == 0)
+			cmd_unset(head, cmds);
 		else if (ft_strcmp(head->args[0], "exit") == 0)
 			cmd_exit();
 		// else if (ft_strcmp(head->args[0], "echo") == 0)
 		// 	cmd_echo(head);
-		// // else if (ft_strcmp(head->args[0], "export") == 0)
-		// // 	cmd_export();
-		// // else if (ft_strcmp(head->args[0], "unset") == 0)
-		// // 	cmd_unset();
 		else if (ft_strcmp(head->args[0], "env") == 0)
 			cmd_env(cmds);
+		else
+		{
+			ft_putstr_fd("minishell: ", 1);
+			ft_putstr_fd(head->args[0], 1);
+			ft_putendl_fd(": command not found", 1);
+		}
 		// else   
 		// 	execve(head->args[0], head->args, cmds->envir);
 		head = head->next;
@@ -193,9 +199,17 @@ int		main(int argc, char **argv, char **envp)
 	char	*line;
 	t_cmds	*cmds;
 	int		status;
+	
 
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmd_list = malloc(sizeof(t_cmd_list));
+	/////////////////////////////////////////////
+	cmds->index = 0;
+	cmds->rem = 0;
+	cmds->oldpwd = NULL;
+	cmds->cd = 0;
+	cmds->minus = 0;
+	/////////////////////////////////////////////
 	cmds->envir = envp;
 	cmds->env_val = NULL;
 	cmds->env_arg = NULL;

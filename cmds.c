@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 12:17:45 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/14 14:36:39 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/11/19 12:42:09 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+//#include "minishell.h"
 
 void	get_env(t_cmds *cmds)
 {

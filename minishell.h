@@ -21,6 +21,12 @@ typedef struct		s_cmd_list
 
 typedef struct	s_cmds
 {
+	int			index;
+	int			rem;
+	char		*oldpwd;
+	int			cd;
+	int			minus;
+	///////////////////////
 	char		**cmd;
 	int			counter;
 	int			sep;
@@ -39,6 +45,7 @@ typedef struct	s_cmds
 
 
 int		get_next_line(int fd, char **line);
+void	get_env(t_cmds *cmds);
 void	get_cmd(t_cmds *cmds, t_cmd_list *head);
 void	cmd_cd(t_cmd_list *list, t_cmds *cmds);
 void	cmd_env(t_cmds *cmds);
@@ -46,5 +53,7 @@ void	cmd_pwd(t_cmds *cmds);
 void	cmd_echo();
 void	cmd_exit();
 void	print_cmds(t_cmd_list *cmds);
+void	cmd_export(t_cmd_list *list, t_cmds *cmds);
+void	cmd_unset(t_cmd_list *list, t_cmds *cmds);
 
 #endif

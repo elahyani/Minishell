@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 10:14:42 by ichejra           #+#    #+#             */
-/*   Updated: 2020/11/18 14:04:38 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/11/21 13:13:58 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	get_env(t_cmds *cmds)
 {
-	int	i;
-	
+	int i;
+
 	i = 0;
 	while (cmds->envir[i] != NULL)
 	{
@@ -111,19 +111,57 @@ char  *skip_slash(char *line)
 	return (path);
 }
 
+/* char	*get_old_pwd(t_cmds *cmds)
+{
+	int 	i;
+
+	i = 0;
+	while (cmds->envir[i] != NULL)
+	{
+		cmds->env_line = ft_split(cmds->envir[i], '=');
+		if (ft_strcmp(cmds->env_line[0], "OLDPWD") == 0)
+			return (cmds->envir[i] + 7);
+		i++;
+	}
+	return (NULL);
+}
+void	set_pwd(t_cmds *cmds)
+{
+	int c;
+	int i;
+	i = 0;
+	c = 0;
+	while (cmds->envir[c] != NULL)
+		c++;
+	while (cmds->envir[i] != NULL)
+	{
+		cmds->env_line = ft_split(cmds->envir[i], '=');
+		if (ft_strcmp(cmds->env_line[0], "PWD") == 0)
+			cmds->envir[i] = ft_strjoin("PWD=", cmds->pwd);
+		if (ft_strcmp(cmds->env_line[0], "OLDPWD") == 0)
+			cmds->envir[i] = ft_strjoin("OLDPWD=", cmds->oldpwd);
+		i++;
+	}
+	//cmds->envir[i] = ft_strjoin("OLDPWD=", cmds->oldpwd);
+} */
+
 void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 {
 	int	i;
-	char *oldpwd; ////////old path
 	char	*tmp;
 	int ret;
 	int c;
-	
+	int j = 0;
 	ret = 0;
 	i = 0;
 	c = 0;
-	oldpwd = "/Users";
-	//cmds->pwd = getcwd(NULL, 0);
+	cmds->cd++;  ///bx n9arnha m3a cd - bax t3tini l oldpwd hoa hadak 
+	while (cmds->envir[j] != NULL)
+		j++;
+	cmds->oldpwd = cmds->pwd;
+	cmds->pwd = getcwd(NULL, 0);
+	//if (!cmds->oldpwd)
+	// 	cmds->envir[j++] = ft_strjoin("OLDPWD1================", cmds->oldpwd);
 	get_env(cmds);
 	if (list->args[1] == NULL)
 	{
@@ -137,11 +175,16 @@ void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 	}
 	else if (list->args[1][0] == '-')
 	{
-		if (oldpwd == NULL)
+		cmds->minus++;
+		if (cmds->minus == cmds->cd)
+			cmds->oldpwd = NULL;
+		if (cmds->oldpwd == NULL)
+		{
 			ft_putendl_fd("minishell: cd: OLDPWD not set", 1);
+		}
 		else
 		{
-			ret = chdir(oldpwd);
+			ret = chdir(cmds->oldpwd);
 			if (ret < 0)
 			{
 				ft_putstr_fd("minishell: cd: ", 1);
@@ -149,14 +192,16 @@ void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 				ft_putstr_fd(": No such file or directory\n", 1);
 			}
 			else
-				ft_putendl_fd(oldpwd, 1);
+				ft_putendl_fd(cmds->oldpwd, 1);
+			cmds->envir[j] = ft_strjoin("OLDPWD1================", cmds->oldpwd);
+			cmds->envir[j + 1] = NULL;
 		}
 	}
 	else if (list->args[1][0] == '~')
 	{
 		if (list->args[1][1] == ' ' || list->args[1][1] == '\0')
 		{
-			printf("path = |%s|\n", list->args[1]);
+			//printf("path = |%s|\n", list->args[1]);
 			ret = chdir(cmds->env_line[1]);
 			if (ret < 0)
 			{
@@ -169,7 +214,7 @@ void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 		{
 			tmp = skip_slash(list->args[1]);
 			list->args[1] = ft_strjoin(cmds->env_line[1], tmp + 1);
-			printf("path = |%s|\n", list->args[1]);
+			//printf("path = |%s|\n", list->args[1]);
 			ret = chdir(list->args[1]);
 			if (ret < 0)
 			{
@@ -225,34 +270,159 @@ void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 		printf("path = |%s|\n", list->args[1]);
 		ft_putendl_fd("No such file or directory", 1);
 	}
+	// if (cmds->pwd)
+	// {
+	// 	cmds->envir[j] = ft_strjoin("PWD1================", cmds->pwd);
+	// 	cmds->envir[j + 1] = NULL; 
+	// }	
+	//if (oldpwd)
 	// //cmds->envir = fgt_set_env("OLDPWD", cmds->pwd, cmds->envir)
 	// printf("\n1 cmd->pwd = |%s| <-------->\n", cmds->pwd);
-	cmds->pwd = getcwd(NULL, 0);
+
+	//printf("cpwd2==|%s|\n", cmds->pwd);
+	//if (cmds->rem != 1)
+	//cmds->pwd = getcwd(NULL, 0);
+	//printf("cpwd3==|%s|\n", cmds->pwd);
 	// printf("1 cmd->pwd = |%s| <-------->\n\n", cmds->pwd);
 	// cmds->envir = ft_set_env("PWD", cmds->pwd, cmds->envir);
+	//set OLDPWD and PWD
+	//set_pwd(cmds);
 }
 
 void	cmd_env(t_cmds *cmds)
 {
 	//printf("\ncmd = |%s| <--------> arg = |%s|\n\n", cmds->args[0], cmds->args[1]);
 	int	i;
-	
+	//int j = 0;
 	i = 0;
 	while (cmds->envir[i] != NULL)
 	{
 		ft_putendl_fd(cmds->envir[i], 1);
 		i++;
 	}
+	///////////Ajoute PWD a env//////////////////
+	/* cmds->pwd = getcwd(NULL, 0);
+	if (cmds->pwd)
+	{
+		while (cmds->envir[j] != NULL)
+		{
+			cmds->env_line = ft_split(cmds->envir[j], '=');
+			if (ft_strcmp(cmds->env_line[0], "PWD") == 0)
+			{
+				cmds->envir[j] = ft_strjoin("PWD=", cmds->pwd);
+				ft_putendl_fd(cmds->envir[j], 1);
+				return ;
+			}
+			j++;
+		}
+		if (cmds->envir[j] == NULL)
+		{
+			cmds->envir[j] = ft_strjoin("PWD=", cmds->pwd);
+			ft_putendl_fd(cmds->envir[j], 1);
+			cmds->envir[j + 1] = NULL; 
+		}
+	} */
 }
 
 void	cmd_pwd(t_cmds *cmds)
 {
-	//printf("\ncmd = |%s| <--------> arg = |%s|\n\n", cmds->args[0], cmds->args[1]);
-	//printf("\n1 cmd->pwd = |%s| <-------->\n\n", cmds->pwd);
 	if ((cmds->buff = getcwd(NULL, 0)) == NULL)
 		ft_putstr_fd("getcwd() error", 1);
 	else
 		ft_putendl_fd(cmds->buff, 1);
+}
+
+void	cmd_export(t_cmd_list *list, t_cmds *cmds)
+{
+	int		j;
+	int i = 0;
+	//int c = 0;
+	char	**str;
+	char **tmp;
+	char *tmp2[100];
+	
+	j = -1;
+	if (list->args[1] == NULL)
+	{
+		while (cmds->envir[i] != NULL)
+		{
+			tmp = ft_split(cmds->envir[i], '=');
+			//printf("tmp[0]====|%s|\n", tmp[0]);
+			//printf("tmp[1]====|%s|\n", tmp[1]);
+			tmp2[i] = ft_strjoin("declare -x ", tmp[0]);
+			tmp2[i] = ft_strjoin(tmp2[i], "=\"");
+			if (tmp[1] != NULL)
+				tmp2[i] = ft_strjoin(tmp2[i], tmp[1]);
+			else if (tmp[1] == NULL)
+				tmp2[i] = ft_strjoin(tmp2[i], "");
+			tmp2[i] = ft_strjoin(tmp2[i], "\"");
+			ft_putendl_fd(tmp2[i], 1);
+			i++;
+		}
+		ft_putendl_fd(cmds->envir[i], 1);
+		//printf("%d==============================|%s|\n",i, cmds->envir[i]);
+		//puts("her");
+		return ;
+	}
+	if (!cmds->index)
+		while (cmds->envir[cmds->index] != NULL)
+			cmds->index++;
+	if (ft_strchr(list->args[1], '"') == NULL)
+	{
+		str = ft_split(list->args[1], '=');
+		//printf("str[1][0]=|%s|\n", str[0]);
+		while (cmds->envir[++j] != NULL && j < cmds->index)
+		{
+			//printf("env = %d|%s|\n", j, cmds->envir[j]);
+			cmds->env_line = ft_split(cmds->envir[j], '=');
+			if (ft_strcmp(cmds->env_line[0], str[0]) == 0)
+			{
+				cmds->envir[j] = ft_strdup(list->args[1]);
+				return ;
+			}
+		}
+		cmds->envir[cmds->index] = ft_strdup(list->args[1]);
+		cmds->envir[j + 1] = NULL;
+		cmds->index++;
+	}
+	//////if there is "" or ''
+	// else if (ft_strchr(list->args[1], '"') != NULL)
+	// {
+	// 	j = 0;
+	// 	while (list->args[1][j])
+	// 	{
+	// 		if (list->args[1][j] == '"')
+	// 			c++;
+	// 		j++;
+	// 	}
+	// 	if (c != 2)
+	// 	{
+	// 		ft_putendl_fd("ERROR", 1);
+	// 		return ;
+	// 	}
+	// }
+}
+
+void	cmd_unset(t_cmd_list *list, t_cmds *cmds)
+{
+	int j = 0;
+	int i = 0;
+	while (cmds->envir[j] != NULL)
+	{
+		cmds->env_line = ft_split(cmds->envir[j], '=');
+		if (ft_strcmp(cmds->env_line[0], list->args[1]) == 0)
+		{
+			i = j;
+			while (cmds->envir[i] != NULL)
+			{
+				cmds->envir[i] = cmds->envir[i + 1];
+				if (cmds->envir[i + 1] == NULL)
+					return ;
+				i++;
+			}
+		}
+		j++;
+	}
 }
 
 void	cmd_exit()
