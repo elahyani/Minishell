@@ -34,6 +34,7 @@ typedef struct	s_cmds
 	char		*join_arg;
 	char		*data;
 	char		**split_cmd;
+	char		**f_parse_line;
 	t_cmd_list	*cmd_list;
 }				t_cmds;
 
