@@ -26,6 +26,9 @@ typedef struct	s_cmds
 	char		*oldpwd;
 	int			cd;
 	int			minus;
+	char		**exp;
+	int			exp_index;
+
 	///////////////////////
 	char		**cmd;
 	int			counter;

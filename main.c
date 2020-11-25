@@ -28,7 +28,11 @@ void	get_cmd(t_cmds *cmds, t_cmd_list *head)
 		else if (ft_strcmp(head->args[0], "export") == 0)
 			cmd_export(head, cmds);
 		else if (ft_strcmp(head->args[0], "unset") == 0)
+		{
+			//printf("arg[1]==|%s|\n",head->args[1]);
+			//printf("arg[2]==|%s|\n",head->args[2]);
 			cmd_unset(head, cmds);
+		}
 		else if (ft_strcmp(head->args[0], "exit") == 0)
 			cmd_exit();
 		// else if (ft_strcmp(head->args[0], "echo") == 0)
@@ -209,6 +213,8 @@ int		main(int argc, char **argv, char **envp)
 	cmds->oldpwd = NULL;
 	cmds->cd = 0;
 	cmds->minus = 0;
+	cmds->exp = NULL;
+	cmds->exp_index = 0;
 	/////////////////////////////////////////////
 	cmds->envir = envp;
 	cmds->env_val = NULL;

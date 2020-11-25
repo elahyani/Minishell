@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 10:14:42 by ichejra           #+#    #+#             */
-/*   Updated: 2020/11/21 15:00:47 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/11/25 12:41:03 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -338,9 +338,22 @@ void	cmd_export(t_cmd_list *list, t_cmds *cmds)
 	//int c = 0;
 	char	**str;
 	char **tmp;
-	char *tmp2[100];
-	
+	char **tmp2;
+	int len;
+	int env_len;
+
+	env_len = 0;
+	len = 0;
 	j = -1;
+	while (cmds->envir[env_len])
+			env_len++;
+	// if (cmds->exp != NULL)
+	// {
+	// 	printf("|0|===========|%s|\n", cmds->exp[0]);
+	// 	printf("|1|===========|%s|\n", cmds->exp[1]);
+	// 	printf("|2|===========|%s|\n", cmds->exp[2]);
+	// }
+	tmp2 = (char **)malloc(sizeof(char *) * (env_len + 1));
 	if (list->args[1] == NULL)
 	{
 		while (cmds->envir[i] != NULL)
@@ -358,31 +371,87 @@ void	cmd_export(t_cmd_list *list, t_cmds *cmds)
 			ft_putendl_fd(tmp2[i], 1);
 			i++;
 		}
-		ft_putendl_fd(cmds->envir[i], 1);
-		//printf("%d==============================|%s|\n",i, cmds->envir[i]);
-		//puts("her");
+		//int o = 0;
+		/* puts("========================================");
+		while (tmp2[o])
+		{
+			ft_putendl_fd(tmp2[o], 1);
+			o++;
+		} */
+		puts("========================================");
+		//ft_putendl_fd(cmds->envir[i], 1);
+		if (cmds->exp != NULL)
+		{
+			i = 0;
+			while (i < cmds->exp_index)
+			{
+				ft_putstr_fd("declare -x ", 1);
+				ft_putendl_fd(cmds->exp[i], 1);
+				i++;
+			}
+		}
 		return ;
 	}
 	if (!cmds->index)
 		while (cmds->envir[cmds->index] != NULL)
 			cmds->index++;
-	if (ft_strchr(list->args[1], '"') == NULL)
+	//list->args[1] = ft_strdup("a= ");
+	//list->args[2] = ft_strdup("b");
+	//printf("||=======|%s|\n", list->args[1]);
+	//printf("||=======|%s|\n", list->args[2]);
+	i = 1;
+	while (list->args[i] != NULL)
 	{
-		str = ft_split(list->args[1], '=');
-		//printf("str[1][0]=|%s|\n", str[0]);
-		while (cmds->envir[++j] != NULL && j < cmds->index)
+		//if (ft_strchr(list->args[i], '=') != NULL)
+		str = ft_split(list->args[i], '=');
+		if (list->args[i + 1] != NULL)
 		{
-			//printf("env = %d|%s|\n", j, cmds->envir[j]);
-			cmds->env_line = ft_split(cmds->envir[j], '=');
-			if (ft_strcmp(cmds->env_line[0], str[0]) == 0)
+			if (ft_strchr(list->args[i + 1], '='))
 			{
-				cmds->envir[j] = ft_strdup(list->args[1]);
-				return ;
+				tmp = ft_split(list->args[i + 1], '=');
+				if (ft_strcmp(str[0], tmp[0]) == 0)
+				{
+					i++;
+					continue ;
+				}
 			}
 		}
-		cmds->envir[cmds->index] = ft_strdup(list->args[1]);
-		cmds->envir[j + 1] = NULL;
-		cmds->index++;
+		//puts("=====3");
+		//printf("str===|%s|", str[0]);
+		//printf("tmp===|%s|", tmp[0]);
+		//printf("|%s|\n", str[0]);
+		if (ft_strchr(list->args[i], '=') != NULL)
+		{
+			if (ft_strchr(list->args[i], '"') == NULL)
+			{
+				str = ft_split(list->args[i], '=');
+				//printf("str[1][0]=|%s|\n", str[0]);
+				while (cmds->envir[++j] != NULL && j < cmds->index)
+				{
+					cmds->env_line = ft_split(cmds->envir[j], '=');
+					//printf("env = |%s|\n", cmds->env_line[0]);
+					if (ft_strcmp(cmds->env_line[0], str[0]) == 0)
+					{
+						cmds->envir[j] = ft_strdup(list->args[i]);
+						return ;
+					}
+				}
+				cmds->envir[cmds->index] = ft_strdup(list->args[i]);
+				cmds->envir[j + 1] = NULL;
+				cmds->index++;
+			}
+		}
+		else if (ft_strchr(list->args[i], '=') == NULL)
+		{
+			while (list->args[len])
+				len++;
+			if (!cmds->exp)
+				cmds->exp = malloc(sizeof(char *) * (len + 1));
+			//printf("|%d|=======|%s|\n",cmds->exp_index, cmds->exp[cmds->exp_index]);
+			cmds->exp[cmds->exp_index] = ft_strdup(list->args[i]);
+			cmds->exp_index++;
+		}
+		i++;
 	}
 	//////if there is "" or ''
 	// else if (ft_strchr(list->args[1], '"') != NULL)
@@ -406,21 +475,34 @@ void	cmd_unset(t_cmd_list *list, t_cmds *cmds)
 {
 	int j = 0;
 	int i = 0;
-	while (cmds->envir[j] != NULL)
+	int k;
+	//printf("arg[1]==|%s|\n",list->args[1]);
+	//printf("arg[2]==|%s|\n",list->args[2]);
+	//list->args[1] = "a";
+	//list->args[2] = "b";
+	k = 1;
+	while (list->args[k] != NULL)
 	{
-		cmds->env_line = ft_split(cmds->envir[j], '=');
-		if (ft_strcmp(cmds->env_line[0], list->args[1]) == 0)
+		//printf("|%d|", k);
+		//printf("arg[%d]==|%s|\n", k, list->args[k]);
+		while (cmds->envir[j] != NULL)
 		{
-			i = j;
-			while (cmds->envir[i] != NULL)
+			cmds->env_line = ft_split(cmds->envir[j], '=');
+			if (ft_strcmp(cmds->env_line[0], list->args[k]) == 0)
 			{
-				cmds->envir[i] = cmds->envir[i + 1];
-				if (cmds->envir[i + 1] == NULL)
-					return ;
-				i++;
+				i = j;
+				while (cmds->envir[i] != NULL)
+				{
+					cmds->envir[i] = cmds->envir[i + 1];
+					//if (cmds->envir[i + 1] == NULL)
+					//	break ;
+					i++;
+				}
+				break ;
 			}
+			j++;
 		}
-		j++;
+		k++;
 	}
 }
 
