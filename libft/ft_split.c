@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/19 12:45:33 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/26 14:29:38 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/11/26 19:08:23 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,129 @@ static int		len_wrd(char *str, char c)
 		len++;
 	return (len);
 }
+//**************************************************************************
+//**************************************************************************
+// char	*get_close_dq(char *str)
+// {
+// 	int		i;
+// 	char	*tmp;
+// 	int		j;
+
+// 	j = 0;
+// 	tmp = malloc(sizeof(char) * ft_strlen(str));
+// 	i = -1;
+// 	while (str[++i])
+// 	{
+// 		if (str[i] == '\\' && ft_strchr("\"'", str[i + 1]))
+// 			continue ;
+// 		else if (str[i] == '\"' && str[i - 1] != '\\')
+// 			break ;
+// 		tmp[j] = str[i];
+// 		j++;
+// 	}
+// 	return (tmp);
+// }
+
+// char	*get_close_sq(char *str)
+// {
+// 	int		i;
+// 	char	*tmp;
+// 	int		j;
+
+// 	j = 0;
+// 	tmp = malloc(sizeof(char) * ft_strlen(str));
+// 	i = -1;
+// 	while (str[++i])
+// 	{
+// 		if (str[i] == '\\' && ft_strchr("\"'", str[i + 1]))
+// 			continue ;
+// 		else if (str[i] == '\'' && str[i - 1] != '\\')
+// 			break ;
+// 		tmp[j] = str[i];
+// 		j++;
+// 	}
+// 	return (tmp);
+// }
+
+// char	*ft_remove_quotes(char *res)
+// {
+// 	int		i;
+// 	char	*str;
+// 	int		j;
+// 	int 	quote;
+
+// 	j = 0;
+// 	quote = 0;
+// 	i = -1;
+
+// 	// str = (char*)malloc(sizeof(char) * ft_strlen(res));
+// 	while (res[++i])
+// 	{
+// 		if (res[i] == '\\' && ft_strchr("\"'", res[i + 1]))
+// 			continue ;
+// 		else if (res[i] == '\"' && res[i - 1] != '\\')
+// 		{
+// 			// quote = quote_activer(res[i], quote);
+			
+// 			// str = ft_strjoin(str, get_close_dq(res + i + 1));
+// 		}
+// 		else if (res[i] == '\'' && res[i - 1] != '\\')
+// 		{
+// 			// str = ft_strjoin(str, get_close_sq(res + i + 1));
+// 		}
+// 		str[j] = res[i];
+// 		j++;
+// 	}
+// 	return (str);
+// }
+//**************************************************************************
+//**************************************************************************
+
+int		is_quote(int c)
+{
+	if (c == '\"')
+		return (2);
+	else if (c == '\'')
+		return (1);
+	return (0);
+}
+
+int		quote_activer(int c, int quote)
+{
+	if (is_quote(c) && !quote)
+		return (is_quote(c));
+	else if (quote && is_quote(c) == quote)
+		return (0);
+	else
+		return (quote);
+}
+
+char	*ft_remove_quotes(char *res)
+{
+	int		i;
+	int		j;
+	int 	quote;
+
+	j = 0;
+	quote = 0;
+	i = -1;
+
+	while (res[++i])
+	{
+		if (((!quote || 
+		(quote && is_quote(res[i]) == quote)) && is_quote(res[i]) && res[i - 1] != '\\') ||
+		(quote != 1 && res[i] == '\\'))
+		{
+			j = i - 1;
+			quote = quote_activer(res[i], quote);
+			if (res[i] != '\\')
+				i--;
+			while (res[++j])
+				res[j] = res[j + 1];
+		}
+	}
+	return (res);
+}
 
 char			**ft_split(char const *str, char c)
 {
@@ -124,8 +247,8 @@ char			**ft_split(char const *str, char c)
 	if (!(res = (char **)malloc(sizeof(char *) * (len + 1))))
 		return (NULL);
 	res = ft_index(res, (char *)str, c);
-	// while (++i < (int)len)
-	// 	res[i] = ft_strtrim(res[i], "\"'");
+	while (++i < (int)len)
+		res[i] = ft_remove_quotes(res[i]);
 	if (!res)
 		return (NULL);
 	res[len] = 0;
