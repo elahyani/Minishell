@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/19 12:45:33 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/17 14:53:16 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/11/26 14:29:38 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,15 @@ int			check_for_q(char *str, int j)
 	str += j;
 	j = 0;
 	q = *str;
-	while (str[++j])
-		if (str[j] == q && ((j && str[j - 1] != '\\') || !j))
-			break ;
+	if (q == '"') {
+        while (str[++j])
+            if (str[j] == q && ((j && str[j - 1] != '\\') || !j))
+                break;
+    }
+	else
+        while (str[++j])
+            if (str[j] == q)
+                break;
 	if (str[j])
 		return (j);
 	return (-1);
@@ -43,17 +49,19 @@ static char		**ft_index(char **split, char *str, char x)
 	int i;
 	int j;
 	int k;
-	int q;
 
 	i = -1;
 	k = 0;
 	j = -1;
-	q = -1;
 	while (str[++i])
 	{
 		if (ft_strchr("\"'", str[i]) && ((i && str[i - 1] != '\\') || !i))
-		{	j = i;
+		{	
+			if (j == -1)
+				j = i;
 			i += check_for_q(str, i);
+			if (str[i + 1] && ft_strchr("\"'", str[i + 1]))
+                continue ;
 		}
 		if (str[i] == x && j != -1)
 		{
@@ -116,8 +124,8 @@ char			**ft_split(char const *str, char c)
 	if (!(res = (char **)malloc(sizeof(char *) * (len + 1))))
 		return (NULL);
 	res = ft_index(res, (char *)str, c);
-	while (++i < (int)len)
-		res[i] = ft_strtrim(res[i], "\"'");
+	// while (++i < (int)len)
+	// 	res[i] = ft_strtrim(res[i], "\"'");
 	if (!res)
 		return (NULL);
 	res[len] = 0;

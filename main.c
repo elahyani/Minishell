@@ -68,10 +68,13 @@ int		main(int argc, char **argv, char **envp)
         if (ft_strcmp(line, ""))
         {
         	parse_line(&line, cmds);
-        	list = cmds->cmd_list;
+        	if (cmds->cmd_list)
+				list = cmds->cmd_list;
+			else
+				free(list);
 			while (list)
 			{
-				printf("***** LINE %s\n", list->line);
+				//printf("***** LINE %s\n", list->line);
 				if (!list->line)
 					break ;
 				parse_list_line(&list->line, list, cmds);
