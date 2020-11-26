@@ -35,8 +35,8 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 		}
 		else if (ft_strcmp(head->args[0], "exit") == 0)
 			cmd_exit();
-		// else if (ft_strcmp(head->args[0], "echo") == 0)
-		// 	cmd_echo(head);
+		else if (ft_strcmp(head->args[0], "echo") == 0)
+			cmd_echo(head);
 		else if (ft_strcmp(head->args[0], "env") == 0)
 			cmd_env(cmds);
 		else
@@ -65,6 +65,13 @@ int		main(int argc, char **argv, char **envp)
     cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmd_list = NULL;
     list = malloc(sizeof(t_cmd_list));
+	cmds->index = 0;
+	cmds->rem = 0;
+	cmds->oldpwd = NULL;
+	cmds->cd = 0;
+	cmds->minus = 0;
+	cmds->exp = NULL;
+	cmds->exp_index = 0;
     cmds->envir = envp;
     cmds->env_val = NULL;
     cmds->env_arg = NULL;
