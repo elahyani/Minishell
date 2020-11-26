@@ -6,7 +6,7 @@
 #    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/21 15:12:43 by elahyani          #+#    #+#              #
-#    Updated: 2020/11/17 09:54:54 by ichejra          ###   ########.fr        #
+#    Updated: 2020/11/26 19:32:21 by ichejra          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,15 +32,15 @@ LINKERFLAG = -Wall -Wextra -Werror -c
 all: $(NAME)
 
 $(NAME):$(OBJ)
-		ar rc $(NAME) $(OBJ)
-		ranlib $(NAME)
+		@ar rc $(NAME) $(OBJ)
+		@ranlib $(NAME)
 
 bonus: all $(OBJ_BONUS)
-		ar rc $(NAME) $(OBJ_BONUS)
-		ranlib $(NAME)
+		@ar rc $(NAME) $(OBJ_BONUS)
+		@ranlib $(NAME)
 
 %.o : %.c
-	gcc $(LINKERFLAG) $< -o $@
+	@gcc $(LINKERFLAG) $< -o $@
 
 clean:
 		rm -f *.o

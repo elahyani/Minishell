@@ -1,2 +1,0 @@
-echo imane
-ls

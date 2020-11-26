@@ -6,7 +6,7 @@
 #    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/11/26 10:39:17 by ichejra          ###   ########.fr        #
+#    Updated: 2020/11/26 19:33:40 by ichejra          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,13 @@ NAME = minishell.a
 
 SRCS =	execution.c \
 		exp_cmd.c \
-		debug.c
+		debug.c \
+		parsing/manag_list.c \
+		parsing/parse_line.c \
+		parsing/parse_list_line.c \
+		# cmds.c \
+		# parsing/dollar.c \
+		# parsing/quotes.c \
 
 SRC_GNL = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
 
