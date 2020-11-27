@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 11:57:08 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/26 19:32:07 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/11/27 11:01:37 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int		ft_strcmp(const char *s1, const char *s2)
 	unsigned int	i;
 
 	i = 0;
+	if (!s1 || !s2)
+		return (1);
 	while ((s1[i] || s2[i]))
 	{
 		if (s1[i] != s2[i])
