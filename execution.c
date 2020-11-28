@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 10:14:42 by ichejra           #+#    #+#             */
-/*   Updated: 2020/11/28 10:50:30 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/11/28 12:10:45 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 {
 	int	i;
 	int	ret_old = 1;
-	char	*tmp;
+	// char	*tmp;
 	//char **str;
 	int ret;
 	int c;
