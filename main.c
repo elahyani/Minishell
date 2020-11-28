@@ -80,13 +80,15 @@ int		main(int argc, char **argv, char **envp)
     cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmd_list = NULL;
 	cmds->index = 0;
-	cmds->rem = 0;
 	cmds->oldpwd = NULL;
 	cmds->cd = 0;
 	cmds->minus = 0;
-	cmds->exp = NULL;
-	cmds->exp_index = 0;
     cmds->envir = envp;
+	cmds->index = 0;
+	cmds->oldpwd = NULL;
+	cmds->save_oldpwd = NULL;
+	cmds->cd = 0;
+	cmds->minus = 0;
     cmds->env_val = NULL;
     cmds->env_arg = NULL;
     ft_putstr_fd("minishell>", 1);
