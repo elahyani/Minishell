@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:31 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/25 09:52:57 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/11/27 10:43:34 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	parse_list_line(char **line_list, t_cmd_list *list, t_cmds *cmds)
 	arg = ft_strdup("");
 	while (++i <= len)
 	{ 
-		if ((*line_list)[i] == '$')
+		if ((*line_list)[i] == '$' && (*line_list)[i - 1] != '\\')
 		{
 			l = b_point(*line_list + i);
 			cmds->join_arg = ft_substr(*line_list + i, 0, l);

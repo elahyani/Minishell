@@ -35,11 +35,11 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 		}
 		else if (ft_strcmp(head->args[0], "exit") == 0)
 			cmd_exit();
-		// else if (ft_strcmp(head->args[0], "echo") == 0)
-		// 	cmd_echo(head);
+		else if (ft_strcmp(head->args[0], "echo") == 0)
+			cmd_echo(head);
 		else if (ft_strcmp(head->args[0], "env") == 0)
 			cmd_env(cmds);
-		else
+		else if (head->args[0])
 		{
 			ft_putstr_fd("minishell: ", 1);
 			ft_putstr_fd(head->args[0], 1);
@@ -54,6 +54,21 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 	return head;
 }
 
+void	free_cmd_list(t_cmds *cmds)
+{
+	t_cmd_list *tmp;
+
+	if (cmds->cmd_list)
+	{
+		while (cmds->cmd_list)
+		{
+			tmp = cmds->cmd_list->next;
+			free(cmds->cmd_list);
+			cmds->cmd_list = tmp;
+		}
+	}
+}
+
 int		main(int argc, char **argv, char **envp)
 {
     t_cmds		*cmds;
@@ -64,7 +79,14 @@ int		main(int argc, char **argv, char **envp)
 
     cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmd_list = NULL;
-    list = malloc(sizeof(t_cmd_list));
+    // list = (t_cmd_list *)malloc(sizeof(t_cmd_list));
+	cmds->index = 0;
+	cmds->rem = 0;
+	cmds->oldpwd = NULL;
+	cmds->cd = 0;
+	cmds->minus = 0;
+	cmds->exp = NULL;
+	cmds->exp_index = 0;
     cmds->envir = envp;
 	cmds->index = 0;
 	cmds->oldpwd = NULL;
@@ -73,7 +95,7 @@ int		main(int argc, char **argv, char **envp)
 	cmds->minus = 0;
     cmds->env_val = NULL;
     cmds->env_arg = NULL;
-    list->line = NULL;
+    // list->line = NULL;
     ft_putstr_fd("minishell>", 1);
     while ((status = get_next_line(0, &line)) > 0)
     {
@@ -81,61 +103,24 @@ int		main(int argc, char **argv, char **envp)
         {
         	parse_line(&line, cmds);
         	if (cmds->cmd_list)
-				list = cmds->cmd_list;
-			else
-				free(list);
-			while (list)
 			{
-				//printf("***** LINE %s\n", list->line);
-				if (!list->line)
-					break ;
-				parse_list_line(&list->line, list, cmds);
-				list = get_cmd(cmds, list);
-				list = list->next;
+				list = cmds->cmd_list;
+				while (list)
+				{
+					//printf("***** LINE %s\n", list->line);
+					if (!list->line)
+						break ;
+					parse_list_line(&list->line, list, cmds);
+					list = get_cmd(cmds, list);
+					list = list->next;
+				}
+            	print_cmds(cmds->cmd_list);
+				free_cmd_list(cmds);
 			}
-            print_cmds(cmds->cmd_list);
             free(line);
         }
         ft_putstr_fd("minishell>", 1);
     }
+	// free cmds
     return (0);
 }
-
-// int		main(int argc, char **argv, char **envp)
-// {
-// 	char	*line;
-// 	t_cmds	*cmds;
-// 	int		status;
-	
-
-// 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
-// 	cmds->cmd_list = malloc(sizeof(t_cmd_list));
-// 	/////////////////////////////////////////////
-// 	cmds->index = 0;
-// 	cmds->rem = 0;
-// 	cmds->oldpwd = NULL;
-// 	cmds->cd = 0;
-// 	cmds->minus = 0;
-// 	cmds->exp = NULL;
-// 	cmds->exp_index = 0;
-// 	/////////////////////////////////////////////
-// 	cmds->envir = envp;
-// 	cmds->env_val = NULL;
-// 	cmds->env_arg = NULL;
-// 	ft_putstr_fd("minishell>", 1);
-
-// 	while ((status = get_next_line(0, &line)) > 0)
-// 	{
-// 		if (ft_strcmp(line, ""))
-// 		{
-// 			parse_line(&line, cmds);
-// 			get_cmd(cmds, cmds->cmd_list);
-// 			print_cmds(cmds->cmd_list);
-// 			free(line);
-// 		}
-// 		ft_putstr_fd("minishell>", 1);
-// 	}
-// 	return (0);
-// }
-// echo $PWD; echo $OLDPWD; cd .; pwd; echo $PWD; echo $OLDPWD
-// cd '' ; echo $PWD

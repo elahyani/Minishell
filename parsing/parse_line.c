@@ -6,26 +6,33 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:28 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/27 11:40:32 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/11/28 10:49:11 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	free_cmds(t_cmds *cmds)
+int		get_sy_err()
 {
-	t_cmd_list *tmp;
-
-	if (cmds->cmd_list)
-		while (cmds->cmd_list)
-		{
-			tmp = cmds->cmd_list;
-			cmds->cmd_list = cmds->cmd_list->next;
-			free(tmp);
-		}
+	// t_cmd_list *tmp;
+	
+	puts("________________1");
+	ft_putendl_fd("minishell: syntax error", 1);
+	// if (cmds->cmd_list)
+	// {
+	// 	puts("________________2");
+	// 	while (cmds->cmd_list)
+	// 	{
+	// 		puts("________________3");
+	// 		tmp = cmds->cmd_list->next;
+	// 		free(cmds->cmd_list);
+	// 		cmds->cmd_list = tmp;
+	// 	}
+	// }
+	return (1);
 }
 
-int		handle_syntax_err(t_cmds *cmds, char **line)
+int		handle_syntax_err(char **line)
 {
 	int		quote;
 	int		i;
@@ -34,42 +41,30 @@ int		handle_syntax_err(t_cmds *cmds, char **line)
 	i = -1;
 	while ((*line)[++i])
 	{
-		if ((*line)[0] == ';' ||
-		((*line)[i] == ';' && (*line)[i + 1] == ';' && !(*line)[i + 2]))
+		if ((*line)[0] == ';' || ((*line)[i] == ';' && (*line)[i + 1] == ';' && !(*line)[i + 2]))
 		{
-			ft_putendl_fd("minishell: syntax error near to unexpected token `;'", 1);
-			free_cmds(cmds);
-			return (1);
+			return (get_sy_err());
 		}
-		else if ((*line)[0] == '|' || ((*line)[i] == '|' && ((!(*line)[i + 1]) || (*line)[i + 1] == ' ')))
+		else if ((*line)[0] == '|' || ((*line)[i] == '|' && (!(*line)[i + 1])))
 		{
-			ft_putendl_fd("minishell: syntax error near to unexpected token `|'", 1);
-			free_cmds(cmds);
-			return (1);
+			return (get_sy_err());
 		}
 		else if ((*line)[i] == '\\' && !(*line)[i + 1])
 		{
-			ft_putendl_fd("minishell: syntax error near to unexpected token `\\'", 1);
-			free_cmds(cmds);
-			return (1);
+			return (get_sy_err());
 		}
-		else if (((*line)[i] == '>' && !(*line)[i + 1]) || 
-		((*line)[i] == '<' && !(*line)[i + 1]))
+		else if (((*line)[i] == '>' && !(*line)[i + 1]) || ((*line)[i] == '<' && !(*line)[i + 1]))
 		{
-			ft_putendl_fd("minishell: syntax error near to unexpected token `newline'", 1);
-			free_cmds(cmds);
-			return (1);
+			return (get_sy_err());	
 		}
 		else if (ft_strchr("\"'", (*line)[i]))
+		{
 			if ((*line)[i - 1] != '\\')
 				quote++;
+		}
 	}
 	if (quote % 2 != 0)
-	{
-		ft_putendl_fd("minishell: syntax error near to unexpected token `\"'", 1);
-		free_cmds(cmds);
-		return (1);
-	}
+		return (get_sy_err());
 	return (0);
 }
 
@@ -80,7 +75,7 @@ void	parse_line(char	**line, t_cmds *cmds)
 	int		i;
 	int		err;
 
-	if ((err = handle_syntax_err(cmds, line)))
+	if ((err = handle_syntax_err(line)))
 		return ;
 	len = ft_strlen(*line);
 	i = -1;
@@ -100,4 +95,13 @@ void	parse_line(char	**line, t_cmds *cmds)
 		head = head->prev;
 	cmds->cmd_list = head;
 }
-// echo "hi ""jj"" po"
+
+/**
+ * syntax err:
+ * [-]____________	[;], [_;cmd], [cmd;;], [;cmd]
+ * [-]____________	[|], [_|cmd], [cmd|], [|cmd]
+ * [-]____________	[cmd|;], [cmd;|]
+ * [-]____________	< , > , >>, cmd >, cmd <
+ * [-]____________	", ', "cmd, 'cmd, cmd', cmd", \, cmd\
+ * [-]____________	
+*/
