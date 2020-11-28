@@ -6,7 +6,7 @@
 #    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/11/26 19:33:40 by ichejra          ###   ########.fr        #
+#    Updated: 2020/11/28 10:46:17 by ichejra          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,6 +52,7 @@ clean:
 		@rm -f *.o
 		@rm -f libft/*.o
 		@rm -f get_next_line/*.o
+		@rm -f parsing/*.o
 
 fclean: clean
 		@rm -f $(NAME)

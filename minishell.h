@@ -22,12 +22,12 @@ typedef struct		s_cmd_list
 typedef struct	s_cmds
 {
 	int			index;
-	int			rem;
 	char		*oldpwd;
+	char		*save_oldpwd;
 	int			cd;
 	int			minus;
-	char		**exp;
-	int			exp_index;
+	//char		**exp;
+	//int			exp_index;
 
 	///////////////////////
 	char		**cmd;
@@ -58,11 +58,22 @@ void		add_front(t_cmd_list **head, t_cmd_list *new);
 t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head);
 void		cmd_cd(t_cmd_list *list, t_cmds *cmds);
 void		cmd_env(t_cmds *cmds);
-void		cmd_pwd();
+void		cmd_pwd(t_cmds *cmds);
 void		cmd_echo();
 void		cmd_exit();
 void		print_cmds(t_cmd_list *cmds);
 void		cmd_export(t_cmd_list *list, t_cmds *cmds);
 void		cmd_unset(t_cmd_list *list, t_cmds *cmds);
+void		get_env(t_cmds *cmds);
+char		**add_to_arr(char **arr, char *value, int opt);
+char		**ft_envdup(char **arr);
+char		**ft_setenv(char *var, char *path, char **env);
+int			ft_getenv(char *name, char **env);
+char		**ft_add_to_arr(char *value, char **arr);
+char		**ft_get_arr(char *value, char **arr);
+char		*ft_get_first(const char *s, int c);
+char		*ft_strcat(char *dest, char *src);	
+
+
 
 #endif

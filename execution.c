@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 10:14:42 by ichejra           #+#    #+#             */
-/*   Updated: 2020/11/26 18:33:07 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/11/27 13:47:49 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,26 +144,60 @@ void	set_pwd(t_cmds *cmds)
 	//cmds->envir[i] = ft_strjoin("OLDPWD=", cmds->oldpwd);
 } */
 
+// char	**set_env(char *var, char *value, char **env)
+// {
+// 	int		i;
+// 	int		found;
+// 	char	*name;
+// 	char	**envp;
+// 	char	**tab;
+
+// 	i = 0;
+// 	found = 0;
+// 	name = ft_strjoin(var, "=");
+// 	envp = add_to_arr(env, value, 0);
+// 	while (envp[i])
+// 	{
+// 		tab = ft_split(envp[i], '=');
+// 		if (!ft_strcmp(tab[0], var))
+// 		{
+// 			found = 1;
+// 			free(envp[i]);
+// 			envp[i] = ft_strjoin(name, value);
+// 			return (envp);
+// 		}
+// 		found = 0;
+// 		i++;
+// 	}
+// 	if (found == 0)
+// 		return (add_to_arr(env, value, 1));
+// 	return (env);
+// }
+
 void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 {
 	int	i;
+	int	ret_old = 1;
 	char	*tmp;
+	//char **str;
 	int ret;
 	int c;
-	int j = 0;
+	// int j = 0;
 	ret = 0;
 	i = 0;
 	c = 0;
 	cmds->cd++;  ///bx n9arnha m3a cd - bax t3tini l oldpwd hoa hadak 
-	while (cmds->envir[j] != NULL)
-		j++;
-	cmds->oldpwd = cmds->pwd;
+	/* while (cmds->envir[j] != NULL)
+		j++; */
+	cmds->save_oldpwd = getcwd(NULL, 0);
+	cmds->oldpwd = cmds->save_oldpwd;
 	cmds->pwd = getcwd(NULL, 0);
 	//if (!cmds->oldpwd)
 	// 	cmds->envir[j++] = ft_strjoin("OLDPWD1================", cmds->oldpwd);
 	get_env(cmds);
 	if (list->args[1] == NULL)
 	{
+		// cmds->oldpwd = cmds->pwd;
 		ret = chdir(cmds->env_line[1]);
 		if (ret < 0)
 		{
@@ -171,29 +205,46 @@ void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 			ft_putstr_fd(list->args[1], 1);
 			ft_putstr_fd(": No such file or directory\n", 1);
 		}
+	/* 	while (cmds->envir[j] != NULL)
+		{
+			str = ft_split(cmds->envir[j], '=');
+			if (ft_strcmp(str[0], "OLDPWD") == 0)
+			{
+				cmds ->envir[j] = ft_strjoin("OLDPWD=", cmds->oldpwd);
+			}
+			j++;
+		}
+		if (cmds->envir[j] == NULL)
+		{
+		} */
+		// cmds->envir[j] = ft_strjoin("OLDPWD=", cmds->oldpwd);
+		// cmds->envir[j + 1] = NULL;
+		//printf("\n\nOLDPWD==|%s|\n\n", cmds->envir[j]);
 	}
 	else if (list->args[1][0] == '-')
 	{
 		cmds->minus++;
 		if (cmds->minus == cmds->cd)
 			cmds->oldpwd = NULL;
-		if (cmds->oldpwd == NULL)
+		if ((i = ft_getenv("OLDPWD", cmds->envir)) == -1)
 		{
 			ft_putendl_fd("minishell: cd: OLDPWD not set", 1);
+			return ;
 		}
 		else
 		{
-			ret = chdir(cmds->oldpwd);
-			if (ret < 0)
+			ret_old = chdir(cmds->envir[i] + 7);
+			if (ret_old < 0)
 			{
 				ft_putstr_fd("minishell: cd: ", 1);
 				ft_putstr_fd(list->args[1], 1);
 				ft_putstr_fd(": No such file or directory\n", 1);
 			}
-			else
-				ft_putendl_fd(cmds->oldpwd, 1);
-			cmds->envir[j] = ft_strjoin("OLDPWD=", cmds->oldpwd);
-			cmds->envir[j + 1] = NULL;
+			// else
+			// 	ft_putendl_fd(cmds->oldpwd, 1);
+			// cmds->envir[j] = ft_strjoin("OLDPWD=", cmds->oldpwd);
+			// cmds->envir[j + 1] = NULL;
+			// cmds->oldpwd = cmds->save_oldpwd;
 		}
 	}
 	else if (list->args[1][0] == '~')
@@ -269,6 +320,11 @@ void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 		printf("path = |%s|\n", list->args[1]);
 		ft_putendl_fd("No such file or directory", 1);
 	}
+	cmds->pwd = getcwd(NULL, 0);
+	cmds->envir = ft_setenv("PWD", cmds->pwd, cmds->envir);
+	cmds->envir = ft_setenv("OLDPWD", cmds->save_oldpwd, cmds->envir);
+	if (ret_old == 0)
+		ft_putendl_fd(cmds->pwd, 1);
 	// if (cmds->pwd)
 	// {
 	// 	cmds->envir[j] = ft_strjoin("PWD1================", cmds->pwd);

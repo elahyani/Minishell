@@ -66,6 +66,11 @@ int		main(int argc, char **argv, char **envp)
 	cmds->cmd_list = NULL;
     list = malloc(sizeof(t_cmd_list));
     cmds->envir = envp;
+	cmds->index = 0;
+	cmds->oldpwd = NULL;
+	cmds->save_oldpwd = NULL;
+	cmds->cd = 0;
+	cmds->minus = 0;
     cmds->env_val = NULL;
     cmds->env_arg = NULL;
     list->line = NULL;
