@@ -79,7 +79,6 @@ int		main(int argc, char **argv, char **envp)
 
     cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmd_list = NULL;
-    // list = (t_cmd_list *)malloc(sizeof(t_cmd_list));
 	cmds->index = 0;
 	cmds->rem = 0;
 	cmds->oldpwd = NULL;
@@ -90,7 +89,6 @@ int		main(int argc, char **argv, char **envp)
     cmds->envir = envp;
     cmds->env_val = NULL;
     cmds->env_arg = NULL;
-    // list->line = NULL;
     ft_putstr_fd("minishell>", 1);
     while ((status = get_next_line(0, &line)) > 0)
     {
@@ -116,6 +114,10 @@ int		main(int argc, char **argv, char **envp)
         }
         ft_putstr_fd("minishell>", 1);
     }
-	// free cmds
+	//free_cmds(cmds);
     return (0);
 }
+
+//	free leaks
+//	manag sy err
+//	$?
