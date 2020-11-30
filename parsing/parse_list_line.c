@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:31 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/27 10:43:34 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/11/30 20:25:56 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 {
 	int		j;
 	int		k;
+	int		i;
 
+	i = 0;
 	j = 0;
 	k = 0;
 	if (cmds->env_val)
@@ -33,7 +35,19 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 		j++;
 	}
 	if (k == 0)
+	{
+		if (!ft_strcmp(cmds->join_arg, "$"))
+			return (ft_strdup("$"));
+		else if (!ft_strcmp(cmds->join_arg, "$?"))
+		{
+			puts("EXIT_STATUS");
+			exit(0);
+		}
+		while (cmds->join_arg[++i])
+			if (ft_isalpha(cmds->join_arg[i]))
+			 	return (ft_strdup(""));
 		return (cmds->join_arg);
+	}
 	return (NULL);
 }
 
@@ -104,7 +118,7 @@ void	parse_list_line(char **line_list, t_cmd_list *list, t_cmds *cmds)
 			if ((*line_list)[i] == ';')
 				break ;
 		}
-		else if ((*line_list)[i] == '|')
+		else if ((*line_list)[i] == '|' && (*line_list)[i - 1] != '\\')
 		{
 			if (!head->prev || (head->prev && head->prev->end))
 				head->start = 1;

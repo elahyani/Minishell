@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:28 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/28 10:49:11 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/11/30 18:12:02 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ int		handle_syntax_err(char **line)
 {
 	int		quote;
 	int		i;
+	int		dq;
 
+	dq = 0;
 	quote = 0;
 	i = -1;
 	while ((*line)[++i])
@@ -57,10 +59,19 @@ int		handle_syntax_err(char **line)
 		{
 			return (get_sy_err());	
 		}
-		else if (ft_strchr("\"'", (*line)[i]))
+		else if ((*line)[i] == '\"')
 		{
-			if ((*line)[i - 1] != '\\')
+			dq++;
+			if (dq % 2 == 0)
+				dq = 0;
+			if ((i && (*line)[i - 1] != '\\') || !i)
 				quote++;
+		}
+		else if ((*line)[i] == '\'')
+		{
+			if ((i && (*line)[i - 1] != '\\') || !i)
+				if (!dq)
+					quote++;
 		}
 	}
 	if (quote % 2 != 0)
@@ -82,7 +93,7 @@ void	parse_line(char	**line, t_cmds *cmds)
 	head = list_cmds(NULL, *line, 0);
 	while (++i <= len)
 	{
-		if ((*line)[i] == ';' || (*line)[i] == '\0')
+		if (((*line)[i] == ';' && (*line)[i - 1] != '\\') || (*line)[i] == '\0')
 		{
 			if ((*line)[i] == ';')
 			{
@@ -95,13 +106,3 @@ void	parse_line(char	**line, t_cmds *cmds)
 		head = head->prev;
 	cmds->cmd_list = head;
 }
-
-/**
- * syntax err:
- * [-]____________	[;], [_;cmd], [cmd;;], [;cmd]
- * [-]____________	[|], [_|cmd], [cmd|], [|cmd]
- * [-]____________	[cmd|;], [cmd;|]
- * [-]____________	< , > , >>, cmd >, cmd <
- * [-]____________	", ', "cmd, 'cmd, cmd', cmd", \, cmd\
- * [-]____________	
-*/
