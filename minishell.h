@@ -5,11 +5,10 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/28 12:09:55 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/01 10:17:36 by elahyani         ###   ########.fr       */
+/*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
+/*   Updated: 2020/12/01 11:03:39 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -39,6 +38,7 @@ typedef struct	s_cmds
 	char		*save_oldpwd;
 	int			cd;
 	int			minus;
+	int			exp_oldp;
 	//char		**exp;
 	//int			exp_index;
 
