@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
+#    By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/11/28 10:46:17 by ichejra          ###   ########.fr        #
+#    Updated: 2020/12/01 14:38:37 by elahyani         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,8 +18,8 @@ SRCS =	execution.c \
 		parsing/manag_list.c \
 		parsing/parse_line.c \
 		parsing/parse_list_line.c \
+		parsing/parse_dollar.c \
 		# cmds.c \
-		# parsing/dollar.c \
 		# parsing/quotes.c \
 
 SRC_GNL = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
