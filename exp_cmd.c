@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 10:37:00 by ichejra           #+#    #+#             */
-/*   Updated: 2020/11/27 13:33:35 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/11/28 11:48:31 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@ char	**ft_envdup(char **arr)
 	size_t	str_len;
 	char	**new_arr;
 
-	len = ft_arr_len(arr) + 1;
-	if (!(new_arr = (char **)malloc(sizeof(char *) * len)))
+	len = ft_arr_len(arr);
+	if (!(new_arr = (char **)malloc(sizeof(char *) * (len + 1))))
 		return (NULL);
 	i = 0;
 	while (i < len)
 	{
-		str_len = (int)ft_strlen(arr[i]) + 1;
-		if (!(new_arr[i] = (char *)malloc(sizeof(char) * str_len)))
+		str_len = (int)ft_strlen(arr[i]);
+		if (!(new_arr[i] = (char *)malloc(sizeof(char) * (str_len + 1))))
 			return (NULL);
 		ft_strcpy(new_arr[i], arr[i]);
 		i++;
@@ -250,16 +250,30 @@ static char	**ft_sort_exp(char  **envr)
 void	cmd_export(t_cmd_list *list, t_cmds *cmds)
 {
 	int		j;
-	int i = 0;
+	int 	i;
+	int		o;
+	int		c;
 	char	**str;
-	char **tmp;
-	//int len;
+	char	**tmp;
 	char	**new_env;
 	char	**env_sort;
 
-	//len = 0;
+	i = 0;
+	cmds->exp_oldp = 0;
+	while (cmds->envir[i])
+	{
+		str = ft_split(cmds->envir[i], '=');
+		if (ft_strcmp(str[0], "OLDPWD") == 0)
+			cmds->exp_oldp = 1;
+		i++;
+	}
 	if (list->args[1] == NULL)
 	{
+		if (cmds->exp_oldp == 0)
+		{
+			cmds->envir[i] = ft_strdup("OLDPWD");
+			cmds->envir[i + 1] = NULL;
+		}
 		env_sort = ft_envdup(cmds->envir);
 		new_env = ft_sort_exp(env_sort);
 		ft_print_export(new_env);
@@ -269,8 +283,6 @@ void	cmd_export(t_cmd_list *list, t_cmds *cmds)
 		while (cmds->envir[cmds->index] != NULL)
 			cmds->index++;
 	i = 1;
-	int o;
-	int c;
 	while (list->args[i] != NULL)
 	{
 		str = ft_split(list->args[i], '=');
@@ -317,10 +329,7 @@ void	cmd_export(t_cmd_list *list, t_cmds *cmds)
 				}
 			}
 		}
-		//printf("1---list->args[i]=|%s|\n", list->args[i]);
-		//printf("2---cmds->index==|%d|\n", cmds->index);
 		cmds->envir[j] = ft_strdup(list->args[i]);
-		//printf("3---cmds->envir==|%s|\n", cmds->envir[cmds->index]);
 		cmds->envir[j + 1] = NULL;
 		cmds->index++;
 		i++;

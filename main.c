@@ -81,12 +81,9 @@ int		main(int argc, char **argv, char **envp)
 	cmds->cmd_list = NULL;
     // list = (t_cmd_list *)malloc(sizeof(t_cmd_list));
 	cmds->index = 0;
-	cmds->rem = 0;
 	cmds->oldpwd = NULL;
 	cmds->cd = 0;
 	cmds->minus = 0;
-	cmds->exp = NULL;
-	cmds->exp_index = 0;
     cmds->envir = envp;
 	cmds->index = 0;
 	cmds->oldpwd = NULL;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
+/*   Updated: 2020/11/28 12:09:59 by ichejra          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -26,6 +38,7 @@ typedef struct	s_cmds
 	char		*save_oldpwd;
 	int			cd;
 	int			minus;
+	int			exp_oldp;
 	//char		**exp;
 	//int			exp_index;
 
