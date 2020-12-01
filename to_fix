@@ -1,3 +1,6 @@
+=> Syntax err
+=> exit_status $?
+=> cd : \
 
 ____________________________________________________________________syntax err
 [-]____________	[;], [_;cmd], [cmd;;], [;cmd]
@@ -12,8 +15,22 @@ $????????????? [√]
 echo hello$?he [√] 
 echo "$"PWD [√]
 echo $"PWD" [x]
-echo ' pp"$PWD" ' [x] 
+echo ' pp"$PWD" ' [√] 
 echo $ [√]
 echo $/ [√]
-echo $++++++$HOME
+echo $++++++$HOME [√]
 
+// int		get_exit_status(t_cmds *cmds)
+// {
+// 	if (cmds->exit_status == 127)
+// 		puts("command not found");
+// 	else if (cmds->exit_status == 1)
+// 		puts("No such file or directory");
+// 	else if (cmds->exit_status == 126)
+// 		puts("is a directory");
+// 	else if (cmds->exit_status == 130)
+// 		puts("CTRL-C");
+// 	else if (cmds->exit_status == 131)
+// 		puts("CTRL-/");
+// 	return (cmds->exit_status);
+// }

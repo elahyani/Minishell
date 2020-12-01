@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:55 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/28 12:09:56 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/01 10:17:36 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct	s_cmds
 	char		*pwd;
 	char		*join_arg;
 	char		*data;
+	int			exit_status;
 	char		**split_cmd;
 	char		**f_parse_line;
 	t_cmd_list	*cmd_list;

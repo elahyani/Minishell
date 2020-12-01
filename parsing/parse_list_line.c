@@ -6,11 +6,26 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:31 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/30 20:25:56 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/01 10:41:16 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+// int		get_exit_status(t_cmds *cmds)
+// {
+// 	if (cmds->exit_status == 127)
+// 		puts("command not found");
+// 	else if (cmds->exit_status == 1)
+// 		puts("No such file or directory");
+// 	else if (cmds->exit_status == 126)
+// 		puts("is a directory");
+// 	else if (cmds->exit_status == 130)
+// 		puts("CTRL-C");
+// 	else if (cmds->exit_status == 131)
+// 		puts("CTRL-/");
+// 	return (cmds->exit_status);
+// }
 
 char	*get_env_val(t_cmds *cmds, char *join_arg)
 {
@@ -40,7 +55,7 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 			return (ft_strdup("$"));
 		else if (!ft_strcmp(cmds->join_arg, "$?"))
 		{
-			puts("EXIT_STATUS");
+			//get_exit_status(cmds);
 			exit(0);
 		}
 		while (cmds->join_arg[++i])
@@ -62,11 +77,29 @@ int		b_point(char *arg)
 	return (i);
 }
 
+int		get_q(char	**line_list)
+{
+	int		i;
+
+	i = -1;
+	while ((*line_list)[++i])
+	{
+		if (ft_strchr("\"'", (*line_list)[i]))
+		{
+			if ((*line_list)[i] == '\"')
+				return (2);
+			else if ((*line_list)[i] == '\'')
+				return (1);
+		}
+	}
+	return (0);
+}
+
 void	parse_list_line(char **line_list, t_cmd_list *list, t_cmds *cmds)
 {	
+	t_cmd_list	*head;
 	int			len;
 	int			i;
-	t_cmd_list	*head;
 	int			l;
 	char		*tmp;
 	char		*tmp1;
@@ -80,7 +113,7 @@ void	parse_list_line(char **line_list, t_cmd_list *list, t_cmds *cmds)
 	arg = ft_strdup("");
 	while (++i <= len)
 	{ 
-		if ((*line_list)[i] == '$' && (*line_list)[i - 1] != '\\')
+		if ((*line_list)[i] == '$' && (*line_list)[i - 1] != '\\' && get_q(line_list) != 1)
 		{
 			l = b_point(*line_list + i);
 			cmds->join_arg = ft_substr(*line_list + i, 0, l);

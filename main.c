@@ -17,10 +17,10 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 	while (head)
 	{
 		head->args = ft_split(head->data, ' ');
-		// puts("==========================");
-		// printf("cmd->args[0] = |%s|\n", head->args[0]);
-		// printf("cmd->args[1] = |%s|\n", head->args[1]);
-		// puts("==========================");
+		puts("==========================");
+		printf("cmd->args[0] = |%s|\n", head->args[0]);
+		printf("cmd->args[1] = |%s|\n", head->args[1]);
+		puts("==========================");
 		if (ft_strcmp(head->args[0], "cd") == 0)
 			cmd_cd(head, cmds);
 		else if (ft_strcmp(head->args[0], "pwd") == 0)
