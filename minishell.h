@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/11/28 12:09:59 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/02 12:05:05 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <sys/stat.h>
+# include <sys/wait.h>
 # include "get_next_line/get_next_line.h"
 # include "libft/libft.h"
 
@@ -70,14 +72,17 @@ void		update_list(t_cmd_list **head, t_cmd_list **next ,t_cmd_list *new);
 void		add_front(t_cmd_list **head, t_cmd_list *new);
 t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head);
 void		cmd_cd(t_cmd_list *list, t_cmds *cmds);
-void		cmd_env(t_cmds *cmds);
+
+//void		cmd_env(t_cmds *cmds);
+int			cmd_env(t_cmds *cmds, t_cmd_list *list);
+
 void	    cmd_pwd(t_cmds *cmds);
 void		cmd_echo(t_cmd_list *list);
 void		cmd_exit();
 void		print_cmds(t_cmd_list *cmds);
 void		cmd_export(t_cmd_list *list, t_cmds *cmds);
 void		cmd_unset(t_cmd_list *list, t_cmds *cmds);
-void		get_env(t_cmds *cmds);
+void		get_home_env(t_cmds *cmds);
 char		**add_to_arr(char **arr, char *value, int opt);
 char		**ft_envdup(char **arr);
 char		**ft_setenv(char *var, char *path, char **env);
@@ -85,7 +90,15 @@ int			ft_getenv(char *name, char **env);
 char		**ft_add_to_arr(char *value, char **arr);
 char		**ft_get_arr(char *value, char **arr);
 char		*ft_get_first(const char *s, int c);
-char		*ft_strcat(char *dest, char *src);	
+//char		*ft_strcat(char *dest, char *src);
+
+
+///////////////////////////////////////////////////
+//char	*get_bin_path(char *filename, char **env);
+//char	*try_path(char *filename, char *dir);
+//int		ft_access(char *path, int mode);
+///////////////////////////////////////////////////
+
 
 
 
