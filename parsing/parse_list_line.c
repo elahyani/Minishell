@@ -6,58 +6,51 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:31 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/01 14:37:06 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/02 11:42:40 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	parse_list_line(char **line_list, t_cmd_list *list, t_cmds *cmds)
+void	parse_list_line(char **line, t_cmd_list *list, t_cmds *cmds)
 {	
-	t_cmd_list	*head;
+	t_cmd_list	*hd;
 	int			len;
 	int			i;
 
-	parse_dollar(cmds, line_list);
-	len = ft_strlen(*line_list);
-	head = list_line_cmds(list, *line_list, 1);
+	parse_dollar(cmds, line);
+	len = ft_strlen(*line);
+	hd = list_line_cmds(list, *line, 1);
 	i = -1;
 	while (++i <= len)
 	{
-		if ((*line_list)[i] == ';' || (*line_list)[i] == '\0')
+		if ((*line)[i] == ';' || (*line)[i] == '\0')
 		{
-			if ((head->prev && head->prev->end) || !head->prev)
-				head->start = 1;
-			if (head->prev && !head->start)
-				head->end = 1;
-			head->end = 1;
-			if ((*line_list)[i] == ';')
+			((hd->prev && hd->prev->end) || !hd->prev) ? hd->start = 1 : 0;
+			hd->end = 1;
+			if ((*line)[i] == ';')
 				break ;
 		}
-		else if ((*line_list)[i] == '|' && (*line_list)[i - 1] != '\\')
+		else if ((*line)[i] == '|' && (*line)[i - 1] != '\\')
 		{
-			if (!head->prev || (head->prev && head->prev->end))
-				head->start = 1;
-			(*line_list)[i] = '\0';
-			if (head->next)
+			(!hd->prev || (hd->prev && hd->prev->end)) ? hd->start = 1 : 0;
+			(*line)[i] = '\0';
+			if (hd->next)
 			{
-				update_list(&head, &head->next, list_line_cmds(NULL, *line_list + i + 1, 1));
-				head = head->next;
+				update_list(&hd, &hd->next, list_line_cmds(NULL, *line + i + 1, 1));
+				hd = hd->next;
 			}
 			else
-				add_front(&head, list_line_cmds(NULL, *line_list + i + 1, 1));
+				add_front(&hd, list_line_cmds(NULL, *line + i + 1, 1));
 		}
-		else if ((*line_list)[i] == '<')
-			head->redir = '<';
-		else if ((*line_list)[i] == '>')
+		else if ((*line)[i] == '<')
+			hd->redir = '<';
+		else if ((*line)[i] == '>')
 		{
-			if ((*line_list)[i + 1] == '>')
-			{
-				head->redir = 'a';
-				i++;
-			}
+			if ((*line)[i + 1] == '>' && (i++))
+				hd->redir = 'a';
 			else
-				head->redir = '>';
+				hd->redir = '>';
 		}
 	}
 }

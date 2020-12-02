@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:24 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/01 14:38:52 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/02 11:54:35 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,24 +107,24 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 	char		tmp2[2];
 	char		*arg;
 	char		*idoll;
-	int			j;
 
-	j = 0;
 	i = -1;
 	tmp = NULL;
 	tmp1 = NULL;
 	len = ft_strlen(*line_list);
 	arg = ft_strdup("");
-	idoll = (char *)malloc(sizeof(char) * (len));
+	idoll = ft_strdup("");
 	while (++i <= len)
 	{	
 		if ((i && !ft_strchr("\"'", (*line_list)[i - 1])) && ((*line_list)[i] == '$') && 
 		((*line_list)[i + 1] && ft_strchr("\"'", (*line_list)[i + 1])))
 			i++;
-		idoll[j++] = (*line_list)[i];
+		tmp2[0] = (*line_list)[i];
+		tmp2[1] = '\0';
+		idoll = ft_strjoin(idoll, tmp2);
 	}
 	*line_list = ft_strdup(idoll);
-	(idoll) ? free(idoll) : 0;
+	(idoll != NULL) ? free(idoll) : 0;
 	i = -1;
 	while (++i <= len)
 	{ 
