@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:28 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/02 14:16:30 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/03 20:02:49 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,53 +32,98 @@ int		get_sy_err()
 	return (1);
 }
 
-int		handle_syntax_err(char **ln)
+int		check_cmd(char *cmd, char *filename)
 {
-	int		quote;
 	int		i;
-	int		dq;
-	int		skip;
 
-	skip = 1;
-	dq = 0;
+	i = -1;
+	if (cmd)
+	{
+		while ((cmd)[++i])
+			if (ft_isalpha((cmd)[i]))
+				return (0);
+	}
+	else if (filename)
+	{
+		while ((filename)[++i])
+			if (ft_isprint((filename)[i]))
+				return (0);
+	}
+	return (1);
+}
+
+int		check_q_err(char **ln)
+{
+	int		i;
+	int		quote;
+	int		q;
+
+	i = -1;
 	quote = 0;
+	q = 0;
+	while ((*ln)[++i])
+		if (((*ln)[i] == '\"' || (*ln)[i] == '\'') && (q = (*ln)[i]))
+			break ;
 	i = -1;
 	while ((*ln)[++i])
 	{
-		if ((*ln)[0] == ';' || ((*ln)[i] == ';' && (*ln)[i + 1] == ';' && !(*ln)[i + 2]))
-		{
+		if ((*ln)[i] == '\"' && q == '\"')
+			((i && (*ln)[i - 1] != '\\') || !i) ? quote++ : 0;
+		else if ((*ln)[i] == '\'' && q == '\'')
+			((i && (*ln)[i - 1] != '\\') || !i) ? quote++ : 0;
+		else if ((*ln)[i] == '\"' && quote % 2 == 0)
 			return (get_sy_err());
-		}
-		else if ((*ln)[0] == '|' || ((*ln)[i] == '|' && (!(*ln)[i + 1])))
-		{
+		else if ((*ln)[i] == '\'' && quote % 2 == 0)
 			return (get_sy_err());
-		}
-		else if ((*ln)[i] == '\\' && (/* !(*ln)[i + 1] || */ (*ln)[i + 1] != '\\') && skip == 0)
-		{
-			skip = 1;
-			return (get_sy_err());
-		}
-		else if (((*ln)[i] == '>' && !(*ln)[i + 1]) || ((*ln)[i] == '<' && !(*ln)[i + 1]))
-		{
-			return (get_sy_err());	
-		}
-		else if ((*ln)[i] == '\"')
-		{
-			dq++;
-			if (dq % 2 == 0)
-				dq = 0;
-			if ((i && (*ln)[i - 1] != '\\') || !i)
-				quote++;
-		}
-		else if ((*ln)[i] == '\'')
-		{
-			if ((i && (*ln)[i - 1] != '\\') || !i)
-				if (!dq)
-					quote++;
-		}
 	}
 	if (quote % 2 != 0)
 		return (get_sy_err());
+	return (0);
+}
+
+int		check_redir(char **ln)
+{
+	int		i;
+
+	i = -1;
+	while ((*ln)[++i])
+	{
+		if ((*ln)[i] == '>' || (*ln)[i] == '<')
+		{
+			if (check_cmd(NULL, *ln + i + 1))
+				return (get_sy_err());
+			else if (((*ln)[i] == '>' && (*ln)[i + 1] == '>' && 
+			(*ln)[i + 2] == '>') || ((*ln)[i] == '<' && (*ln)[i + 1] == '<'))
+				return (get_sy_err());
+		}
+	}
+	return (0);
+}
+
+int		handle_syntax_err(char **ln)
+{
+	int		i;
+	int		j;
+	char	*iscmd;
+
+	j = -1;
+	i = -1;
+	iscmd = NULL;
+	while ((*ln)[++i])
+	{
+		if ((*ln)[i] == ';' || (*ln)[i] == '|')
+		{
+			iscmd = ft_substr(*ln, j, i - j);
+			j = -1;
+			if ((*ln)[i] == '|' && !(*ln)[i + 1])
+				return (get_sy_err());
+			else if (check_cmd(iscmd, NULL))
+				return (get_sy_err());
+		}
+		else if ((*ln)[i] == '\\' && !(*ln)[i + 1] && (*ln)[i - 1] != '\\')
+			return (get_sy_err());
+		(j == -1l) ? j = i : 0;
+	}
 	return (0);
 }
 
@@ -87,9 +132,8 @@ void	parse_line(char	**line, t_cmds *cmds)
 	t_cmd_list *head;
 	int		len;
 	int		i;
-	int		err;
 
-	if ((err = handle_syntax_err(line)))
+	if (handle_syntax_err(line) || check_q_err(line) || check_redir(line))
 		return ;
 	len = ft_strlen(*line);
 	i = -1;
