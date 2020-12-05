@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:28 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/03 20:02:49 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/05 10:26:41 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int		check_redir(char **ln)
 		{
 			if (check_cmd(NULL, *ln + i + 1))
 				return (get_sy_err());
-			else if (((*ln)[i] == '>' && (*ln)[i + 1] == '>' && 
+			else if (((*ln)[i] == '>' && (*ln)[i + 1] == '>' &&
 			(*ln)[i + 2] == '>') || ((*ln)[i] == '<' && (*ln)[i + 1] == '<'))
 				return (get_sy_err());
 		}
@@ -127,11 +127,11 @@ int		handle_syntax_err(char **ln)
 	return (0);
 }
 
-void	parse_line(char	**line, t_cmds *cmds)
-{	
-	t_cmd_list *head;
-	int		len;
-	int		i;
+void	parse_line(char **line, t_cmds *cmds)
+{
+	int			len;
+	int			i;
+	t_cmd_list	*head;
 
 	if (handle_syntax_err(line) || check_q_err(line) || check_redir(line))
 		return ;

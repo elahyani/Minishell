@@ -1,7 +1,7 @@
 => Syntax err [√]
-=> exit_status $?
 => cd : \ [√]
-
+=> exit_status $? [x]
+=> free_leaks [x]
 ________________________________________________________________________Dollar
 $????????????? [x]
 echo hello$?he [x] 

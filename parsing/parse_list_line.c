@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:31 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/04 11:00:15 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/05 10:24:20 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	parse_pipe(char **line, t_cmd_list **hd, int *i)
 		add_front(hd, list_line_cmds(NULL, *line + *i + 1, 1));
 }
 
-void	parse_redir(char **line, t_cmd_list **hd ,int *i)
+void	parse_redir(char **line, t_cmd_list **hd, int *i)
 {
 	if ((*line)[*i] == '<')
 		(*hd)->redir = '<';
@@ -34,15 +34,24 @@ void	parse_redir(char **line, t_cmd_list **hd ,int *i)
 		if ((*line)[*i + 1] == '>')
 		{
 			(*hd)->redir = 'a';
+			(*line)[*i] = '\0';
 			(*i)++;
 		}
 		else
 			(*hd)->redir = '>';
 	}
+	(*line)[*i] = '\0';
+	if ((*hd)->next)
+	{
+		update_list(hd, &(*hd)->next, list_line_cmds(NULL, *line + *i + 1, 1));
+		(*hd) = (*hd)->next;
+	}
+	else
+		add_front(hd, list_line_cmds(NULL, *line + *i + 1, 1));
 }
 
 void	parse_list_line(char **line, t_cmd_list *list, t_cmds *cmds)
-{	
+{
 	t_cmd_list	*hd;
 	int			len;
 	int			i;
@@ -64,6 +73,4 @@ void	parse_list_line(char **line, t_cmd_list *list, t_cmds *cmds)
 		else if ((*line)[i] == '<' || (*line)[i] == '>')
 			parse_redir(line, &hd, &i);
 	}
-
-	// create a fct to separate the redirection (ad sp before & after it)
 }
