@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/01 14:37:44 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/09 14:33:11 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ typedef struct	s_cmds
 	//int			exp_index;
 
 	///////////////////////
+	int			quote;
+	int			ignore;
 	char		**cmd;
 	int			counter;
 	int			sep;
@@ -88,6 +90,9 @@ char		**ft_get_arr(char *value, char **arr);
 char		*ft_get_first(const char *s, int c);
 char		*ft_strcat(char *dest, char *src);	
 char		*parse_dollar(t_cmds *cmds, char **line_list);
+int			check_for_q(char *str, int j);
+int		is_quote(int c);
+int		quote_activer(int c, int quote);
 
 
 #endif

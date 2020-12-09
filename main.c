@@ -1,4 +1,4 @@
-	/* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/07 12:17:38 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/09 14:33:02 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 {	
+	//puts("here");
 	while (head)
 	{
 		head->args = ft_split(head->data, ' ');
@@ -42,7 +43,7 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 		else if (head->args[0])
 		{
 			ft_putstr_fd("minishell: ", 1);
-			ft_putstr_fd(head->args[0], 1);
+			ft_putstr_fd(ft_strtrim(head->args[0], "	"), 1);
 			ft_putendl_fd(": command not found", 1);
 		}
 		// else   
@@ -91,7 +92,9 @@ int		main(int argc, char **argv, char **envp)
 	cmds->minus = 0;
     cmds->env_val = NULL;
     cmds->env_arg = NULL;
-    ft_putstr_fd("minishell>", 1);
+	cmds->ignore = 0;
+	cmds->quote = 0;
+	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
     while ((status = get_next_line(0, &line)) > 0)
     {
         if (ft_strcmp(line, ""))
@@ -107,14 +110,15 @@ int		main(int argc, char **argv, char **envp)
 						break ;
 					parse_list_line(&list->line, list, cmds);
 					list = get_cmd(cmds, list);
-					list = list->next;
+					if (list)
+						list = list->next;
 				}
             	print_cmds(cmds->cmd_list);
 				free_cmd_list(cmds);
 			}
             free(line);
         }
-        ft_putstr_fd("minishell>", 1);
+		ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
     }
 	//free_cmds(cmds);
     return (0);

@@ -2,6 +2,11 @@
 => cd : \ [√]
 => exit_status $? [x]
 => free_leaks [x]
+=> echo "a ; echo b" [√]
+=> echo "a | echo b" [√]
+=> '	ls' (ignore whitespaces) [√]
+=> ./srcs (erros type output) 
+
 ________________________________________________________________________Dollar
 $????????????? [x]
 echo hello$?he [x] 
@@ -11,6 +16,8 @@ echo ' pp"$PWD" ' [√]
 echo $ [√]
 echo $/ [√]
 echo $++++++$HOME [√]
+
+echo a		b		c (should ignore whitespaces || tabs) [x]
 ____________________________________________________________________syntax err
 [√]____________	[;], [_;cmd], [cmd;;], [;cmd]
 [√]____________	[|], [_|cmd], [cmd|], [|cmd]
@@ -20,32 +27,3 @@ ____________________________________________________________________syntax err
 [√]____________ [\\] , [\], [cmd\]
 
 [-]____________ [(], [)], [()]
-
-
-// int		check_q_err(char **ln)
-// {
-// 	int		i;
-// 	int		quote;
-// 	int		dq;
-	
-// 	i = -1;
-// 	dq = 0;
-// 	quote = 0;
-// 	while ((*ln)[++i])
-// 	{
-// 		if ((*ln)[i] == '\"')
-// 		{
-// 			dq++;
-// 			(dq % 2 == 0) ? dq = 0 : 0;
-// 			((i && (*ln)[i - 1] != '\\') || !i) ? quote++ : 0;
-// 		}
-// 		else if ((*ln)[i] == '\'')
-// 		{
-// 			if ((i && (*ln)[i - 1] != '\\') || !i)
-// 				(!dq) ? quote++ : 0;
-// 		}
-// 	}
-// 	if (quote % 2 != 0)
-// 		return (get_sy_err());
-// 	return (0);
-// }
