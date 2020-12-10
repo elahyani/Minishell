@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   split_cmds.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/19 12:45:33 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/10 14:26:07 by elahyani         ###   ########.fr       */
+/*   Created: 2020/12/10 14:18:50 by elahyani          #+#    #+#             */
+/*   Updated: 2020/12/10 14:24:21 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdio.h>
-
+#include "../minishell.h"
 
 static char		**ft_free(char **split)
 {
@@ -30,13 +28,21 @@ static char		**ft_index(char **split, char *str, char x)
 	int i;
 	int j;
 	int k;
+	int ignore;
+	int	quote;
 
 	i = -1;
 	k = 0;
 	j = -1;
+	quote = 0;
+	ignore = 0;
 	while (str[++i])
 	{
-		if (str[i] == x && j != -1)
+		if (str[i] == '\\' && quote != 1)
+			ignore = ignore ? 0 : 1;
+		if (!ignore && is_quote(str[i]))
+			quote = quote_activer(str[i], quote);
+		if (str[i] == x && j != -1 && !quote && !ignore)
 		{
 			if (!(split[k++] = ft_substr(str, j, i - j)))
 				return (ft_free(split));
@@ -44,6 +50,8 @@ static char		**ft_index(char **split, char *str, char x)
 		}
 		else if (str[i] != x && j == -1)
 			j = i;
+		if (str[i] != '\\' && ignore)
+			ignore = 0;
 	}
 	if (j != -1)
 		if (!(split[k] = ft_substr(str, j, i - j)))
@@ -56,13 +64,21 @@ static int		len_wrd(char *str, char c)
 	int			i;
 	int			start;
 	int			len;
+	int			quote;
+	int			ignore;
 
 	i = 0;
 	len = 0;
 	start = 0;
+	quote = 0;
+	ignore = 0;
 	while (str[i])
 	{
-		if (str[i] == c)
+		if (str[i] == '\\' && quote != 1)
+			ignore = ignore ? 0 : 1;
+		if (!ignore && is_quote(str[i]))
+			quote = quote_activer(str[i], quote);
+		if (str[i] == c && !ignore && !quote)
 		{
 			if (start == 1)
 			{
@@ -72,6 +88,8 @@ static int		len_wrd(char *str, char c)
 		}
 		else if (str[i] != c)
 			start = 1;
+		if (str[i] != '\\' && ignore)
+			ignore = 0;
 		i++;
 	}
 	if (start)
@@ -79,8 +97,7 @@ static int		len_wrd(char *str, char c)
 	return (len);
 }
 
-
-char			**ft_split(char const *str, char c)
+char			**split_cmd(char const *str, char c)
 {
 	char		**res;
 	size_t		len;
@@ -96,6 +113,8 @@ char			**ft_split(char const *str, char c)
 	if (!(res = (char **)malloc(sizeof(char *) * (len + 1))))
 		return (NULL);
 	res = ft_index(res, (char *)str, c);
+	while (++i < (int)len)
+		res[i] = ft_remove_quotes(res[i]);
 	if (!res)
 		return (NULL);
 	res[len] = 0;

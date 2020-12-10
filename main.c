@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/10 09:43:27 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/10 14:21:07 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 	//puts("here");
 	while (head)
 	{
-		head->args = ft_split(head->data, ' ');
+		head->args = split_cmd(head->data, ' ');
 		// puts("==========================");
 		// printf("cmd->args[0] = |%s|\n", head->args[0]);
 		// printf("cmd->args[1] = |%s|\n", head->args[1]);
