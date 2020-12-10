@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/09 14:33:02 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/10 09:43:27 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,6 @@ int		main(int argc, char **argv, char **envp)
 	cmds->minus = 0;
     cmds->env_val = NULL;
     cmds->env_arg = NULL;
-	cmds->ignore = 0;
-	cmds->quote = 0;
 	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
     while ((status = get_next_line(0, &line)) > 0)
     {

@@ -6,7 +6,7 @@
 #    By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/12/01 14:38:37 by elahyani         ###   ########.fr        #
+#    Updated: 2020/12/10 13:40:58 by elahyani         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,9 @@ SRCS =	execution.c \
 		parsing/parse_line.c \
 		parsing/parse_list_line.c \
 		parsing/parse_dollar.c \
+		parsing/manag_stx_err.c \
+		# parsing/manag_quotes.c \
 		# cmds.c \
-		# parsing/quotes.c \
 
 SRC_GNL = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
 

@@ -1,12 +1,15 @@
-=> Syntax err [√]
-=> cd : \ [√]
-=> exit_status $? [x]
-=> free_leaks [x]
-=> echo "a ; echo b" [√]
-=> echo "a | echo b" [√]
-=> '	ls' (ignore whitespaces) [√]
-=> ./srcs (erros type output) 
+=> Syntax err					 (√)
+=> cd : \ 						 (√)
+=> echo "a ; echo b" 			 (√)
+=> echo "a | echo b"			 (√)
+=> '	ls' (ignore whitespaces) (√)
 
+=> free_leaks 					 (x)
+=> exit_status $? 				 (x)
+=> ./srcs (erros type output) 	 (x√)
+=> Invalid read of size 		 (√)
+=> valgrind				 		 (√)
+=> stx err: ['';], [''|'';''|'';'';';';'|'] [√]
 ________________________________________________________________________Dollar
 $????????????? [x]
 echo hello$?he [x] 

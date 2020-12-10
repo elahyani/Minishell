@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:24 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/08 11:47:41 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/10 13:31:24 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,9 +114,9 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 	len = ft_strlen(*line_list);
 	arg = ft_strdup("");
 	idoll = ft_strdup("");
-	while (++i <= len)
+	while ((*line_list)[++i])
 	{	
-		if ((i && !ft_strchr("\"'", (*line_list)[i - 1])) && ((*line_list)[i] == '$') && 
+		if (((i && !ft_strchr("\"'", (*line_list)[i - 1])) || !i) && ((*line_list)[i] == '$') && 
 		((*line_list)[i + 1] && ft_strchr("\"'", (*line_list)[i + 1])))
 			i++;
 		tmp2[0] = (*line_list)[i];
@@ -126,9 +126,9 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 	*line_list = ft_strdup(idoll);
 	(idoll != NULL) ? free(idoll) : 0;
 	i = -1;
-	while (++i <= len)
+	while ((*line_list)[++i])
 	{ 
-		if ((*line_list)[i] == '$' && (*line_list)[i - 1] != '\\' && get_q(line_list) != 1)
+		if ((*line_list)[i] == '$' && ((i && (*line_list)[i - 1] != '\\') || !i) && get_q(line_list) != 1)
 		{
 			l = b_point(*line_list + i);
 			cmds->join_arg = ft_substr(*line_list + i, 0, l);

@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/09 14:33:11 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/10 13:42:15 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,11 @@ char		*ft_get_first(const char *s, int c);
 char		*ft_strcat(char *dest, char *src);	
 char		*parse_dollar(t_cmds *cmds, char **line_list);
 int			check_for_q(char *str, int j);
-int		is_quote(int c);
-int		quote_activer(int c, int quote);
-
-
+char		*ft_remove_quotes(char *res);
+int			is_quote(int c);
+int			quote_activer(int c, int quote);
+int			handle_stx_err(char **ln, t_cmds *cmds);
+int			check_redir(char **ln, t_cmds *cmds);
+int			check_q(char **ln, t_cmds *cmds);
+int			get_sy_err();
 #endif
