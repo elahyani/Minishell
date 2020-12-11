@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 11:04:14 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/10 11:04:52 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/11 14:32:24 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,13 @@ char	*ft_remove_quotes(char *res)
 	int 	quote;
 	int		ignore;
 
-	i = 0;
 	quote = 0;
 	ignore = 0;
+	i = 0;
 	while (res[i])
 	{
 		j = 0;
-		if (res[i] == '\\' && quote != 1)
-			ignore = ignore ? 0 : 1;
+		(res[i] == '\\' && quote != 1) ? ignore =  1 : 0;
 		if (((!quote || (quote && is_quote(res[i]) == quote)) && is_quote(res[i]) && !ignore))
 		{
 			j = i - 1;
@@ -59,7 +58,7 @@ char	*ft_remove_quotes(char *res)
 			while (res[++j])
 				res[j] = res[j + 1];
 		}
-		(!j || ignore) ? i++ : 0;
+		(ignore || !j) ? i++ : 0;
 		(res[i] != '\\' && ignore) ? ignore = 0 : 0;
 	}
 	return (res);

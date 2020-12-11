@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:31 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/10 11:08:15 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/11 14:35:54 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,32 +55,30 @@ void	parse_list_line(char **line, t_cmd_list *list, t_cmds *cmds)
 	t_cmd_list	*hd;
 	int			len;
 	int			i;
-	int			ignore;
-	int			quote;
 
 	parse_dollar(cmds, line);
 	len = ft_strlen(*line);
 	hd = list_line_cmds(list, *line, 1);
 	i = -1;
-	quote = 0;
-	ignore = 0;
+	cmds->quote = 0;
+	cmds->ignore = 0;
 	while ((*line)[++i])
 	{
-		if ((*line)[i] == '\\' && quote != 1)
-			ignore = ignore ? 0 : 1;
-		if (!ignore && is_quote((*line)[i]))
-			quote = quote_activer((*line)[i], quote);
-		if ((*line)[i + 1] == '\0' && (hd->end = 1) && !ignore && !quote)
+		if ((*line)[i] == '\\' && cmds->quote != 1)
+			cmds->ignore = cmds->ignore ? 0 : 1;
+		if (!cmds->ignore && is_quote((*line)[i]))
+			cmds->quote = quote_activer((*line)[i], cmds->quote);
+		if ((*line)[i + 1] == '\0' && (hd->end = 1) && !cmds->ignore && !cmds->quote)
 		{
 			((hd->prev && hd->prev->end) || !hd->prev) ? hd->start = 1 : 0;
 			if ((*line)[i] == ';')
 				break ;
 		}
-		else if ((*line)[i] == '|' && (*line)[i - 1] != '\\' && !ignore && !quote)
+		else if ((*line)[i] == '|' && (*line)[i - 1] != '\\' && !cmds->ignore && !cmds->quote)
 			parse_pipe(line, &hd, &i);
-		else if (((*line)[i] == '<' || (*line)[i] == '>') && !ignore && !quote)
+		else if (((*line)[i] == '<' || (*line)[i] == '>') && !cmds->ignore && !cmds->quote)
 			parse_redir(line, &hd, &i);
-		if ((*line)[i] != '\\' && ignore)
-			ignore = 0;
+		if ((*line)[i] != '\\' && cmds->ignore)
+			cmds->ignore = 0;
 	}
 }

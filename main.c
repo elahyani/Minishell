@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/10 14:21:07 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/11 11:34:37 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 	//puts("here");
 	while (head)
 	{
-		head->args = split_cmd(head->data, ' ');
+		head->args = split_cmd(head->data, ' ', cmds);
 		// puts("==========================");
 		// printf("cmd->args[0] = |%s|\n", head->args[0]);
 		// printf("cmd->args[1] = |%s|\n", head->args[1]);
@@ -92,6 +92,8 @@ int		main(int argc, char **argv, char **envp)
 	cmds->minus = 0;
     cmds->env_val = NULL;
     cmds->env_arg = NULL;
+	cmds->quote = 0;
+	cmds->ignore = 0;
 	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
     while ((status = get_next_line(0, &line)) > 0)
     {

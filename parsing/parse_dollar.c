@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:24 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/10 13:31:24 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/11 14:40:07 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,8 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 	(idoll != NULL) ? free(idoll) : 0;
 	i = -1;
 	while ((*line_list)[++i])
-	{ 
+	{
+		// ==> \\$ENV need to be fixed
 		if ((*line_list)[i] == '$' && ((i && (*line_list)[i - 1] != '\\') || !i) && get_q(line_list) != 1)
 		{
 			l = b_point(*line_list + i);

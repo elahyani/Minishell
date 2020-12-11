@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 14:18:50 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/10 14:24:21 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/11 13:14:47 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,24 @@ static char		**ft_free(char **split)
 	return (NULL);
 }
 
-static char		**ft_index(char **split, char *str, char x)
+static char		**ft_sp_index(char **split, char *str, char x, t_cmds *cmds)
 {
 	int i;
 	int j;
 	int k;
-	int ignore;
-	int	quote;
 
 	i = -1;
 	k = 0;
 	j = -1;
-	quote = 0;
-	ignore = 0;
+	cmds->quote = 0;
+	cmds->ignore = 0;
 	while (str[++i])
 	{
-		if (str[i] == '\\' && quote != 1)
-			ignore = ignore ? 0 : 1;
-		if (!ignore && is_quote(str[i]))
-			quote = quote_activer(str[i], quote);
-		if (str[i] == x && j != -1 && !quote && !ignore)
+		if (str[i] == '\\' && cmds->quote != 1)
+			cmds->ignore = cmds->ignore ? 0 : 1;
+		if (!cmds->ignore && is_quote(str[i]))
+			cmds->quote = quote_activer(str[i], cmds->quote);
+		if (str[i] == x && j != -1 && !cmds->quote && !cmds->ignore)
 		{
 			if (!(split[k++] = ft_substr(str, j, i - j)))
 				return (ft_free(split));
@@ -50,8 +48,7 @@ static char		**ft_index(char **split, char *str, char x)
 		}
 		else if (str[i] != x && j == -1)
 			j = i;
-		if (str[i] != '\\' && ignore)
-			ignore = 0;
+		(str[i] != '\\' && cmds->ignore) ? cmds->ignore = 0 : 0;
 	}
 	if (j != -1)
 		if (!(split[k] = ft_substr(str, j, i - j)))
@@ -59,26 +56,24 @@ static char		**ft_index(char **split, char *str, char x)
 	return (split);
 }
 
-static int		len_wrd(char *str, char c)
+static int		len_arg(char *str, char c, t_cmds *cmds)
 {
 	int			i;
 	int			start;
 	int			len;
-	int			quote;
-	int			ignore;
 
-	i = 0;
+	i = -1;
 	len = 0;
 	start = 0;
-	quote = 0;
-	ignore = 0;
-	while (str[i])
+	cmds->quote = 0;
+	cmds->ignore = 0;
+	while (str[++i])
 	{
-		if (str[i] == '\\' && quote != 1)
-			ignore = ignore ? 0 : 1;
-		if (!ignore && is_quote(str[i]))
-			quote = quote_activer(str[i], quote);
-		if (str[i] == c && !ignore && !quote)
+		if (str[i] == '\\' && cmds->quote != 1)
+			cmds->ignore = cmds->ignore ? 0 : 1;
+		if (!cmds->ignore && is_quote(str[i]))
+			cmds->quote = quote_activer(str[i], cmds->quote);
+		if (str[i] == c && !cmds->ignore && !cmds->quote)
 		{
 			if (start == 1)
 			{
@@ -88,16 +83,13 @@ static int		len_wrd(char *str, char c)
 		}
 		else if (str[i] != c)
 			start = 1;
-		if (str[i] != '\\' && ignore)
-			ignore = 0;
-		i++;
+		(str[i] != '\\' && cmds->ignore) ? cmds->ignore = 0 : 0;
 	}
-	if (start)
-		len++;
+	(start) ? len++ : 0;
 	return (len);
 }
 
-char			**split_cmd(char const *str, char c)
+char			**split_cmd(char const *str, char c, t_cmds *cmds)
 {
 	char		**res;
 	size_t		len;
@@ -109,10 +101,10 @@ char			**split_cmd(char const *str, char c)
 	len = 0;
 	if (!str)
 		return (NULL);
-	len = len_wrd((char *)str, c);
+	len = len_arg((char *)str, c, cmds);
 	if (!(res = (char **)malloc(sizeof(char *) * (len + 1))))
 		return (NULL);
-	res = ft_index(res, (char *)str, c);
+	res = ft_sp_index(res, (char *)str, c, cmds);
 	while (++i < (int)len)
 		res[i] = ft_remove_quotes(res[i]);
 	if (!res)
