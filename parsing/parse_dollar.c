@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:24 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/11 14:40:07 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/12 14:22:13 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@
 // 		puts("CTRL-/");
 // 	return (cmds->exit_status);
 // }
+
+int		is_quote_s(int c)
+{
+	if (c == '\'')
+		return (1);
+	return (0);
+}
 
 char	*get_env_val(t_cmds *cmds, char *join_arg)
 {
@@ -86,13 +93,10 @@ int		get_q(char	**line_list)
 	i = -1;
 	while ((*line_list)[++i])
 	{
-		if (ft_strchr("\"'", (*line_list)[i]))
-		{
-			if ((*line_list)[i] == '\"')
-				return (2);
-			else if ((*line_list)[i] == '\'')
-				return (1);
-		}
+		if ((*line_list)[i] == '\"')
+			return (2);
+		else if ((*line_list)[i] == '\'')
+			return (1);
 	}
 	return (0);
 }
@@ -107,29 +111,25 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 	char		tmp2[2];
 	char		*arg;
 	char		*idoll;
-
+	char		is_in_dq;
 	i = -1;
 	tmp = NULL;
 	tmp1 = NULL;
+	is_in_dq = 0;
 	len = ft_strlen(*line_list);
 	arg = ft_strdup("");
 	idoll = ft_strdup("");
-	while ((*line_list)[++i])
-	{	
-		if (((i && !ft_strchr("\"'", (*line_list)[i - 1])) || !i) && ((*line_list)[i] == '$') && 
-		((*line_list)[i + 1] && ft_strchr("\"'", (*line_list)[i + 1])))
-			i++;
-		tmp2[0] = (*line_list)[i];
-		tmp2[1] = '\0';
-		idoll = ft_strjoin(idoll, tmp2);
-	}
-	*line_list = ft_strdup(idoll);
-	(idoll != NULL) ? free(idoll) : 0;
 	i = -1;
+	cmds->quote = 0;
+    cmds->ignore = 0;
 	while ((*line_list)[++i])
 	{
-		// ==> \\$ENV need to be fixed
-		if ((*line_list)[i] == '$' && ((i && (*line_list)[i - 1] != '\\') || !i) && get_q(line_list) != 1)
+		if ((*line_list)[i] == '\\' && cmds->quote != 1)
+			cmds->ignore = cmds->ignore ? 0 : 1;
+		(!cmds->ignore && (*line_list)[i] == '"') ? is_in_dq = !is_in_dq : 0;
+		if (!is_in_dq && !cmds->ignore && is_quote_s((*line_list)[i]) == 1)
+			cmds->quote = quote_activer((*line_list)[i], cmds->quote);
+		if ((*line_list)[i] == '$' && !cmds->ignore && !cmds->quote)
 		{
 			l = b_point(*line_list + i);
 			cmds->join_arg = ft_substr(*line_list + i, 0, l);
@@ -147,6 +147,7 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 			(arg) ? free(arg) : 0;
 			arg = ft_strdup(tmp1);
 		}
+		((*line_list)[i] != '\\' && cmds->ignore) ? cmds->ignore = 0 : 0;
 	}
 	*line_list = ft_strdup(arg);
 	(arg) ? free(arg) : 0;

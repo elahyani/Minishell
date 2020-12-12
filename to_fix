@@ -103,3 +103,7 @@ exit g h and try exit 8 9
 =========================
 signals:
 try ctrl-C 
+
+\\$ENV
+''$ENV
+"'$ENV'"
