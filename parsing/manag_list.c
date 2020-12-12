@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manag_list.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:53:48 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/08 11:11:39 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/12 19:40:42 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ t_cmd_list	*list_line_cmds(t_cmd_list *list, char *data, int k)
 		head->data = data;
 	else
 		head->line = data;
+	head->p = 0;
 	head->next = list ? head->next : NULL;
 	head->prev = list ? head->prev : NULL;
 	head->start = list ? head->start : 0;

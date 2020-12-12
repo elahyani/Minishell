@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/12 11:31:06 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/12 20:29:02 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,24 @@
 # define MINISHELL_H
 
 # include <stdio.h>
+# include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <sys/stat.h>
+# include <sys/wait.h>
+# include <sys/errno.h>
 # include "get_next_line/get_next_line.h"
 # include "libft/libft.h"
+
+typedef struct		s_pipe
+{
+	int		backup[3];
+	int		fdin;
+	int		fdout;
+	int		file_num;
+	int		*fds;
+	int		*pids;
+}					t_pipe;
 
 typedef struct		s_cmd_list
 {
@@ -26,6 +40,7 @@ typedef struct		s_cmd_list
 	int					start;
 	int					end;
 	char				*line;
+	int					p;
 	char				redir;
 	struct s_cmd_list	*next;
 	struct s_cmd_list	*prev;
@@ -39,6 +54,7 @@ typedef struct	s_cmds
 	int			cd;
 	int			minus;
 	int			exp_oldp;
+	int			num_pipe;
 	//char		**exp;
 	//int			exp_index;
 
@@ -61,6 +77,7 @@ typedef struct	s_cmds
 	char		**split_cmd;
 	char		**f_parse_line;
 	t_cmd_list	*cmd_list;
+	t_pipe		pipe;
 }				t_cmds;
 
 
@@ -73,14 +90,17 @@ void		update_list(t_cmd_list **head, t_cmd_list **next ,t_cmd_list *new);
 void		add_front(t_cmd_list **head, t_cmd_list *new);
 t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head);
 void		cmd_cd(t_cmd_list *list, t_cmds *cmds);
-void		cmd_env(t_cmds *cmds);
+
+//void		cmd_env(t_cmds *cmds);
+int			cmd_env(t_cmds *cmds, t_cmd_list *list);
+
 void	    cmd_pwd(t_cmds *cmds);
 void		cmd_echo(t_cmd_list *list);
 void		cmd_exit();
 void		print_cmds(t_cmd_list *cmds);
 void		cmd_export(t_cmd_list *list, t_cmds *cmds);
 void		cmd_unset(t_cmd_list *list, t_cmds *cmds);
-void		get_env(t_cmds *cmds);
+void		get_home_env(t_cmds *cmds);
 char		**add_to_arr(char **arr, char *value, int opt);
 char		**ft_envdup(char **arr);
 char		**ft_setenv(char *var, char *path, char **env);
@@ -88,6 +108,21 @@ int			ft_getenv(char *name, char **env);
 char		**ft_add_to_arr(char *value, char **arr);
 char		**ft_get_arr(char *value, char **arr);
 char		*ft_get_first(const char *s, int c);
+
+pid_t			exec_child(t_cmds *cmds, t_cmd_list *list);
+char	*get_bin_path(char *cmdfile, char **env);
+//char		*ft_strcat(char *dest, char *src);
+
+
+///////////////////////////////////////////////////
+//char	*get_bin_path(char *filename, char **env);
+//char	*try_path(char *filename, char *dir);
+//int		ft_access(char *path, int mode);
+///////////////////////////////////////////////////
+
+
+
+
 char		*ft_strcat(char *dest, char *src);	
 char		*parse_dollar(t_cmds *cmds, char **line_list);
 // int			check_for_q(char *str, int j);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+         #
+#    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/12/10 14:23:50 by elahyani         ###   ########.fr        #
+#    Updated: 2020/12/12 11:58:42 by ichejra          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,12 @@ NAME = minishell.a
 
 SRCS =	execution.c \
 		exp_cmd.c \
+		cd_cmd.c \
+		echo_cmd.c \
+		env_cmd.c \
+		pwd_cmd.c \
+		unset_cmd.c \
+		exec_child.c \
 		debug.c \
 		parsing/manag_list.c \
 		parsing/parse_line.c \
