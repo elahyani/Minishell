@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_list_line.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:31 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/11 14:35:54 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/12 19:40:54 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	parse_pipe(char **line, t_cmd_list **hd, int *i)
 {
 	(!(*hd)->prev || ((*hd)->prev && (*hd)->prev->end)) ? (*hd)->start = 1 : 0;
 	(*line)[*i] = '\0';
+	// (*hd)->num
+	(*hd)->p = 1;
 	if ((*hd)->next)
 	{
 		update_list(hd, &(*hd)->next, list_line_cmds(NULL, *line + *i + 1, 1));
@@ -56,6 +58,7 @@ void	parse_list_line(char **line, t_cmd_list *list, t_cmds *cmds)
 	int			len;
 	int			i;
 
+	cmds->num_pipe = 0;
 	parse_dollar(cmds, line);
 	len = ft_strlen(*line);
 	hd = list_line_cmds(list, *line, 1);
@@ -68,7 +71,7 @@ void	parse_list_line(char **line, t_cmd_list *list, t_cmds *cmds)
 			cmds->ignore = cmds->ignore ? 0 : 1;
 		if (!cmds->ignore && is_quote((*line)[i]))
 			cmds->quote = quote_activer((*line)[i], cmds->quote);
-		if ((*line)[i + 1] == '\0' && (hd->end = 1) && !cmds->ignore && !cmds->quote)
+		if (((*line)[i + 1] == ';' || (*line)[i + 1] == '\0') && (hd->end = 1) && !cmds->ignore && !cmds->quote)
 		{
 			((hd->prev && hd->prev->end) || !hd->prev) ? hd->start = 1 : 0;
 			if ((*line)[i] == ';')

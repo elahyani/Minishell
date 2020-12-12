@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:33:32 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/12 12:07:53 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/12 19:29:31 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	cmd_echo(t_cmd_list *list)
 	ret = 0;
 	n = 0;
 	i = 1;
+	//puts("bbb");
 	if (!list->args[1])
 	{
 		ft_putchar_fd('\n', 1);
@@ -64,12 +65,13 @@ void	cmd_echo(t_cmd_list *list)
 		if (!n)
 			while (list->args[i] && (ret = check_n_flag(list->args[i], &n)))
 				i++;
-		print_args(list->args, i);
-		// if (ft_strcmp(list->args[i + 1], ">"))
-		// {
-		// 	ft_putchar_fd('\n', 1);
-		// 	break ;
-		// }
+		//if (!list->redir)
+			print_args(list->args, i);
+		/* if (list->prev->redir)
+		{
+			ft_putchar_fd('\n', 1);
+			break ;
+		} */
 		if ((!list->args[i + 1] && !n))
 			ft_putchar_fd('\n', 1);
 		i++;

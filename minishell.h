@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/12 11:58:16 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/12 18:48:12 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct		s_cmd_list
 	int					start;
 	int					end;
 	char				*line;
+	int					p;
 	char				redir;
 	struct s_cmd_list	*next;
 	struct s_cmd_list	*prev;

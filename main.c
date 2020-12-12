@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/12 12:12:14 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/12 20:02:43 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,6 @@ int		wait_child(t_cmds *cmds, pid_t pid)
 	if (!cmds->num_pipe)
 	{
 		waitpid(pid, &status, 0);
-
 	}
 	else
 	{
@@ -279,76 +278,118 @@ static t_cmd_list *skip_append(t_cmd_list *list)
 	return (list);
 }
 
+int		get_num_pipes(t_cmd_list *cmds)
+{
+	int i;
+
+	i = 0;
+	while (cmds->next)
+	{
+		if (cmds->end)
+			break ;
+		if (!cmds->redir)
+			i++;
+		cmds = cmds->next;	
+	}
+	return (i);
+}
+
+t_cmd_list	*skip_redir(t_cmd_list *cmds)
+{
+	while (cmds && cmds->redir)
+		cmds = cmds->next;
+	return (cmds);
+}
+
 t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 {
 	//char *path;
 	//int ret = 0;
-	pid_t pid;   
-	cmds->num_pipe = 2;
-	while (head)
+	pid_t pid;
+	// while (head)
+	// {
+		///////////////////////////////////////////////////
+	head->args = split_cmd(head->data, ' ', cmds);
+	// puts(head->data);
+	// printf("%d\n", cmds->num_pipe);
+	cmds->num_pipe = get_num_pipes(head);
+	// printf("%d\n", cmds->num_pipe);
+	cmds->pipe.file_num = 0;
+	if (cmds->num_pipe)
+		cmds->pipe.pids = malloc(sizeof(int) * (cmds->num_pipe + 1));
+	//head = excute_command_by_order(cmds, cmds);
+	// printf("0|%s|\n", head->args[0]);
+	// printf("1|%s|\n", head->args[1]);
+	// printf("2|%s|\n", head->args[2]);
+	// printf("3|%s|\n", head->args[3]);
+	
+	if ((head->next && !head->end) || !is_builtin(head->args[0]))
+	{
+		cmds->pipe.fds = pipe_fds(cmds->num_pipe, cmds->pipe.fds); //pipe_fds(cmds->num_pipe, cmds->pipe.fds)
+		// printf("%d %d\n", cmds->pipe.fds[0] , cmds->pipe.fds[1]);
+		save_fds(cmds->pipe.backup);
+		cmds->pipe.file_num = 0;
+		while (head)
+		{
+			head->args = split_cmd(head->data, ' ', cmds);
+			// puts(head->args[1]);
+			//printf("head->data ==> |%s|\n", head->data);
+			//if (cmds->num_pipe)
+			//{
+			//if (head->redir)
+			//{
+				// puts("jj");
+				pid = exec_child(cmds, head);
+				//head = skip_append(head);
+				head = skip_redir(head);
+
+				cmds->pipe.file_num += 2;
+					
+			//}
+			//}
+			if (head->end)
+				break ;
+			// else
+				head = head->next;
+		}
+		restore_fds(cmds->pipe.backup);
+		get_cmd_help(cmds, head, pid);
+			//close_fds(cmds->pipe.fds, cmds->num_pipe);
+			//close_fds(cmds->pipe.fds, 1);
+	}
+	else if (head->args[0])
 	{
 		///////////////////////////////////////////////////
-		head->args = split_cmd(head->data, ' ', cmds);
-		cmds->pipe.file_num = 0;
-		if (cmds->num_pipe)
-			cmds->pipe.pids = malloc(sizeof(int) * (cmds->num_pipe + 1));
-		//head = excute_command_by_order(cmds, cmds);
-		printf("0|%s|\n", head->args[0]);
-		printf("1|%s|\n", head->args[1]);
-		printf("2|%s|\n", head->args[2]);
-		printf("3|%s|\n", head->args[3]);
-		if ((head->next && !head->end))
+		if (ft_strcmp(head->args[0], "cd") == 0)
 		{
-			cmds->pipe.fds =  pipe_fds(cmds->num_pipe, cmds->pipe.fds); //pipe_fds(cmds->num_pipe, cmds->pipe.fds)
-			save_fds(cmds->pipe.backup);
-			while (head)
-			{
-				//printf("head->data ==> |%s|\n", head->data);
-				//if (cmds->num_pipe)
-				//{
-					pid = exec_child(cmds, head);
-					head = skip_append(head);
-					cmds->pipe.file_num += 2;
-				//}
-				if (head->end)
-					break ;
-				else
-					head = head->next;
-			}
-			restore_fds(cmds->pipe.backup);
-			get_cmd_help(cmds, head, pid);
-				//close_fds(cmds->pipe.fds, cmds->num_pipe);
-				//close_fds(cmds->pipe.fds, 1);
+			cmd_cd(head, cmds);
 		}
-		else if (head->args[0])
+		else if (ft_strcmp(head->args[0], "pwd") == 0)
+			cmd_pwd(cmds);
+		else if (ft_strcmp(head->args[0], "export") == 0)
+			cmd_export(head, cmds);
+		else if (ft_strcmp(head->args[0], "unset") == 0)
+			cmd_unset(head, cmds);
+		else if (ft_strcmp(head->args[0], "exit") == 0)
+			cmd_exit();
+		else if (ft_strcmp(head->args[0], "echo") == 0)
 		{
-			///////////////////////////////////////////////////
-			if (ft_strcmp(head->args[0], "cd") == 0)
-			{
-				cmd_cd(head, cmds);
-			}
-			else if (ft_strcmp(head->args[0], "pwd") == 0)
-				cmd_pwd(cmds);
-			else if (ft_strcmp(head->args[0], "export") == 0)
-				cmd_export(head, cmds);
-			else if (ft_strcmp(head->args[0], "unset") == 0)
-				cmd_unset(head, cmds);
-			else if (ft_strcmp(head->args[0], "exit") == 0)
-				cmd_exit();
-			else if (ft_strcmp(head->args[0], "echo") == 0)
-				cmd_echo(head);
-			else if (ft_strcmp(head->args[0], "env") == 0)
-				cmd_env(cmds, head);
-			else
-			{
-				check_cmd(cmds, head);
-			}
+			cmd_echo(head);
 		}
-		printf("redi===|%c|\n", head->redir);
-		if (head->end)
-			break ;
-		head = head->next;
+		else if (ft_strcmp(head->args[0], "env") == 0)
+			cmd_env(cmds, head);
+		// else
+		// {
+		// 	check_cmd(cmds, head);
+		// }
 	}
+	// puts(head->args[1]);
+	// puts("salut");
+
+		// if (head->end)
+		// 	break ;
+		// head = head->next;
+	// }
 	return head;
 }
 
@@ -402,11 +443,14 @@ int		main(int argc, char **argv, char **envp)
 				list = cmds->cmd_list;
 				while (list)
 				{
-					//printf("***** LINE %s\n", list->line);
+					// printf("***** LINE %s\n", list->line);
 					if (!list->line)
 						break ;
 					parse_list_line(&list->line, list, cmds);
 					list = get_cmd(cmds, list);
+					// puts(list->data);
+					// if (list->end)
+					// 	break ;
 					if (list)
 						list = list->next;
 				}

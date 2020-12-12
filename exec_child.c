@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 10:26:16 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/12 12:20:47 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/12 20:03:41 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,21 @@ int open_input(char *file)
 	return (fd);
 }
 
-int		backward_redir(t_cmd_list *list)
+int		backward_redir(t_cmd_list *list, t_cmds *cmds)
 {
 	int i;
 	//int j;
 	char *file;
 	struct stat file_stat;
 
-	i = 1;
-	file = NULL;
+	i = -1;
 	//list = skip_append(list);
-	while (ft_strcmp(list->args[i], "<"))
-		i++;
-	if (list->args[++i])
+	/* while (ft_strcmp(list->args[i], "<"))
+		i++; */
+	//printf("========|%s|\n", list->args[1]);
+	list->args = split_cmd(list->data, ' ', cmds);
+	//printf("========|%s|\n", list->next->args[0]);
+	while (list->args[++i])
 	{
 		file = list->args[i];
 		if (stat(file, &file_stat) < 0)
@@ -74,21 +76,7 @@ int		backward_redir(t_cmd_list *list)
 			ft_putendl_fd(": No such file or directory", 1);
 			exit (1);
 		}
-		
 	}
-	//printf("|%d|===file===|%s|\n", ++i, list->args[++i]);
-	//puts("======================================================");
-	// while (list->args[++i])
-	// {
-	// 	printf("|%d|===file===|%s|\n", i, list->args[i]);
-	// }
-	//puts("======================================================");
-	//j = -1;	
-	/* while (list->next->args[++j])
-	{
-		printf("file===|%s|\n", list->next->args[j]);
-	} */
-	//puts("======================================================");
 	return (open_input(file));
 	
 }
@@ -99,21 +87,21 @@ void	exec_io_redi(t_cmds *cmds, t_cmd_list *list)
 	k = 0;
 	t_cmd_list *tmp;
 	tmp = list;
-	while (list && list->redir)
+	while (tmp && tmp->redir)
 	{
-		if (list->redir == '>' || list->redir == 'a')
+		if (tmp->redir == '>' || tmp->redir == 'a')
 		{
 			//cmds->pipe.fdout = forward_redir();
 			//if (!cmds->pipe.fdout)
 			k = 4;
 				
 		}
-		else if (list->redir == '<')
+		else if (tmp->redir == '<')
 		{
-			cmds->pipe.fdin = backward_redir(tmp);
+			cmds->pipe.fdin = backward_redir(tmp->next, cmds);
 			//if (!cmds->pipe.fdin)
 		}
-		list = list->next;
+		tmp = tmp->next;
 	}
 	redir_fd_io(cmds);
 }
@@ -132,9 +120,9 @@ static void	close_pipes(int *fds, int num_pipe)
 
 int		*create_fds(t_cmd_list *list, t_cmds *cmds,int j, int *fds)
 {
-	// int num = 1;
-	// if (cmds->num_pipe)	
-	// 	num = 2;
+	int num = 1;
+	if (cmds->num_pipe)	
+		num = 2;
 	if (j != 0)
 	{
 		if (dup2(fds[j - 2], 0) < 0)
@@ -145,9 +133,11 @@ int		*create_fds(t_cmd_list *list, t_cmds *cmds,int j, int *fds)
 			
 		}
 	}
+	// printf("%d\n", list->p);
 	//if (list->next && ((((!list->start && !list->end) || (!list->start && list->end)) || (!list->next->end))))
-	if (list->next && (cmds->num_pipe || !list->next->end))
+	if (list->next && !list->end && (list->p || !list->next->end))
 	{
+		// puts("here");
 		if (dup2(fds[j + 1], 1) < 0)
 		{
 			ft_putstr_fd("dup2 Error", 1);
@@ -169,16 +159,18 @@ pid_t			exec_child(t_cmds *cmds, t_cmd_list *list)
 		cmds->pipe.fdin = 0;
 		cmds->pipe.fdout = 0;
 		(cmds->num_pipe) ? cmds->pipe.fds = create_fds(list, cmds,cmds->pipe.file_num, cmds->pipe.fds) : 0;
-		puts("here --------------------------------");
+		// puts("here --------------------------------");
 		close_pipes(cmds->pipe.fds, cmds->num_pipe);
 		// if (list->prev->redir)
 		if (list->redir)
 		{
-			puts("am in");
+			// puts("am in");
 			exec_io_redi(cmds, list);
 		}
-		list->args = ft_split(list->data, ' ');
-		if (list->args[0])
+		// list->args = split_cmd(list->data, ' ', cmds);
+		// printf("%s\n", list->args[0]);
+		//&& list->prev && !list->prev->redir
+		if (list->args[0] && (!list->prev || (list->prev  && !list->prev->redir)))
 		{
 			// puts("yayayay");
 			// printf("list === |%s|\n", list->args[0]);
@@ -206,7 +198,7 @@ pid_t			exec_child(t_cmds *cmds, t_cmd_list *list)
 					ft_putstr_fd("minishell: ", 1);
 					ft_putstr_fd(list->args[0], 1);
 					ft_putendl_fd(": command not found", 1);
-					exit(0); //function that returns code error
+					exit(1); //function that returns code error
 				}
 			}
 		}
