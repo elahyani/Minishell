@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   manag_stx_err.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 13:10:55 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/10 14:06:04 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/12 12:00:34 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int		check_cmd(char *cmd)
+int		check_cmd_sep(char *cmd)
 {
 	int		i;
 
@@ -65,7 +65,7 @@ int		check_redir(char **ln, t_cmds *cmds)
 		if (((*ln)[i] == '>' || (*ln)[i] == '<') &&
 		!cmds->ignore && !cmds->quote)
 		{
-			if (check_cmd(*ln + i + 1))
+			if (check_cmd_sep(*ln + i + 1))
 				return (get_sy_err());
 			else if (((*ln)[i] == '>' && (*ln)[i + 1] == '>' &&
 			(*ln)[i + 2] == '>') || ((*ln)[i] == '<' && (*ln)[i + 1] == '<'))
@@ -95,7 +95,7 @@ int		semi_pipe_stx_err(char **ln, t_cmds *cmds)
 			j = -1;
 			if ((*ln)[i] == '|' && !(*ln)[i + 1])
 				return (get_sy_err());
-			else if (check_cmd(iscmd))
+			else if (check_cmd_sep(iscmd))
 				return (get_sy_err());
 		}
 		(j == -1) ? j = i : 0;

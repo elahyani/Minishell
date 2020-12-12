@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2020/12/10 10:55:23 by ichejra          ###   ########.fr       */
-=======
-/*   Updated: 2020/12/11 11:34:57 by elahyani         ###   ########.fr       */
->>>>>>> d333ef67e309afadb534b47da7ad6c9c2d49a2ea
+/*   Updated: 2020/12/12 11:58:16 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +107,6 @@ int			ft_getenv(char *name, char **env);
 char		**ft_add_to_arr(char *value, char **arr);
 char		**ft_get_arr(char *value, char **arr);
 char		*ft_get_first(const char *s, int c);
-<<<<<<< HEAD
 
 pid_t			exec_child(t_cmds *cmds, t_cmd_list *list);
 char	*get_bin_path(char *cmdfile, char **env);
@@ -127,7 +122,6 @@ char	*get_bin_path(char *cmdfile, char **env);
 
 
 
-=======
 char		*ft_strcat(char *dest, char *src);	
 char		*parse_dollar(t_cmds *cmds, char **line_list);
 int			check_for_q(char *str, int j);
@@ -139,5 +133,4 @@ int			handle_stx_err(char **ln, t_cmds *cmds);
 int			check_redir(char **ln, t_cmds *cmds);
 int			check_q(char **ln, t_cmds *cmds);
 int			get_sy_err();
->>>>>>> d333ef67e309afadb534b47da7ad6c9c2d49a2ea
 #endif

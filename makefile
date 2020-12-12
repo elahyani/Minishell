@@ -3,14 +3,10 @@
 #                                                         :::      ::::::::    #
 #    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+         #
+#    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-<<<<<<< HEAD
-#    Updated: 2020/12/04 13:19:35 by ichejra          ###   ########.fr        #
-=======
-#    Updated: 2020/12/10 14:23:50 by elahyani         ###   ########.fr        #
->>>>>>> d333ef67e309afadb534b47da7ad6c9c2d49a2ea
+#    Updated: 2020/12/12 11:58:42 by ichejra          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

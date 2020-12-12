@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 10:26:16 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/12 11:46:49 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/12 12:20:47 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,10 +169,12 @@ pid_t			exec_child(t_cmds *cmds, t_cmd_list *list)
 		cmds->pipe.fdin = 0;
 		cmds->pipe.fdout = 0;
 		(cmds->num_pipe) ? cmds->pipe.fds = create_fds(list, cmds,cmds->pipe.file_num, cmds->pipe.fds) : 0;
+		puts("here --------------------------------");
 		close_pipes(cmds->pipe.fds, cmds->num_pipe);
-		//puts("here");
+		// if (list->prev->redir)
 		if (list->redir)
 		{
+			puts("am in");
 			exec_io_redi(cmds, list);
 		}
 		list->args = ft_split(list->data, ' ');
