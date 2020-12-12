@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:31 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/12 14:22:27 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/12 17:34:36 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ void	parse_list_line(char **line, t_cmd_list *list, t_cmds *cmds)
 			cmds->ignore = cmds->ignore ? 0 : 1;
 		if (!cmds->ignore && is_quote((*line)[i]))
 			cmds->quote = quote_activer((*line)[i], cmds->quote);
-		if (((*line)[i] == ';' || (*line)[i + 1] == '\0') && (hd->end = 1) && !cmds->ignore && !cmds->quote)
+		if (((*line)[i] == ';' || (*line)[i + 1] == '\0') && (hd->end = 1) &&
+		!cmds->ignore && !cmds->quote)
 		{
 			((hd->prev && hd->prev->end) || !hd->prev) ? hd->start = 1 : 0;
 			if ((*line)[i] == ';')

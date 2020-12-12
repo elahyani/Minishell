@@ -10,12 +10,13 @@
 => valgrind				 		 (√)
 => stx err: ['';], [''|'';''|'';'';';';'|'] [√]
 
-=> parse_dollar:line 131
+=> parse_dollar:line 131 [√]
 ________________________________________________________________________Dollar
 $????????????? [x]
 echo hello$?he [x] 
+echo $"PWD" [x]
+
 echo "$"PWD [√]
-echo $"PWD" [√]
 echo ' pp"$PWD" ' [√]
 echo " pp'$PWD' " [√]
 echo $ [√]
@@ -30,8 +31,6 @@ ____________________________________________________________________syntax err
 [√]____________	[<] , [>] , [>>], [cmd >], [cmd <]
 [√]____________	["], ['], ["cmd], ['cmd], [cmd'], [cmd"]
 [√]____________ [\\] , [\], [cmd\]
-
-[-]____________ [(], [)], [()]
 
 -----------------------------------------------
 .\/Desktop
@@ -59,7 +58,7 @@ cd ~//////////////////////////////////Path
 cd /
 cd //
 =========================
-[√] echo -n 
+[√] echo -n
 [√] echo -n -n -n -n
 [√] echo -nnnnnnn
 [√] echo $?
@@ -67,6 +66,7 @@ cd //
 [√] echo hello$PWD
 [√] echo $PWD
 [√] echo "$"PWD
+[√] echo $"PWD"
 [√] echo "$PWD"
 [√] echo '$PWD'
 [√] echo '$'PWD
@@ -74,8 +74,8 @@ cd //
 [√] echo '" '$PWD' "
 [√] echo \$\$\$\$
 [√] echo \anychar\anychar\anychar
-[x] echo \'\'\'\'
-[x] echo \"\"\"
+[√] echo \'\'\'\'
+[√] echo \"\"\"
 [√] echo \\"$PWD
 =========================
 \\
@@ -103,7 +103,3 @@ exit g h and try exit 8 9
 =========================
 signals:
 try ctrl-C 
-
-\\$ENV
-''$ENV
-"'$ENV'"
