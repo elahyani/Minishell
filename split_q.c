@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/19 12:45:33 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/17 14:52:29 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/08 14:26:44 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,8 +144,10 @@ int			check_for_q(char *str, int j)
 	j = 0;
 	q = *str;
 	while (str[++j])
+	{
 		if (str[j] == q && ((j && str[j - 1] != '\\') || !j))
 			break ;
+	}
 	if (str[j])
 		return (j);
 	return (-1);

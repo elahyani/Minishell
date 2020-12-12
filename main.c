@@ -1,4 +1,4 @@
-	/* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/07 12:17:38 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/11 11:34:37 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,6 +280,7 @@ static t_cmd_list *skip_append(t_cmd_list *list)
 }
 
 t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
+<<<<<<< HEAD
 {
 	//char *path;
 	//int ret = 0;
@@ -298,6 +299,24 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 		printf("2|%s|\n", head->args[2]);
 		printf("3|%s|\n", head->args[3]);
 		if ((head->next && !head->end) || head->redir)
+=======
+{	
+	//puts("here");
+	while (head)
+	{
+		head->args = split_cmd(head->data, ' ', cmds);
+		// puts("==========================");
+		// printf("cmd->args[0] = |%s|\n", head->args[0]);
+		// printf("cmd->args[1] = |%s|\n", head->args[1]);
+		// puts("==========================");
+		if (ft_strcmp(head->args[0], "cd") == 0)
+			cmd_cd(head, cmds);
+		else if (ft_strcmp(head->args[0], "pwd") == 0)
+			cmd_pwd(cmds);
+		else if (ft_strcmp(head->args[0], "export") == 0)
+			cmd_export(head, cmds);
+		else if (ft_strcmp(head->args[0], "unset") == 0)
+>>>>>>> d333ef67e309afadb534b47da7ad6c9c2d49a2ea
 		{
 			cmds->pipe.fds =  pipe_fds(cmds->num_pipe, cmds->pipe.fds); //pipe_fds(cmds->num_pipe, cmds->pipe.fds)
 			save_fds(cmds->pipe.backup);
@@ -322,6 +341,7 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 		}
 		else if (head->args[0])
 		{
+<<<<<<< HEAD
 			///////////////////////////////////////////////////
 			if (ft_strcmp(head->args[0], "cd") == 0)
 			{
@@ -343,6 +363,11 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 			{
 				check_cmd(cmds, head);
 			}
+=======
+			ft_putstr_fd("minishell: ", 1);
+			ft_putstr_fd(ft_strtrim(head->args[0], "	"), 1);
+			ft_putendl_fd(": command not found", 1);
+>>>>>>> d333ef67e309afadb534b47da7ad6c9c2d49a2ea
 		}
 		printf("redi===|%c|\n", head->redir);
 		if (head->end)
@@ -377,7 +402,6 @@ int		main(int argc, char **argv, char **envp)
 
     cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmd_list = NULL;
-    // list = (t_cmd_list *)malloc(sizeof(t_cmd_list));
 	cmds->index = 0;
 	cmds->oldpwd = NULL;
 	cmds->cd = 0;
@@ -390,8 +414,14 @@ int		main(int argc, char **argv, char **envp)
 	cmds->minus = 0;
     cmds->env_val = NULL;
     cmds->env_arg = NULL;
+<<<<<<< HEAD
     // list->line = NULL;
     ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
+=======
+	cmds->quote = 0;
+	cmds->ignore = 0;
+	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
+>>>>>>> d333ef67e309afadb534b47da7ad6c9c2d49a2ea
     while ((status = get_next_line(0, &line)) > 0)
     {
         if (ft_strcmp(line, ""))
@@ -407,8 +437,13 @@ int		main(int argc, char **argv, char **envp)
 						break ;
 					parse_list_line(&list->line, list, cmds);
 					list = get_cmd(cmds, list);
+<<<<<<< HEAD
 					//puts("pppppppp");
 					list = list->next;
+=======
+					if (list)
+						list = list->next;
+>>>>>>> d333ef67e309afadb534b47da7ad6c9c2d49a2ea
 				}
             	//print_cmds(cmds->cmd_list);
 				//puts("c");
@@ -416,8 +451,16 @@ int		main(int argc, char **argv, char **envp)
 			}
             free(line);
         }
+<<<<<<< HEAD
         ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
+=======
+		ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
+>>>>>>> d333ef67e309afadb534b47da7ad6c9c2d49a2ea
     }
-	// free cmds
+	//free_cmds(cmds);
     return (0);
 }
+
+//	free leaks
+//	manag sy err
+//	$?

@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parse_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:28 by elahyani          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2020/12/11 13:37:52 by ichejra          ###   ########.fr       */
+=======
+/*   Updated: 2020/12/10 14:09:27 by elahyani         ###   ########.fr       */
+>>>>>>> d333ef67e309afadb534b47da7ad6c9c2d49a2ea
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +20,12 @@ int		get_sy_err()
 {
 	// t_cmd_list *tmp;
 	
-	puts("________________1");
+	//puts("________________1");
 	ft_putendl_fd("minishell: syntax error", 1);
 	// if (cmds->cmd_list)
 	// {
 	// 	puts("________________2");
-	// 	while (cmds->cmd_list)
+	// 	while (cmds->cmd_list)b
 	// 	{
 	// 		puts("________________3");
 	// 		tmp = cmds->cmd_list->next;
@@ -32,76 +36,38 @@ int		get_sy_err()
 	return (1);
 }
 
-int		handle_syntax_err(char **line)
+void	parse_line(char **ln, t_cmds *cmds)
 {
-	int		quote;
-	int		i;
+	int			len;
+	int			i;
+	t_cmd_list	*head;
 
-	quote = 0;
-	i = -1;
-	while ((*line)[++i])
-	{
-		if ((*line)[0] == ';' || ((*line)[i] == ';' && (*line)[i + 1] == ';' && !(*line)[i + 2]))
-		{
-			return (get_sy_err());
-		}
-		else if ((*line)[0] == '|' || ((*line)[i] == '|' && (!(*line)[i + 1])))
-		{
-			return (get_sy_err());
-		}
-		else if ((*line)[i] == '\\' && !(*line)[i + 1])
-		{
-			return (get_sy_err());
-		}
-		else if (((*line)[i] == '>' && !(*line)[i + 1]) || ((*line)[i] == '<' && !(*line)[i + 1]))
-		{
-			return (get_sy_err());	
-		}
-		else if (ft_strchr("\"'", (*line)[i]))
-		{
-			if ((*line)[i - 1] != '\\')
-				quote++;
-		}
-	}
-	if (quote % 2 != 0)
-		return (get_sy_err());
-	return (0);
-}
-
-void	parse_line(char	**line, t_cmds *cmds)
-{	
-	t_cmd_list *head;
-	int		len;
-	int		i;
-	int		err;
-
-	if ((err = handle_syntax_err(line)))
+	if (handle_stx_err(ln, cmds) || check_q(ln, cmds) || check_redir(ln, cmds))
 		return ;
-	len = ft_strlen(*line);
+	len = ft_strlen(*ln);
 	i = -1;
-	head = list_cmds(NULL, *line, 0);
-	while (++i <= len)
+	head = list_cmds(NULL, *ln, 0);
+	cmds->quote = 0;
+	cmds->ignore = 0;
+	while ((*ln)[++i])
 	{
-		if ((*line)[i] == ';' || (*line)[i] == '\0')
+		if ((*ln)[i] == '\\' && cmds->quote != 1)
+			cmds->ignore = cmds->ignore ? 0 : 1;
+		if (!cmds->ignore && is_quote((*ln)[i]))
+			cmds->quote = quote_activer((*ln)[i], cmds->quote);
+		if (!cmds->quote && !cmds->ignore && (((*ln)[i] == ';' &&
+		(*ln)[i - 1] != '\\') || !(*ln)[i + 1]))
 		{
-			if ((*line)[i] == ';')
+			if ((*ln)[i] == ';')
 			{
-				(*line)[i] = '\0';
-				add_front(&head, list_cmds(NULL, *line + i + 1, 0));
+				(*ln)[i] = '\0';
+				add_front(&head, list_cmds(NULL, *ln + i + 1, 0));
 			}
 		}
+		if ((*ln)[i] != '\\' && cmds->ignore)
+			cmds->ignore = 0;
 	}
 	while (head->prev != NULL)
 		head = head->prev;
 	cmds->cmd_list = head;
 }
-
-/**
- * syntax err:
- * [-]____________	[;], [_;cmd], [cmd;;], [;cmd]
- * [-]____________	[|], [_|cmd], [cmd|], [|cmd]
- * [-]____________	[cmd|;], [cmd;|]
- * [-]____________	< , > , >>, cmd >, cmd <
- * [-]____________	", ', "cmd, 'cmd, cmd', cmd", \, cmd\
- * [-]____________	
-*/

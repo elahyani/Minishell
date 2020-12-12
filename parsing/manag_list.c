@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:53:48 by elahyani          #+#    #+#             */
-/*   Updated: 2020/11/27 12:40:38 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/08 11:11:39 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ t_cmd_list	*list_line_cmds(t_cmd_list *list, char *data, int k)
 		head->data = data;
 	else
 		head->line = data;
-	head->next = head->next ? head->next : NULL;
-	head->prev = head->prev ? head->prev : NULL;
+	head->next = list ? head->next : NULL;
+	head->prev = list ? head->prev : NULL;
 	head->start = list ? head->start : 0;
 	head->end = list ? head->end : 0;
 	head->redir = list ? head->redir : 0;
