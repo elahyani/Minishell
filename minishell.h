@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/02 12:05:05 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/10 10:55:23 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,24 @@
 # define MINISHELL_H
 
 # include <stdio.h>
+# include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
+# include <sys/errno.h>
 # include "get_next_line/get_next_line.h"
 # include "libft/libft.h"
+
+typedef struct		s_pipe
+{
+	int		backup[3];
+	int		fdin;
+	int		fdout;
+	int		file_num;
+	int		*fds;
+	int		*pids;
+}					t_pipe;
 
 typedef struct		s_cmd_list
 {
@@ -41,6 +53,7 @@ typedef struct	s_cmds
 	int			cd;
 	int			minus;
 	int			exp_oldp;
+	int			num_pipe;
 	//char		**exp;
 	//int			exp_index;
 
@@ -60,6 +73,7 @@ typedef struct	s_cmds
 	char		**split_cmd;
 	char		**f_parse_line;
 	t_cmd_list	*cmd_list;
+	t_pipe		pipe;
 }				t_cmds;
 
 
@@ -90,6 +104,9 @@ int			ft_getenv(char *name, char **env);
 char		**ft_add_to_arr(char *value, char **arr);
 char		**ft_get_arr(char *value, char **arr);
 char		*ft_get_first(const char *s, int c);
+
+pid_t			exec_child(t_cmds *cmds, t_cmd_list *list);
+char	*get_bin_path(char *cmdfile, char **env);
 //char		*ft_strcat(char *dest, char *src);
 
 

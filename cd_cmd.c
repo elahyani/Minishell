@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:30:08 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/02 12:05:18 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/05 12:00:14 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,17 +95,52 @@ void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 				ft_putstr_fd(": No such file or directory\n", 1);
 			}
 		}
+		else if (list->args[1][1] == '-')
+		{
+			if ((i = ft_getenv("OLDPWD", cmds->envir)) == -1)
+			{
+				ft_putendl_fd("minishell: cd: ~-: No such file or directory", 1);
+				return ;
+			}
+			else
+			{
+				ret_old = chdir(cmds->envir[i] + 7);
+				if (ret_old < 0)
+				{
+					ft_putstr_fd("minishell: cd: ", 1);
+					ft_putstr_fd(list->args[1], 1);
+					ft_putstr_fd(": No such file or directory\n", 1);
+				}
+			}
+		}
+	}
+	// else if ((list->args[1][1] == '/' && list->args[1][2] == '\0') || (list->args[1][1] == '/' && list->args[1][2] == '/' && list->args[1][3] == '\0'))
+	else if (list->args[1][0] == '/' && list->args[1][1] == '/' && list->args[1][2] == '\0')
+	{
+		ret = chdir(list->args[1]);
+		// if (ret < 0)
+		// {
+		// 	puts("here");
+		// 	ft_putstr_fd("minishell: cd: ", 1);
+		// 	ft_putstr_fd(list->args[1], 1);
+		// 	ft_putstr_fd(": No such file or directory\n", 1);
+		// }
+	}
+	else if ((list->args[1][0] == '/' && list->args[1][1] == '\0') ||
+		(list->args[1][0] == '/' && list->args[1][1] == '/' && list->args[1][2] == '/'))
+	{
+		ret = chdir(list->args[1]);
+		// if (ret < 0)
+		// {
+		// 	puts("here");
+		// 	ft_putstr_fd("minishell: cd: ", 1);
+		// 	ft_putstr_fd(list->args[1], 1);
+		// 	ft_putstr_fd(": No such file or directory\n", 1);
+		// }
 	}
 	else if (list->args[1][0] != '~' && list->args[1][0] != '-' &&
 		list->args[1][0] != '/' && list->args[1][0] != 92)
 	{
-		// if (list->args[1][0] == '/')
-		// {
-		// 	ft_putstr_fd("minishell: cd: " , 1);
-		// 	ft_putstr_fd(list->args[1], 1);
-		// 	ft_putstr_fd(" :: No such file or directory", 1);
-		// }
-		//printf("path = |%s|\n", list->args[1]);
 		ret = chdir(list->args[1]);
 		if (ret < 0)
 		{
@@ -116,18 +151,7 @@ void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 	}
 	else if (list->args[1][0] == 92 && list->args[1][1] == 92)
 	{
-		// i = 0;
-		// int c = 0;
-		// while (list->args[1][i] == 92)
-		// {
-		// 	if (c % 2 != 0)
-		// 	{
-		// 		list->args[1] = list->args[1] + 1;
-		// 		i++;
-		// 	}
-		// 	c++;
-		// }
-		printf("path = |%s|\n", list->args[1]);
+		//printf("path = |%s|\n", list->args[1]);
 		ret = chdir(list->args[1]);
 		if (ret < 0)
 		{
@@ -138,9 +162,6 @@ void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 	}
 	else
 	{
-		/* puts("else\n");
-		printf("path = |%s|\n", list->args[1]);
-		ft_putendl_fd("No such file or directory", 1); */
 		ft_putstr_fd("minishell: cd: ", 1);
 		ft_putstr_fd(list->args[1], 1);
 		ft_putstr_fd(": No such file or directory\n", 1);
@@ -149,5 +170,8 @@ void	cmd_cd(t_cmd_list *list, t_cmds *cmds)
 	cmds->envir = ft_setenv("PWD", cmds->pwd, cmds->envir);
 	cmds->envir = ft_setenv("OLDPWD", cmds->save_oldpwd, cmds->envir);
 	if (ret_old == 0)
-		ft_putendl_fd(cmds->pwd, 1);
+	{
+		if (list->args[1][0] == '-')
+			ft_putendl_fd(cmds->pwd, 1);
+	}
 }

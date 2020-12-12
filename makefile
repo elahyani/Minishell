@@ -6,7 +6,7 @@
 #    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/12/02 12:01:04 by ichejra          ###   ########.fr        #
+#    Updated: 2020/12/04 13:19:35 by ichejra          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ SRCS =	execution.c \
 		env_cmd.c \
 		pwd_cmd.c \
 		unset_cmd.c \
+		exec_child.c \
 		debug.c \
 		parsing/manag_list.c \
 		parsing/parse_line.c \

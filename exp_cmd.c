@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 10:37:00 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/02 11:59:02 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/05 13:00:20 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,6 +278,14 @@ void	cmd_export(t_cmd_list *list, t_cmds *cmds)
 		new_env = ft_sort_exp(env_sort);
 		ft_print_export(new_env);
 		return ;
+	}
+	if (!ft_isalpha(list->args[1][0]))
+	{
+		ft_putstr_fd("minishell: export: `", 1);
+		ft_putstr_fd(list->args[1], 1);
+		ft_putendl_fd("': Invalid identifier", 1);
+		return ;
+		
 	}
 	if (!cmds->index)
 		while (cmds->envir[cmds->index] != NULL)
