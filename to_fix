@@ -1,105 +1,112 @@
-=> Syntax err					 (√)
-=> cd : \ 						 (√)
-=> echo "a ; echo b" 			 (√)
-=> echo "a | echo b"			 (√)
-=> '	ls' (ignore whitespaces) (√)
-=> free_leaks 					 (x)
-=> exit_status $? 				 (x)
-=> ./srcs (erros type output) 	 (x√)
-=> Invalid read of size 		 (√)
-=> valgrind				 		 (√)
-=> stx err: ['';], [''|'';''|'';'';';';'|'] [√]
+(✅) Syntax err					 
+(✅) cd : \ 						 
+(✅) echo "a ; echo b" 			 
+(✅) echo "a | echo b"			 
+(✅) '	ls' (ignore whitespaces) 
+(❌) free_leaks 					 
+(❌) exit_status $? 				 
+(❌) ./srcs (erros type output) 	 
+(✅) Invalid read of size 		 
+(✅) valgrind				 		 
+[✅] stx err: ['';], [''|'';''|'';'';';';'|'] 
+[✅] \\$PWD
 
-=> parse_dollar:line 131 [√]
-________________________________________________________________________Dollar
-$????????????? [x]
-echo hello$?he [x] 
-echo $"PWD" [x]
+======================================================================================
 
-echo "$"PWD [√]
-echo ' pp"$PWD" ' [√]
-echo " pp'$PWD' " [√]
-echo $ [√]
-echo $/ [√]
-echo $++++++$HOME [√]
+[✅] echo $"PWD" 
+[✅] echo "$"PWD 
+[✅] echo ' pp"$PWD" ' 
+[✅] echo " pp'$PWD' " 
+[✅] echo $ 
+[✅] echo $/ 
+[✅] echo $++++++$HOME 
+[❌] echo a		b		c (should ignore whitespaces || tabs) 
 
-echo a		b		c (should ignore whitespaces || tabs) [x]
-____________________________________________________________________syntax err
-[√]____________	[;], [_;cmd], [cmd;;], [;cmd]
-[√]____________	[|], [_|cmd], [cmd|], [|cmd]
-[√]____________	[cmd|;], [cmd;|]
-[√]____________	[<] , [>] , [>>], [cmd >], [cmd <]
-[√]____________	["], ['], ["cmd], ['cmd], [cmd'], [cmd"]
-[√]____________ [\\] , [\], [cmd\]
+======================================================================================
+[✅]	[;], [_;cmd], [cmd;;], [;cmd]
+[✅]	[|], [_|cmd], [cmd|], [|cmd]
+[✅]	[cmd|;], [cmd;|]
+[✅]	[<] , [>] , [>>], [cmd >], [cmd <]
+[✅]	["], ['], ["cmd], ['cmd], [cmd'], [cmd"]
+[✅] [\\] , [\], [cmd\] 
 
------------------------------------------------
-.\/Desktop
+======================================================================================
+[❌].\/Desktop
 
-________________________________________________________________________
-export a = b ==> then check env and export
-export a
-export a=
-export b=c
-export e=$b
-export z=\v ==> it gives z="v"
-export _=sakdjh ==> u shouldn't have change this var u have to protect the var _
-unset PATH
-export PATH=/bin:/usr/bin ==> should work
-=========================
-env
-=========================
-cd -
-cd ..
-cd .
-cd
-cd ~
-cd ~//////////////////////////////////
-cd ~//////////////////////////////////Path
-cd /
-cd //
-=========================
-[√] echo -n
-[√] echo -n -n -n -n
-[√] echo -nnnnnnn
-[√] echo $?
-[√] echo hello$?hi
-[√] echo hello$PWD
-[√] echo $PWD
-[√] echo "$"PWD
-[√] echo $"PWD"
-[√] echo "$PWD"
-[√] echo '$PWD'
-[√] echo '$'PWD
-[√] echo " "$PWD" "
-[√] echo '" '$PWD' "
-[√] echo \$\$\$\$
-[√] echo \anychar\anychar\anychar
-[√] echo \'\'\'\'
-[√] echo \"\"\"
-[√] echo \\"$PWD
-=========================
-\\
-/
-//
-./ls
-\ls
-=========================
-'/bin/ls'
-'anycmd' ==> should work
-'/bin/ls ; /bin/pwd' ==> shouldn't work
-any test contains double quetes or signle quetes
-=========================
-when running minishell multiple times a var called SHLVL in the env must be added to 1 
-=========================
-exit ==> echo $? == 0
-exit 1 ==> echo $? == 1
-exit 9 ==> echo $? == 9
-exit 255 ==> echo $? == 255
-exit 256 ==> echo $? == 0
-exit MAX_LONG_INT ==> echo $? == 255
-exit MAX_LONG_INT + 1 ==> print Error msg eceho $? == 255
-exit MIN_LONG_INT ==> echo $? == 1
-exit g h and try exit 8 9
-=========================
+======================================================================================
+[✅] export a = b ==> then check env and export
+[✅] export a
+[✅] export a=
+[✅] export b=c
+[✅] export e=$b
+[✅] export z=\v ==> it gives z="v"
+[❌] export _=sakdjh ==> u shouldn't have change this var u have to protect the var _
+[✅] unset PATH
+[✅] export PATH=/bin:/usr/bin ==> should work
+
+======================================================================================
+[✅] env
+
+======================================================================================
+[✅] cd -
+[✅] cd ..
+[✅] cd .
+[✅] cd
+[✅] cd ~
+[✅] cd ~//////////////////////////////////
+[✅] cd ~//////////////////////////////////Path
+[✅] cd /
+[✅] cd //
+
+======================================================================================
+[✅] echo -n
+[❌] echo -n -n -n -n
+[✅] echo -nnnnnnn
+[🔶] echo $?
+[🔶] echo hello$?hi
+[🔶] $?????????????
+[✅] echo hello$PWD
+[✅] echo $PWD
+[✅] echo "$"PWD
+[✅] echo $"PWD"
+[✅] echo "$PWD"
+[✅] echo '$PWD'
+[✅] echo '$'PWD
+[✅] echo " "$PWD" "
+[✅] echo '" '$PWD' "
+[✅] echo \$\$\$\$
+[✅] echo \anychar\anychar\anychar
+[✅] echo \'\'\'\'
+[✅] echo \"\"\"
+[✅] echo \\"$PWD
+
+======================================================================================
+[✅] \\
+[❌] /
+[❌] //
+[❌] ./ls
+[✅] \ls
+
+======================================================================================
+[✅] '/bin/ls'
+[✅] 'anycmd' ==> should work
+[❌] '/bin/ls ; /bin/pwd' ==> shouldn't work
+[❌] any test contains double quetes or signle quetes
+
+======================================================================================
+[🔶] exit ==> echo $? == 0
+[🔶] exit 1 ==> echo $? == 1
+[🔶] exit 9 ==> echo $? == 9
+[🔶] exit 255 ==> echo $? == 255
+[🔶] exit 256 ==> echo $? == 0
+[🔶] exit MAX_LONG_INT ==> echo $? == 255
+[🔶] exit MAX_LONG_INT + 1 ==> print Error msg eceho $? == 255
+[🔶] exit MIN_LONG_INT ==> echo $? == 1
+[🔶] exit g h and try exit 8 9
+
+======================================================================================
 signals:
-try ctrl-C 
+[🔶] try ctrl-C
+[🔶] try ctrl-C ctrl-\ ctrl-D in an empty prompt then check echo $?
+[🔶] try ctrl-C ctrl-\ ctrl-D after u wrote some stuff then check echo $?
+[🔶] try ctrl-C ctrl-\ ctrl-D after u run a blocking cmd like cat or wc or sleep 5 then check echo $?

@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:24 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/12 17:52:51 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/13 14:17:33 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 	i = 0;
 	j = 0;
 	k = 0;
+	//puts("hi");
 	arg = *join_arg;
 	if (cmds->env_val)
 		free(cmds->env_val);
@@ -53,7 +54,6 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 	}
 	if (k == 0)
 	{
-		puts("hi tho");
 		if (!ft_strcmp(cmds->join_arg, "$"))
 			return (ft_strdup("$"));
 		else if (!ft_strcmp(cmds->join_arg, "$?"))
@@ -101,9 +101,13 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 	{
 		if ((*line_list)[i] == '\\' && cmds->quote != 1)
 			cmds->ignore = cmds->ignore ? 0 : 1;
-		(!cmds->ignore && (*line_list)[i] == '"') ? is_in_dq = !is_in_dq : 0;
+		if (!cmds->ignore && (*line_list)[i] == '"' && !cmds->quote)
+			is_in_dq = !is_in_dq;
 		if (!is_in_dq && !cmds->ignore && is_quote((*line_list)[i]) == 1)
 			cmds->quote = quote_activer((*line_list)[i], cmds->quote);
+		if ((*line_list)[i] == '$' && is_quote((*line_list)[i + 1]) &&
+		!cmds->ignore && ((i && !is_quote((*line_list)[i - 1])) || !i))
+			i++;
 		if ((*line_list)[i] == '$' && !cmds->ignore && !cmds->quote)
 		{
 			l = b_point(*line_list + i);
