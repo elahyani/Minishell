@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/12 20:29:12 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/14 14:10:45 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,87 +308,86 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 	pid_t pid;
 	// while (head)
 	// {
-		///////////////////////////////////////////////////
-	head->args = split_cmd(head->data, ' ', cmds);
-	// puts(head->data);
-	// printf("%d\n", cmds->num_pipe);
-	cmds->num_pipe = get_num_pipes(head);
-	// printf("%d\n", cmds->num_pipe);
-	cmds->pipe.file_num = 0;
-	if (cmds->num_pipe)
-		cmds->pipe.pids = malloc(sizeof(int) * (cmds->num_pipe + 1));
-	//head = excute_command_by_order(cmds, cmds);
-	// printf("0|%s|\n", head->args[0]);
-	// printf("1|%s|\n", head->args[1]);
-	// printf("2|%s|\n", head->args[2]);
-	// printf("3|%s|\n", head->args[3]);
-	
-	if ((head->next && !head->end) || !is_builtin(head->args[0]))
-	{
-		cmds->pipe.fds = pipe_fds(cmds->num_pipe, cmds->pipe.fds); //pipe_fds(cmds->num_pipe, cmds->pipe.fds)
-		// printf("%d %d\n", cmds->pipe.fds[0] , cmds->pipe.fds[1]);
-		save_fds(cmds->pipe.backup);
+			///////////////////////////////////////////////////
+		// head->args = split_cmd(head->data, ' ', cmds);
+		// puts(head->data);
+		// printf("%d\n", cmds->num_pipe);
+		cmds->num_pipe = get_num_pipes(head);
+		// printf("%d\n", cmds->num_pipe);
 		cmds->pipe.file_num = 0;
-		while (head)
+		if (cmds->num_pipe)
+			cmds->pipe.pids = malloc(sizeof(int) * (cmds->num_pipe + 1));
+		//head = excute_command_by_order(cmds, cmds);
+		// printf("0|%s|\n", head->args[0]);
+		// printf("1|%s|\n", head->args[1]);
+		// printf("2|%s|\n", head->args[2]);
+		// printf("3|%s|\n", head->args[3]);
+		if ((head->next && !head->end) || !is_builtin(head->args[0]))
 		{
-			head->args = split_cmd(head->data, ' ', cmds);
-			// puts(head->args[1]);
-			//printf("head->data ==> |%s|\n", head->data);
-			//if (cmds->num_pipe)
-			//{
-			//if (head->redir)
-			//{
-				// puts("jj");
-				pid = exec_child(cmds, head);
-				//head = skip_append(head);
-				head = skip_redir(head);
+			cmds->pipe.fds = pipe_fds(cmds->num_pipe, cmds->pipe.fds); //pipe_fds(cmds->num_pipe, cmds->pipe.fds)
+			// printf("%d %d\n", cmds->pipe.fds[0] , cmds->pipe.fds[1]);
+			save_fds(cmds->pipe.backup);
+			cmds->pipe.file_num = 0;
+			while (head)
+			{
+				//head->args = split_cmd(head->data, ' ', cmds);
+				// puts(head->args[1]);
+				//printf("head->data ==> |%s|\n", head->data);
+				//if (cmds->num_pipe)
+				//{
+				//if (head->redir)
+				//{
+					// puts("jj");
+					pid = exec_child(cmds, head);
+					//head = skip_append(head);
+					head = skip_redir(head);
 
-				cmds->pipe.file_num += 2;
-					
-			//}
-			//}
-			if (head->end)
-				break ;
+					cmds->pipe.file_num += 2;
+						
+				//}
+				//}
+				if (head->end)
+					break ;
+				// else
+					head = head->next;
+			}
+			restore_fds(cmds->pipe.backup);
+			get_cmd_help(cmds, head, pid);
+				//close_fds(cmds->pipe.fds, cmds->num_pipe);
+				//close_fds(cmds->pipe.fds, 1);
+		}
+		else if (head->args[0])
+		{
+			///////////////////////////////////////////////////
+			if (ft_strcmp(head->args[0], "cd") == 0)
+			{
+				cmd_cd(head, cmds);
+			}
+			else if (ft_strcmp(head->args[0], "pwd") == 0)
+				cmd_pwd(cmds);
+			else if (ft_strcmp(head->args[0], "export") == 0)
+				cmd_export(head, cmds);
+			else if (ft_strcmp(head->args[0], "unset") == 0)
+				cmd_unset(head, cmds);
+			else if (ft_strcmp(head->args[0], "exit") == 0)
+				cmd_exit();
+			else if (ft_strcmp(head->args[0], "echo") == 0)
+			{
+				cmd_echo(head);
+			}
+			else if (ft_strcmp(head->args[0], "env") == 0)
+				cmd_env(cmds, head);
 			// else
-				head = head->next;
+			// {
+			// 	check_cmd(cmds, head);
+			// }
 		}
-		restore_fds(cmds->pipe.backup);
-		get_cmd_help(cmds, head, pid);
-			//close_fds(cmds->pipe.fds, cmds->num_pipe);
-			//close_fds(cmds->pipe.fds, 1);
-	}
-	else if (head->args[0])
-	{
-		///////////////////////////////////////////////////
-		if (ft_strcmp(head->args[0], "cd") == 0)
-		{
-			cmd_cd(head, cmds);
-		}
-		else if (ft_strcmp(head->args[0], "pwd") == 0)
-			cmd_pwd(cmds);
-		else if (ft_strcmp(head->args[0], "export") == 0)
-			cmd_export(head, cmds);
-		else if (ft_strcmp(head->args[0], "unset") == 0)
-			cmd_unset(head, cmds);
-		else if (ft_strcmp(head->args[0], "exit") == 0)
-			cmd_exit();
-		else if (ft_strcmp(head->args[0], "echo") == 0)
-		{
-			cmd_echo(head);
-		}
-		else if (ft_strcmp(head->args[0], "env") == 0)
-			cmd_env(cmds, head);
-		// else
-		// {
-		// 	check_cmd(cmds, head);
-		// }
-	}
-	// puts(head->args[1]);
-	// puts("salut");
+		// puts(head->args[1]);
+		// puts("salut");
 
-		// if (head->end)
-		// 	break ;
-		// head = head->next;
+	// 	if (head->end)
+	// 		break ;
+	// 	head = head->next;
 	// }
 	return head;
 }
@@ -413,9 +412,10 @@ int		main(int argc, char **argv, char **envp)
     t_cmds		*cmds;
     t_cmd_list	*list;
     char		*line;
-    int			status;
+    int			status = 1;
 	int			i;
 
+    status = 1;
     cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmd_list = NULL;
 	cmds->index = 0;
@@ -433,8 +433,9 @@ int		main(int argc, char **argv, char **envp)
 	cmds->quote = 0;
 	cmds->ignore = 0;
 	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
-    while ((status = get_next_line(0, &line)) > 0)
+    while (status)
     {
+		status = get_next_line(0, &line);
         if (ft_strcmp(line, ""))
         {
         	parse_line(&line, cmds);
@@ -448,14 +449,11 @@ int		main(int argc, char **argv, char **envp)
 						break ;
 					parse_list_line(&list->line, list, cmds);
 					list = get_cmd(cmds, list);
-					// puts(list->data);
-					// if (list->end)
+					// if (!list->next)
 					// 	break ;
-					if (list)
-						list = list->next;
+					list = list->next;
 				}
-            	//print_cmds(cmds->cmd_list);
-				//puts("c");
+            	print_cmds(cmds->cmd_list);
 				free_cmd_list(cmds);
 			}
             free(line);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_child.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 10:26:16 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/12 20:03:41 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/14 11:08:05 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int open_input(char *file)
 	return (fd);
 }
 
-int		backward_redir(t_cmd_list *list, t_cmds *cmds)
+int		backward_redir(t_cmd_list *list/* , t_cmds *cmds */)
 {
 	int i;
 	//int j;
@@ -64,7 +64,7 @@ int		backward_redir(t_cmd_list *list, t_cmds *cmds)
 	/* while (ft_strcmp(list->args[i], "<"))
 		i++; */
 	//printf("========|%s|\n", list->args[1]);
-	list->args = split_cmd(list->data, ' ', cmds);
+	//list->args = split_cmd(list->data, ' ', cmds);
 	//printf("========|%s|\n", list->next->args[0]);
 	while (list->args[++i])
 	{
@@ -98,7 +98,7 @@ void	exec_io_redi(t_cmds *cmds, t_cmd_list *list)
 		}
 		else if (tmp->redir == '<')
 		{
-			cmds->pipe.fdin = backward_redir(tmp->next, cmds);
+			cmds->pipe.fdin = backward_redir(tmp->next/* , cmds */);
 			//if (!cmds->pipe.fdin)
 		}
 		tmp = tmp->next;
