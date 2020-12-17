@@ -6,19 +6,16 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:33:32 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/12 19:29:31 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/17 12:01:10 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-
-int			check_n_flag(char *s, int *n)
+int		check_n_flag(char *s, int *n)
 {
-	int i;
-	int n_flag;
+	int	i;
+	int	n_flag;
 
 	i = 0;
 	n_flag = 0;
@@ -37,7 +34,7 @@ int			check_n_flag(char *s, int *n)
 	return (n_flag);
 }
 
-void		print_args(char **s, int pos)
+void	print_args(char **s, int pos)
 {
 	if (s[pos])
 		ft_putstr_fd(s[pos], 1);
@@ -45,35 +42,24 @@ void		print_args(char **s, int pos)
 		ft_putchar_fd(' ', 1);
 }
 
-void	cmd_echo(t_cmd_list *list)
+int		cmd_echo(t_cmd_list *list)
 {
 	int	i;
-	int n;
-	int ret;
-	
+	int	n;
+	int	ret;
+
 	ret = 0;
 	n = 0;
 	i = 1;
-	//puts("bbb");
-	if (!list->args[1])
-	{
-		ft_putchar_fd('\n', 1);
-		return ;
-	}
+	while (list->args[i] && check_n_flag(list->args[i], &n))
+		i++;
 	while (list->args[i])
 	{
-		if (!n)
-			while (list->args[i] && (ret = check_n_flag(list->args[i], &n)))
-				i++;
-		//if (!list->redir)
+		if (list->args[i])
 			print_args(list->args, i);
-		/* if (list->prev->redir)
-		{
-			ft_putchar_fd('\n', 1);
-			break ;
-		} */
-		if ((!list->args[i + 1] && !n))
-			ft_putchar_fd('\n', 1);
 		i++;
 	}
+	if (!n)
+		ft_putchar_fd('\n', 1);
+	return (0);
 }

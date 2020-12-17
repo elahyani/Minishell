@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 13:10:55 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/15 11:31:47 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 18:06:07 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int		check_q(char **ln, t_cmds *cmds)
 			cmds->ignore = 0;
 	}
 	if (cmds->ignore || cmds->quote)
-		return (get_sy_err());
+		return (get_sy_err(cmds));
 	return (0);
 }
 
@@ -66,10 +66,10 @@ int		check_redir(char **ln, t_cmds *cmds)
 		!cmds->ignore && !cmds->quote)
 		{
 			if (check_cmd_sep(*ln + i + 1))
-				return (get_sy_err());
+				return (get_sy_err(cmds));
 			else if (((*ln)[i] == '>' && (*ln)[i + 1] == '>' &&
 			(*ln)[i + 2] == '>') || ((*ln)[i] == '<' && (*ln)[i + 1] == '<'))
-				return (get_sy_err());
+				return (get_sy_err(cmds));
 		}
 		if ((*ln)[i] != '\\' && cmds->ignore)
 			cmds->ignore = 0;
@@ -96,12 +96,12 @@ int		semi_pipe_stx_err(char **ln, t_cmds *cmds)
 			if ((*ln)[i] == '|' && !(*ln)[i + 1])
 			{
 				ft_free_str(&iscmd);
-				return (get_sy_err());
+				return (get_sy_err(cmds));
 			}
 			else if (check_cmd_sep(iscmd))
 			{
 				ft_free_str(&iscmd);
-				return (get_sy_err());
+				return (get_sy_err(cmds));
 			}
 			ft_free_str(&iscmd);
 		}
@@ -132,7 +132,7 @@ int		handle_stx_err(char **ln, t_cmds *cmds)
 			return (semi_pipe_stx_err(ln, cmds));
 		else if ((*ln)[i] == '\\' && !(*ln)[i + 1] &&
 		((i && (*ln)[i - 1] != '\\') || !i))
-			return (get_sy_err());
+			return (get_sy_err(cmds));
 		((*ln)[i] != '\\' && cmds->ignore) ? cmds->ignore = 0 : 0;
 	}
 	return (0);

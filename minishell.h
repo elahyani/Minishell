@@ -6,13 +6,15 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/17 13:30:42 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 18:06:45 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+
+# include <signal.h>
 # include <stdio.h>
 # include <string.h>
 # include <stdlib.h>
@@ -55,6 +57,7 @@ typedef struct	s_cmds
 	int			minus;
 	int			exp_oldp;
 	int			num_pipe;
+	int			ret;
 	//char		**exp;
 	//int			exp_index;
 
@@ -78,8 +81,10 @@ typedef struct	s_cmds
 	char		**f_parse_line;
 	t_cmd_list	*cmd_list;
 	t_pipe		pipe;
+	int			sig;
 }				t_cmds;
 
+int				g_ret;
 
 int			get_next_line(int fd, char **line);
 void		parse_list_line(char **line_list, t_cmd_list *list, t_cmds *cmds);
@@ -89,17 +94,17 @@ t_cmd_list	*list_cmds(t_cmd_list *list, char *data, int k);
 void		update_list(t_cmd_list **head, t_cmd_list **next ,t_cmd_list *new);
 void		add_front(t_cmd_list **head, t_cmd_list *new);
 t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head);
-void		cmd_cd(t_cmd_list *list, t_cmds *cmds);
+int		cmd_cd(t_cmd_list *list, t_cmds *cmds);
 
 //void		cmd_env(t_cmds *cmds);
 int			cmd_env(t_cmds *cmds, t_cmd_list *list);
 
-void	    cmd_pwd(t_cmds *cmds);
-void		cmd_echo(t_cmd_list *list);
-void		cmd_exit(t_cmds *cmds);
+int	    cmd_pwd(t_cmds *cmds);
+int			cmd_echo(t_cmd_list *list);
+int		cmd_exit(t_cmds *cmds);
 void		print_cmds(t_cmd_list *cmds);
-void		cmd_export(t_cmd_list *list, t_cmds *cmds);
-void		cmd_unset(t_cmd_list *list, t_cmds *cmds);
+int		cmd_export(t_cmd_list *list, t_cmds *cmds);
+int		cmd_unset(t_cmd_list *list, t_cmds *cmds);
 void		get_home_env(t_cmds *cmds);
 char		**add_to_arr(char **arr, char *value, int opt);
 char		**ft_envdup(char **arr);
@@ -111,6 +116,8 @@ char		*ft_get_first(const char *s, int c);
 
 pid_t			exec_child(t_cmds *cmds, t_cmd_list *list);
 char	*get_bin_path(char *cmdfile, char **env);
+void		check_cmd(t_cmds *cmds, t_cmd_list *list);
+int		ft_arr_len(char **tab);
 //char		*ft_strcat(char *dest, char *src);
 
 
@@ -133,7 +140,12 @@ int			quote_activer(int c, int quote);
 int			handle_stx_err(char **ln, t_cmds *cmds);
 int			check_redir(char **ln, t_cmds *cmds);
 int			check_q(char **ln, t_cmds *cmds);
-int			get_sy_err();
+int			get_sy_err(t_cmds *cmds);
 void		ft_free_str(char **str);
 void		free_cmd_list(t_cmds *list);
+void		sig_handle(int sig);
+void		exit_error(char *str, int status, t_cmds *cmds, t_cmd_list *list);
+int			exec_cmds(t_cmds *cmds, t_cmd_list *list);
+int			print_error(char *cmd, char *arg, int err);
+//int cmd_exit(t_cmds *cmds, t_cmd_list *list);
 #endif

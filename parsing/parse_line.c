@@ -6,18 +6,19 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:28 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 10:37:38 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 18:05:52 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int		get_sy_err()
+int		get_sy_err(t_cmds *cmds)
 {
 	// t_cmd_list *tmp;
 	
 	//puts("________________1");
 	ft_putendl_fd("minishell: syntax error", 1);
+	cmds->ret = 258;
 	// if (cmds->cmd_list)
 	// {
 	// 	puts("________________2");

@@ -6,30 +6,11 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:35:54 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/01 14:35:21 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/17 12:25:18 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-///////////////////////////////////////////////////////////
-
-/* int		print_error(char *str, int err, int iscmd)
-{
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(str, 2);
-	if (err == 2 && iscmd)
-		ft_putstr_fd(": command not found", 2);
-	else if (err)
-	{
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(strerror(err), 2);
-	}
-	ft_putchar_fd('\n', 2);
-	return (1);
-} */
-
-////////////////////////////////////////////////////////
 
 int		ft_isalnum_str(char *str)
 {
@@ -50,22 +31,25 @@ int		valid_arg_name(char *val)
 	return (1);
 }
 
-void	cmd_unset(t_cmd_list *list, t_cmds *cmds)
+int	cmd_unset(t_cmd_list *list, t_cmds *cmds)
 {
-	int j = 0;
-	int i = 0;
+	int j;
+	int i;
 	int k;
+	int err;
+
 	k = 1;
+	i = 0;
+	j = 0;
+	err = 0;
 	while (list->args[k] != NULL)
 	{
 		while (cmds->envir[j] != NULL)
 		{
 			if (!valid_arg_name(list->args[k]) || ft_strchr(list->args[k], '='))
 			{
-				ft_putstr_fd("minishell: unset: `", 1);
-				ft_putstr_fd(list->args[k], 1);
-				ft_putendl_fd("': not a valid identifier", 1);
-				return ;
+				err = print_error(list->args[0], list->args[k], 1);
+				return (err);
 			}
 			cmds->env_line = ft_split(cmds->envir[j], '=');
 			if (ft_strcmp(cmds->env_line[0], list->args[k]) == 0)
@@ -74,8 +58,6 @@ void	cmd_unset(t_cmd_list *list, t_cmds *cmds)
 				while (cmds->envir[i] != NULL)
 				{
 					cmds->envir[i] = cmds->envir[i + 1];
-					//if (cmds->envir[i + 1] == NULL)
-					//	break ;
 					i++;
 				}
 				break ;
@@ -84,4 +66,5 @@ void	cmd_unset(t_cmd_list *list, t_cmds *cmds)
 		}
 		k++;
 	}
+	return (err);
 }

@@ -6,27 +6,11 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:24 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 13:01:20 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 18:02:24 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// int		get_exit_status(t_cmds *cmds)
-// {
-// 	if (cmds->exit_status == 127)
-// 		puts("command not found");
-// 	else if (cmds->exit_status == 1)
-// 		puts("No such file or directory");
-// 	else if (cmds->exit_status == 126)
-// 		puts("is a directory");
-// 	else if (cmds->exit_status == 130)
-// 		puts("CTRL-C");
-// 	else if (cmds->exit_status == 131)
-// 		puts("CTRL-/");
-// 	return (cmds->exit_status);
-// }
-//
 
 void	ft_free_str(char **str)
 {
@@ -43,13 +27,8 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 
 	j = 0;
 	env_val_w = NULL;
-	// if (cmds->env_val)
-	// 	free(cmds->env_val);
-	// cmds->env_val = ft_strdup(join_arg + 1);
-	// join_arg++;
 	while (cmds->envir[j] != NULL)
 	{
-		// cmds->env_line = ft_split(cmds->envir[j], '=');
 		env_val_w = ft_get_first(cmds->envir[j], '=');
 		if (ft_strcmp(env_val_w, join_arg + 1) == 0)
 		{
@@ -63,8 +42,7 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 		return (ft_strdup("$"));
 	else if (!ft_strcmp(cmds->join_arg, "$?"))
 	{
-		//get_exit_status(cmds);
-		exit(0);
+		return (ft_itoa(cmds->ret));
 	}
 	j = 0;
 	while (cmds->join_arg[++j])

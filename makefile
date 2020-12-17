@@ -6,7 +6,7 @@
 #    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/12/12 11:58:42 by ichejra          ###   ########.fr        #
+#    Updated: 2020/12/17 13:24:33 by ichejra          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,8 @@ SRCS =	execution.c \
 		parsing/manag_stx_err.c \
 		parsing/manag_quotes.c \
 		parsing/split_cmds.c \
+		errors.c \
+		#exit_cmd \
 		# cmds.c \
 
 SRC_GNL = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c

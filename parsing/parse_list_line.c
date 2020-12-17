@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:31 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 12:53:18 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 17:59:03 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ void	parse_redir(char **line, t_cmd_list **hd, int *j, int *i, t_cmds *cmds)
 		if ((*line)[*i + 1] == '>')
 		{
 			(*hd)->redir = 'a';
-			(*line)[*i] = '\0';
+			//(*line)[*i] = '\0';
 			(*i)++;
 		}
 		else
 			(*hd)->redir = '>';
 	}
 	//-
-	(*hd)->data = ft_substr(*line, *j, *i - *j);
+	(*hd)->data = ft_substr(*line, *j, *i - *j - 1);
 	(*hd)->args = split_cmd((*hd)->data, ' ', cmds);
 	add_front(&(*hd), list_line_cmds(NULL, NULL, 1));
 	//-
@@ -95,23 +95,18 @@ void	parse_list_line(char **line, t_cmd_list *list, t_cmds *cmds)
 		if ((*line)[i + 1] == '\0' && (hd->end = 1) &&
 		!cmds->ignore && !cmds->quote)
 		{
-			//i++;
 			if ((hd->prev && hd->prev->end) || !hd->prev)
 				hd->start = 1;
-			hd->data = ft_substr(*line, j, i - j + 1); //b
-			// if (hd->next)
-			// 	hd = hd->next;
-			// hd->line = hd->data;
+			hd->data = ft_substr(*line, j, i - j + 1);
 		}
 		else if ((*line)[i] == '|' && (*line)[i - 1] != '\\' && !cmds->ignore && !cmds->quote)
 		{
-			// a ; b | c ; d
 			if (!hd->prev || (hd->prev && hd->prev->end))
 				hd->start = 1;
-			hd->data = ft_substr(*line, j, i - j); // hd->data = a
+			hd->data = ft_substr(*line, j, i - j);
 			hd->p = 1;
 			hd->args = split_cmd(hd->data, ' ', cmds);
-			add_front(&hd, list_line_cmds(NULL, NULL, 1)); // hd->data = NULL; //line = NULL
+			add_front(&hd, list_line_cmds(NULL, NULL, 1));
 			j = i + 1;
 		}
 		else if (((*line)[i] == '<' || (*line)[i] == '>') && !cmds->ignore && !cmds->quote)
