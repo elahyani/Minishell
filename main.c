@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/12 20:29:12 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 13:25:46 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,9 +150,10 @@ int		wait_child(t_cmds *cmds, pid_t pid)
 	{
 		while (++i < cmds->num_pipe + 1)
 		{
-			// puts("hhhhh");
 			waitpid(cmds->pipe.pids[i], &status, 0);
-			//if (status)
+			if (status == 2)
+				if (i != cmds->num_pipe)
+					cmds->sig = 1;
 		}
 	}
 	return (status);
@@ -166,7 +167,13 @@ void	get_cmd_help(t_cmds *cmds, t_cmd_list *list, pid_t pid)
 	status = 0;
 	close_pipes(cmds->pipe.fds, cmds->num_pipe);
 	status = wait_child(cmds, pid);
-	// puts("waaa akhdeeeem");
+	if (status == 2 || status == 3)
+		cmds->ret = status + 128;
+	else
+	{
+		if (WIFEXITED(status))
+            cmds->ret = WEXITSTATUS(status); 
+	}
 	if (cmds->num_pipe)
 	{
 		free(cmds->pipe.fds);
@@ -184,6 +191,10 @@ int		is_builtin(char *cmd)
 	return (1);
 }
 
+
+
+
+
 void			check_file(char *file, int cas, t_cmds *cmds, t_cmd_list *list)
 {
 	struct stat	file_stat;
@@ -191,50 +202,25 @@ void			check_file(char *file, int cas, t_cmds *cmds, t_cmd_list *list)
 	if (cas == 1)
 	{
 		if (stat(file, &file_stat) < 0)
-		{
-			ft_putstr_fd("minishell: ", 1);
-			ft_putstr_fd(list->args[0], 1);
-			ft_putstr_fd(": ", 1);
-			ft_putendl_fd(strerror(errno), 1);
-			return ;
-		}
+			exit_error(strerror(errno), 200, cmds, list);
 		if (!ft_access(file, 1))
-		{
-			ft_putstr_fd("minishell: ", 1);
-			ft_putstr_fd(list->args[0], 1);
-			ft_putendl_fd(": Permission denied", 1);
-			return ;
-		}
-		if (stat(file, &file_stat) == 0)
-		{
-			puts("am here again");
-			ft_putstr_fd("minishell: ", 1);
-			ft_putstr_fd(list->args[0], 1);
-			ft_putendl_fd(": is a directory", 1);
-			return ;
-		}
+			exit_error("Permission denied", 126, cmds, list);
+		// if (stat(file, &file_stat) == 0)
+		if (file_stat.st_mode == 16877)
+			exit_error("is a directory", 126, cmds, list);
 
 	}
 	else if (cas == 2)
 	{
 		stat(file, &file_stat);
 		if (file_stat.st_mode == 16877)
-		{
-			ft_putstr_fd("minishell: ", 1);
-			ft_putstr_fd(list->args[0], 1);
-			ft_putendl_fd(": is a directory", 1);
-		}
+			exit_error("is a directory", 126, cmds, list);
 		if (stat(file, &file_stat) < 0)
-		{
-			ft_putstr_fd("minishell: ", 1);
-			ft_putstr_fd(list->args[0], 1);
-			ft_putstr_fd(": ", 1);
-			ft_putendl_fd(strerror(errno), 1);
-		}
+			exit_error(strerror(errno), 127, cmds, list);
 	}
 }
 
-void		check_cmd(t_cmds *cmds, t_cmd_list *list)
+void 		check_cmd(t_cmds *cmds, t_cmd_list *list)
 {
 	int ret = 0;
 	char *path;
@@ -246,28 +232,29 @@ void		check_cmd(t_cmds *cmds, t_cmd_list *list)
 		if (list->args[0][ft_strlen(list->args[0]) - 1] == '/')
 		{
 			check_file(list->args[0], 2, cmds, list);
+
 		}
 		else
 		{
 			check_file(list->args[0], 1, cmds, list);
 		}
-		//execve(list->args[0], list->args, cmds->envir);
+		execve(list->args[0], list->args, cmds->envir);
 	}
 	else
 	{
 		path = get_bin_path(list->args[0], cmds->envir);
 		ret = execve(path, list->args, cmds->envir);
-		//printf("\npat=|%d|\n", ret);
 		if (ret < 0)
 		{
 			ft_putstr_fd("minishell: ", 1);
 			ft_putstr_fd(list->args[0], 1);
 			ft_putendl_fd(": command not found", 1);
+			exit(127);
 		}
 	}
 }
 
-static t_cmd_list *skip_append(t_cmd_list *list)
+/* static t_cmd_list *skip_append(t_cmd_list *list)
 {
 	while (list && list->redir > 0)
 	{
@@ -275,6 +262,13 @@ static t_cmd_list *skip_append(t_cmd_list *list)
 			break ;
 		list = list->next;
 	}
+	return (list);
+} */
+
+t_cmd_list	*skip_redir(t_cmd_list *list)
+{
+	while (list && list->redir)
+		list = list->next;
 	return (list);
 }
 
@@ -294,11 +288,31 @@ int		get_num_pipes(t_cmd_list *cmds)
 	return (i);
 }
 
-t_cmd_list	*skip_redir(t_cmd_list *cmds)
+int		exec_cmds(t_cmds *cmds, t_cmd_list *list)
 {
-	while (cmds && cmds->redir)
-		cmds = cmds->next;
-	return (cmds);
+	int ret;
+
+	ret = 1;
+	if (ft_strcmp(list->args[0], "cd") == 0)
+		ret = cmd_cd(list, cmds);
+	else if (ft_strcmp(list->args[0], "pwd") == 0)
+		ret = cmd_pwd(cmds);
+	else if (ft_strcmp(list->args[0], "export") == 0)
+		ret = cmd_export(list, cmds);
+	else if (ft_strcmp(list->args[0], "unset") == 0)
+		ret = cmd_unset(list, cmds);
+	else if (ft_strcmp(list->args[0], "exit") == 0)
+		ret = cmd_exit();
+	else if (ft_strcmp(list->args[0], "echo") == 0)
+		ret = cmd_echo(list);
+	else if (ft_strcmp(list->args[0], "env") == 0)
+		ret = cmd_env(cmds, list);
+	else
+	{
+		check_cmd(cmds, list);
+	}
+	cmds->ret = ret;
+	return (ret);
 }
 
 t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
@@ -310,10 +324,7 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 	// {
 		///////////////////////////////////////////////////
 	head->args = split_cmd(head->data, ' ', cmds);
-	// puts(head->data);
-	// printf("%d\n", cmds->num_pipe);
 	cmds->num_pipe = get_num_pipes(head);
-	// printf("%d\n", cmds->num_pipe);
 	cmds->pipe.file_num = 0;
 	if (cmds->num_pipe)
 		cmds->pipe.pids = malloc(sizeof(int) * (cmds->num_pipe + 1));
@@ -322,18 +333,14 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 	// printf("1|%s|\n", head->args[1]);
 	// printf("2|%s|\n", head->args[2]);
 	// printf("3|%s|\n", head->args[3]);
-	
 	if ((head->next && !head->end) || !is_builtin(head->args[0]))
 	{
-		cmds->pipe.fds = pipe_fds(cmds->num_pipe, cmds->pipe.fds); //pipe_fds(cmds->num_pipe, cmds->pipe.fds)
-		// printf("%d %d\n", cmds->pipe.fds[0] , cmds->pipe.fds[1]);
+		cmds->pipe.fds = pipe_fds(cmds->num_pipe, cmds->pipe.fds);
 		save_fds(cmds->pipe.backup);
 		cmds->pipe.file_num = 0;
 		while (head)
 		{
 			head->args = split_cmd(head->data, ' ', cmds);
-			// puts(head->args[1]);
-			//printf("head->data ==> |%s|\n", head->data);
 			//if (cmds->num_pipe)
 			//{
 			//if (head->redir)
@@ -354,13 +361,13 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 		}
 		restore_fds(cmds->pipe.backup);
 		get_cmd_help(cmds, head, pid);
-			//close_fds(cmds->pipe.fds, cmds->num_pipe);
-			//close_fds(cmds->pipe.fds, 1);
 	}
 	else if (head->args[0])
 	{
 		///////////////////////////////////////////////////
-		if (ft_strcmp(head->args[0], "cd") == 0)
+		cmds->ret = exec_cmds(cmds, head);
+		printf("1ret====|%d|\n", cmds->ret);
+		/* if (ft_strcmp(head->args[0], "cd") == 0)
 		{
 			cmd_cd(head, cmds);
 		}
@@ -378,14 +385,11 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 		}
 		else if (ft_strcmp(head->args[0], "env") == 0)
 			cmd_env(cmds, head);
-		// else
-		// {
-		// 	check_cmd(cmds, head);
-		// }
+		else
+		{
+			check_cmd(cmds, head);
+		} */
 	}
-	// puts(head->args[1]);
-	// puts("salut");
-
 		// if (head->end)
 		// 	break ;
 		// head = head->next;
@@ -408,15 +412,35 @@ void	free_cmd_list(t_cmds *cmds)
 	}
 }
 
+void		sig_handle(int sig)
+{
+	if (sig == SIGINT)
+	{
+		g_ret = 1;
+		ft_putstr_fd("\b\b  \b\b\n", 1);
+		ft_putstr_fd("\e[1;31mminishell\e[0m\033[0;33m~>\033[0m", 1);
+	}
+	else if (sig == SIGQUIT)
+	{
+		if (g_ret == 2)
+			ft_putendl_fd("Quit: 3", 2);
+		else
+			ft_putstr_fd("\b\b  \b\b", 2);
+		//return ;
+	}
+}
+
 int		main(int argc, char **argv, char **envp)
 {
     t_cmds		*cmds;
     t_cmd_list	*list;
     char		*line;
     int			status;
+	int			st;
 	int			i;
 
     cmds = (t_cmds *)malloc(sizeof(t_cmds));
+	g_ret = 0;
 	cmds->cmd_list = NULL;
 	cmds->index = 0;
 	cmds->oldpwd = NULL;
@@ -432,14 +456,41 @@ int		main(int argc, char **argv, char **envp)
     cmds->env_arg = NULL;
 	cmds->quote = 0;
 	cmds->ignore = 0;
-	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
-    while ((status = get_next_line(0, &line)) > 0)
+	cmds->ret = 0;
+	cmds->sig = 0;
+	// ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
+	//signal(SIGQUIT, sig_handle);
+	signal(SIGINT, sig_handle);
+	signal(SIGQUIT, SIG_IGN);
+	status = 1;
+    while (status)
     {
+		//signal(SIGQUIT, SIG_IGN);
+		signal(SIGQUIT, sig_handle);
+		signal(SIGINT, sig_handle);
+		st = cmds->ret;
+		// printf("1|%d|\n", g_ret);
+		// if (g_ret == 1)
+		// 	st = 130;
+		if (cmds->ret != 130)
+			ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
+		// if (cmds->ret != 130 && cmds->sig != 1 && status != 0 && cmds->ret == 0)
+		// {
+		// 	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
+		// }
+		// else if (cmds->ret != 130 && cmds->sig != 1 && status != 0)
+		// 	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
+		// printf("2|%d|\n", st);
+		cmds->sig = 0;
+		status = get_next_line(0, &line);
+		if (status == 0)
+			cmd_exit();
         if (ft_strcmp(line, ""))
         {
         	parse_line(&line, cmds);
         	if (cmds->cmd_list)
 			{
+				g_ret = !g_ret ? 2 : g_ret;
 				list = cmds->cmd_list;
 				while (list)
 				{
@@ -455,12 +506,13 @@ int		main(int argc, char **argv, char **envp)
 						list = list->next;
 				}
             	//print_cmds(cmds->cmd_list);
-				//puts("c");
 				free_cmd_list(cmds);
 			}
+			g_ret = 0;
             free(line);
         }
-        ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
+		// if (cmds->ret != 130)
+        // 	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
     }
 	//free_cmds(cmds);
     return (0);

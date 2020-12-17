@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 10:26:16 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/12 20:03:41 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/15 13:03:24 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,20 +52,15 @@ int open_input(char *file)
 	return (fd);
 }
 
+
 int		backward_redir(t_cmd_list *list, t_cmds *cmds)
 {
 	int i;
-	//int j;
 	char *file;
 	struct stat file_stat;
 
 	i = -1;
-	//list = skip_append(list);
-	/* while (ft_strcmp(list->args[i], "<"))
-		i++; */
-	//printf("========|%s|\n", list->args[1]);
 	list->args = split_cmd(list->data, ' ', cmds);
-	//printf("========|%s|\n", list->next->args[0]);
 	while (list->args[++i])
 	{
 		file = list->args[i];
@@ -81,25 +76,62 @@ int		backward_redir(t_cmd_list *list, t_cmds *cmds)
 	
 }
 
+int		open_output(t_cmd_list *list, char redir)
+{
+	int fd;
+	int flag;
+	int flag_mode;
+
+	fd = 0;
+	flag = O_WRONLY | O_CREAT;
+	flag_mode = S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH;
+	if (redir == 'a')
+		flag = flag | O_APPEND;
+	else if (redir == '>')
+		flag = flag | O_TRUNC;
+	if ((fd = open(list->args[0], flag, flag_mode)) < 0)
+	{
+		ft_putendl_fd("error opening file", 1);
+		exit(1);
+	}
+	return (fd);
+}
+
+int		forward_redir(t_cmd_list *tmp, t_cmd_list *list, t_cmds *cmds)
+{
+	int i;
+	
+	tmp->next->args = split_cmd(list->next->data, ' ', cmds);
+	if (ft_arr_len(tmp->next->args) > 1 && !tmp->next->start)
+	{
+		i = 1;
+		while (tmp->next->args[i])
+		{
+			list->args = ft_get_arr(tmp->next->args[i], list->args);
+			i++;
+		}
+	}
+	return (open_output(tmp->next, tmp->redir));
+}
+
 void	exec_io_redi(t_cmds *cmds, t_cmd_list *list)
 {
-	int k;
-	k = 0;
 	t_cmd_list *tmp;
 	tmp = list;
 	while (tmp && tmp->redir)
 	{
 		if (tmp->redir == '>' || tmp->redir == 'a')
 		{
-			//cmds->pipe.fdout = forward_redir();
-			//if (!cmds->pipe.fdout)
-			k = 4;
+			cmds->pipe.fdout = forward_redir(tmp, list, cmds);
+			if (!cmds->pipe.fdout)
+				cmds->ret = 1;
 				
 		}
 		else if (tmp->redir == '<')
 		{
 			cmds->pipe.fdin = backward_redir(tmp->next, cmds);
-			//if (!cmds->pipe.fdin)
+			if (!cmds->pipe.fdin)
+				cmds->ret = 1;
 		}
 		tmp = tmp->next;
 	}
@@ -127,17 +159,13 @@ int		*create_fds(t_cmd_list *list, t_cmds *cmds,int j, int *fds)
 	{
 		if (dup2(fds[j - 2], 0) < 0)
 		{
-			//printf("j====|%d|\n", errno);
 			ft_putstr_fd("dup2 Error", 1);
 			exit(1);
 			
 		}
 	}
-	// printf("%d\n", list->p);
-	//if (list->next && ((((!list->start && !list->end) || (!list->start && list->end)) || (!list->next->end))))
 	if (list->next && !list->end && (list->p || !list->next->end))
 	{
-		// puts("here");
 		if (dup2(fds[j + 1], 1) < 0)
 		{
 			ft_putstr_fd("dup2 Error", 1);
@@ -150,31 +178,22 @@ int		*create_fds(t_cmd_list *list, t_cmds *cmds,int j, int *fds)
 pid_t			exec_child(t_cmds *cmds, t_cmd_list *list)
 {
 	pid_t	pid;
-	char *path;
-	int ret = 0;
 	pid = fork();
 	if (pid == 0)
 	{
-		//printf("am a child wlh\n");
 		cmds->pipe.fdin = 0;
 		cmds->pipe.fdout = 0;
 		(cmds->num_pipe) ? cmds->pipe.fds = create_fds(list, cmds,cmds->pipe.file_num, cmds->pipe.fds) : 0;
-		// puts("here --------------------------------");
 		close_pipes(cmds->pipe.fds, cmds->num_pipe);
-		// if (list->prev->redir)
 		if (list->redir)
 		{
-			// puts("am in");
 			exec_io_redi(cmds, list);
 		}
-		// list->args = split_cmd(list->data, ' ', cmds);
-		// printf("%s\n", list->args[0]);
-		//&& list->prev && !list->prev->redir
 		if (list->args[0] && (!list->prev || (list->prev  && !list->prev->redir)))
 		{
-			// puts("yayayay");
-			// printf("list === |%s|\n", list->args[0]);
-			if (ft_strcmp(list->args[0], "cd") == 0)
+			cmds->ret = exec_cmds(cmds, list);
+			printf("2ret====|%d|\n", cmds->ret);
+			/* if (ft_strcmp(list->args[0], "cd") == 0)
 				cmd_cd(list, cmds);
 			else if (ft_strcmp(list->args[0], "pwd") == 0)
 				cmd_pwd(cmds);
@@ -190,24 +209,14 @@ pid_t			exec_child(t_cmds *cmds, t_cmd_list *list)
 				cmd_env(cmds, list);
 			else
 			{
-				path = get_bin_path(list->args[0], cmds->envir);
-				ret = execve(path, list->args, cmds->envir);
-				//printf("\npat=|%d|\n", ret);
-				if (ret < 0)
-				{
-					ft_putstr_fd("minishell: ", 1);
-					ft_putstr_fd(list->args[0], 1);
-					ft_putendl_fd(": command not found", 1);
-					exit(1); //function that returns code error
-				}
-			}
+				check_cmd(cmds, list);
+			} */
 		}
 		exit(0);
 	}
 	else if (pid < 0)
 	{
-		ft_putstr_fd("Fork error", 1);
-		//exit(0);
+		exit_error("Fork error", 1, cmds, list);
 	}
 	if (cmds->num_pipe)
 		cmds->pipe.pids[cmds->pipe.file_num / 2] = pid;

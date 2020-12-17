@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:34:43 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/01 13:34:30 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/17 12:32:05 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	cmd_env(t_cmds *cmds, t_cmd_list *list)
 	i = 0;
 	if (list->args[1] != NULL)
 	{
-		//man_errors();
+		print_error(list->args[0], list->args[1], 2);
 		return (127);
 	}
 	else

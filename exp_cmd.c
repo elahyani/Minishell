@@ -6,20 +6,20 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 10:37:00 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/05 13:00:20 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/15 14:06:17 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		ft_arr_len(char **arr)
+int		ft_arr_len(char **tab)
 {
 	int	i;
 
 	i = 0;
-	if (arr)
+	if (tab)
 	{
-		while (arr[i] != NULL)
+		while (tab[i] != NULL)
 			i++;
 	}
 	return (i);
@@ -111,22 +111,6 @@ int		ft_getenv(char *name, char **env)
 	// ft_del(search);
 	return (-1);
 }
-
-/* char	*ft_strcat(char *dest, char *src)
-{
-	int		i;
-	int		len;
-
-	i = 0;
-	len = ft_strlen(dest);
-	while (src[i] != '\0')
-	{
-		dest[i + len] = src[i];
-		i++;
-	}
-	dest[i + len] = '\0';
-	return (dest);
-} */
 
 char	**ft_setenv(char *var, char *path, char **env)
 {
@@ -247,18 +231,20 @@ static char	**ft_sort_exp(char  **envr)
 	return (envr);
 }
 
-void	cmd_export(t_cmd_list *list, t_cmds *cmds)
+int	cmd_export(t_cmd_list *list, t_cmds *cmds)
 {
 	int		j;
 	int 	i;
 	int		o;
 	int		c;
+	//int		err;
 	char	**str;
 	char	**tmp;
 	char	**new_env;
 	char	**env_sort;
 
 	i = 0;
+	//err = 0;
 	cmds->exp_oldp = 0;
 	while (cmds->envir[i])
 	{
@@ -277,14 +263,14 @@ void	cmd_export(t_cmd_list *list, t_cmds *cmds)
 		env_sort = ft_envdup(cmds->envir);
 		new_env = ft_sort_exp(env_sort);
 		ft_print_export(new_env);
-		return ;
+		return (0);
 	}
 	if (!ft_isalpha(list->args[1][0]))
 	{
 		ft_putstr_fd("minishell: export: `", 1);
 		ft_putstr_fd(list->args[1], 1);
 		ft_putendl_fd("': Invalid identifier", 1);
-		return ;
+		return (1);
 		
 	}
 	if (!cmds->index)
@@ -319,21 +305,21 @@ void	cmd_export(t_cmd_list *list, t_cmds *cmds)
 				{
 					free(cmds->envir[j]);
 					cmds->envir[j] = ft_strdup(list->args[i]);
-					return ;
+					return (0);
 				}
 				else if (ft_strchr(cmds->envir[j], '=') && !(ft_strchr(list->args[i], '=')))
  				{
-					return ;
+					return (0);
 				}
 				else if (!ft_strchr(cmds->envir[j], '=') && !(ft_strchr(list->args[i], '=')))
 				{
-					return ;
+					return (0);
 				}
 				else if (!ft_strchr(cmds->envir[j], '=') && (ft_strchr(list->args[i], '=')))
 				{
 					free(cmds->envir[j]);
 					cmds->envir[j] = ft_strdup(list->args[i]);
-					return ;
+					return (0);
 				}
 			}
 		}
@@ -342,4 +328,5 @@ void	cmd_export(t_cmd_list *list, t_cmds *cmds)
 		cmds->index++;
 		i++;
 	}
+	return (0);
 }
