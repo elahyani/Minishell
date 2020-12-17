@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manag_stx_err.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 13:10:55 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/12 12:00:34 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/15 11:31:47 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,16 @@ int		semi_pipe_stx_err(char **ln, t_cmds *cmds)
 			iscmd = ft_substr(*ln, j, i - j);
 			j = -1;
 			if ((*ln)[i] == '|' && !(*ln)[i + 1])
+			{
+				ft_free_str(&iscmd);
 				return (get_sy_err());
+			}
 			else if (check_cmd_sep(iscmd))
+			{
+				ft_free_str(&iscmd);
 				return (get_sy_err());
+			}
+			ft_free_str(&iscmd);
 		}
 		(j == -1) ? j = i : 0;
 	}

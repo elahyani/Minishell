@@ -79,7 +79,8 @@
 [✅] echo \'\'\'\'
 [✅] echo \"\"\"
 [✅] echo \\"$PWD
-
+[✅] echo hello$PWD ; echo $PWD | echo "$"PWD | echo $"PWD" ; echo "$PWD" ; echo '$PWD' | echo '$'PWD | echo " "$PWD" " ; echo '" '$PWD' "' ; echo \$\$\$\$ ; echo \anychar\anychar\anychar ; echo \'\'\'\' ;  echo \"\"\" | echo \\"$PWD"
+[✅] a ; b | c | d ; e ; f | g | h ; i ; j ; k ; l ; m | n
 ======================================================================================
 [✅] \\
 [❌] /

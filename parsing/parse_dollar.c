@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:24 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/13 14:17:33 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 13:01:20 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,46 +26,51 @@
 // 		puts("CTRL-/");
 // 	return (cmds->exit_status);
 // }
+//
+
+void	ft_free_str(char **str)
+{
+	if (*str)
+		free(*str);
+	*str = NULL;
+}
 
 char	*get_env_val(t_cmds *cmds, char *join_arg)
 {
 	int		j;
-	int		k;
-	int		i;
-	char	arg;
+	char	*env_val_w;
 
-	i = 0;
+
 	j = 0;
-	k = 0;
-	//puts("hi");
-	arg = *join_arg;
-	if (cmds->env_val)
-		free(cmds->env_val);
-	cmds->env_val = ft_strdup(join_arg + 1);
+	env_val_w = NULL;
+	// if (cmds->env_val)
+	// 	free(cmds->env_val);
+	// cmds->env_val = ft_strdup(join_arg + 1);
+	// join_arg++;
 	while (cmds->envir[j] != NULL)
 	{
-		cmds->env_line = ft_split(cmds->envir[j], '=');
-		if (ft_strcmp(cmds->env_line[0], cmds->env_val) == 0)
+		// cmds->env_line = ft_split(cmds->envir[j], '=');
+		env_val_w = ft_get_first(cmds->envir[j], '=');
+		if (ft_strcmp(env_val_w, join_arg + 1) == 0)
 		{
-			k = 1;
-			return (cmds->env_line[1]);
+			ft_free_str(&env_val_w);
+			return (ft_strdup(cmds->envir[j] + ft_strlen(join_arg + 1) + 1));
 		}
+		ft_free_str(&env_val_w);
 		j++;
 	}
-	if (k == 0)
+	if (!ft_strcmp(cmds->join_arg, "$"))
+		return (ft_strdup("$"));
+	else if (!ft_strcmp(cmds->join_arg, "$?"))
 	{
-		if (!ft_strcmp(cmds->join_arg, "$"))
-			return (ft_strdup("$"));
-		else if (!ft_strcmp(cmds->join_arg, "$?"))
-		{
-			//get_exit_status(cmds);
-			exit(0);
-		}
-		while (cmds->join_arg[++i])
-			if (ft_isalpha(cmds->join_arg[i]))
-			 	return (ft_strdup(""));
-		return (cmds->join_arg);
+		//get_exit_status(cmds);
+		exit(0);
 	}
+	j = 0;
+	while (cmds->join_arg[++j])
+		if (ft_isalpha(cmds->join_arg[j]))
+			return (ft_strdup(""));
+	return (cmds->join_arg);
 	return (NULL);
 }
 
@@ -79,6 +84,8 @@ int		b_point(char *arg)
 			return (i);
 	return (i);
 }
+
+
 
 char	*parse_dollar(t_cmds *cmds, char **line_list)
 {
@@ -114,8 +121,11 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 			cmds->join_arg = ft_substr(*line_list + i, 0, l);
 			cmds->env_val = get_env_val(cmds, cmds->join_arg);
 			tmp = ft_strjoin(arg, cmds->env_val);
-			(arg) ? free(arg) : 0;
-			arg = ft_strdup(tmp);
+			ft_free_str(&cmds->env_val);
+			ft_free_str(&cmds->join_arg);
+			ft_free_str(&arg);
+			arg = tmp;
+			// ft_free_str(&tmp);
 			i += l - 1;
 		}
 		else
@@ -123,14 +133,13 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 			tmp2[0] = (*line_list)[i];
 			tmp2[1] = '\0';
 			tmp1 = ft_strjoin(arg, tmp2);
-			(arg) ? free(arg) : 0;
-			arg = ft_strdup(tmp1);
+			ft_free_str(&arg);
+			arg = tmp1;
+			// ft_free_str(&tmp1);
 		}
 		((*line_list)[i] != '\\' && cmds->ignore) ? cmds->ignore = 0 : 0;
 	}
-	*line_list = ft_strdup(arg);
-	(arg) ? free(arg) : 0;
-	(tmp) ? free(tmp) : 0;
-	(tmp1) ? free(tmp1) : 0;
-	return (*line_list);
+	// free(*line_list);
+	// *line_list = NULL;
+	return (arg);
 }

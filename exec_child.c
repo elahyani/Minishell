@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 10:26:16 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/14 11:08:05 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 13:30:32 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ pid_t			exec_child(t_cmds *cmds, t_cmd_list *list)
 			else if (ft_strcmp(list->args[0], "unset") == 0)
 				cmd_unset(list, cmds);
 			else if (ft_strcmp(list->args[0], "exit") == 0)
-				cmd_exit();
+				cmd_exit(cmds);
 			else if (ft_strcmp(list->args[0], "echo") == 0)
 				cmd_echo(list);
 			else if (ft_strcmp(list->args[0], "env") == 0)

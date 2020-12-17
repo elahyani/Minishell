@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 10:14:42 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/12 11:59:04 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/17 13:30:38 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,8 +240,11 @@
 		ft_putchar_fd('\n', 1);
 } */
 
-void	cmd_exit()
+void	cmd_exit(t_cmds *cmds)
 {
 	ft_putstr_fd("exit\n", 1);
+	free_cmd_list(cmds);
+	free(cmds->line);
+	free(cmds);
 	exit(1);
 }

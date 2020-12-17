@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/14 14:10:45 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 13:32:31 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -370,7 +370,7 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 			else if (ft_strcmp(head->args[0], "unset") == 0)
 				cmd_unset(head, cmds);
 			else if (ft_strcmp(head->args[0], "exit") == 0)
-				cmd_exit();
+				cmd_exit(cmds);
 			else if (ft_strcmp(head->args[0], "echo") == 0)
 			{
 				cmd_echo(head);
@@ -394,12 +394,20 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 
 void	free_cmd_list(t_cmds *cmds)
 {
-	t_cmd_list *tmp;
+	int			i;
+	t_cmd_list	*tmp;
 
 	if (cmds->cmd_list)
 	{
 		while (cmds->cmd_list)
 		{
+			i = -1;
+			(cmds->cmd_list->line) ? ft_free_str(&cmds->cmd_list->line) : 0;
+			(cmds->cmd_list->data) ? ft_free_str(&cmds->cmd_list->data) : 0;
+			while (cmds->cmd_list->args && cmds->cmd_list->args[++i])
+				if (cmds->cmd_list->args[i])
+					ft_free_str(&cmds->cmd_list->args[i]);
+			free(cmds->cmd_list->args);
 			tmp = cmds->cmd_list->next;
 			free(cmds->cmd_list);
 			cmds->cmd_list = tmp;
@@ -407,35 +415,40 @@ void	free_cmd_list(t_cmds *cmds)
 	}
 }
 
+void	initialization(t_cmds **cmds, char **envp)
+{
+	*cmds = (t_cmds *)malloc(sizeof(t_cmds));
+	(*cmds)->cmd_list = NULL;
+	(*cmds)->index = 0;
+	(*cmds)->oldpwd = NULL;
+	(*cmds)->cd = 0;
+	(*cmds)->minus = 0;
+    (*cmds)->envir = envp;
+	(*cmds)->index = 0;
+	(*cmds)->oldpwd = NULL;
+	(*cmds)->save_oldpwd = NULL;
+	(*cmds)->cd = 0;
+	(*cmds)->minus = 0;
+    (*cmds)->env_val = NULL;
+    (*cmds)->env_arg = NULL;
+	(*cmds)->quote = 0;
+	(*cmds)->ignore = 0;
+}
+
 int		main(int argc, char **argv, char **envp)
 {
+    int			status;
+    char		*line;
     t_cmds		*cmds;
     t_cmd_list	*list;
-    char		*line;
-    int			status = 1;
-	int			i;
 
     status = 1;
-    cmds = (t_cmds *)malloc(sizeof(t_cmds));
-	cmds->cmd_list = NULL;
-	cmds->index = 0;
-	cmds->oldpwd = NULL;
-	cmds->cd = 0;
-	cmds->minus = 0;
-    cmds->envir = envp;
-	cmds->index = 0;
-	cmds->oldpwd = NULL;
-	cmds->save_oldpwd = NULL;
-	cmds->cd = 0;
-	cmds->minus = 0;
-    cmds->env_val = NULL;
-    cmds->env_arg = NULL;
-	cmds->quote = 0;
-	cmds->ignore = 0;
-	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
+	initialization(&cmds, envp);
+	ft_putstr_fd("\e[1;31mminishell~>\e[0m ", 1);
     while (status)
     {
 		status = get_next_line(0, &line);
+		cmds->line = line;
         if (ft_strcmp(line, ""))
         {
         	parse_line(&line, cmds);
@@ -444,26 +457,25 @@ int		main(int argc, char **argv, char **envp)
 				list = cmds->cmd_list;
 				while (list)
 				{
-					// printf("***** LINE %s\n", list->line);
-					if (!list->line)
-						break ;
-					parse_list_line(&list->line, list, cmds);
-					list = get_cmd(cmds, list);
-					// if (!list->next)
+					//printf("***** LINE %s\n", list->line);
+					// if (!list->line)
 					// 	break ;
+					parse_list_line(&list->line, list, cmds);
+					//printf("ll => %s\n\n", list->line);
+					// list->args = split_cmd(list->data, ' ', cmds);
+					// printf("list->args[0] = |%s|\n", list->args[0]);
+					// printf("list->args[1] = |%s|\n", list->args[1]);
+					//(list->line) ? ft_free_str(&list->line) : 0;
+					list = get_cmd(cmds, list);
 					list = list->next;
 				}
             	print_cmds(cmds->cmd_list);
 				free_cmd_list(cmds);
 			}
-            free(line);
         }
-        ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
+		free(line);
+        ft_putstr_fd("\e[1;31mminishell~>\e[0m ", 1);
+		free(cmds);
     }
-	//free_cmds(cmds);
     return (0);
 }
-
-//	free leaks
-//	manag sy err
-//	$?

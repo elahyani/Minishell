@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:28 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/12 19:22:24 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/17 10:37:38 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,15 @@ int		get_sy_err()
 
 void	parse_line(char **ln, t_cmds *cmds)
 {
-	int			len;
 	int			i;
+	int			j;
 	t_cmd_list	*head;
 
 	if (handle_stx_err(ln, cmds) || check_q(ln, cmds) || check_redir(ln, cmds))
 		return ;
-	len = ft_strlen(*ln);
 	i = -1;
-	head = list_cmds(NULL, *ln, 0);
+	j = -1;
+	head = NULL;
 	cmds->quote = 0;
 	cmds->ignore = 0;
 	while ((*ln)[++i])
@@ -51,19 +51,31 @@ void	parse_line(char **ln, t_cmds *cmds)
 			cmds->ignore = cmds->ignore ? 0 : 1;
 		if (!cmds->ignore && is_quote((*ln)[i]))
 			cmds->quote = quote_activer((*ln)[i], cmds->quote);
-		if (!cmds->quote && !cmds->ignore && (((*ln)[i] == ';' &&
-		(*ln)[i - 1] != '\\') || !(*ln)[i + 1]))
+		if (!cmds->quote && !cmds->ignore && (((*ln)[i] == ';') || !(*ln)[i + 1]) && j != -1)
 		{
-			if ((*ln)[i] == ';')
+			if (head)
 			{
-				(*ln)[i] = '\0';
-				add_front(&head, list_cmds(NULL, *ln + i + 1, 0));
+				if (!(*ln)[i + 1] && (*ln)[i] != ';')
+					add_front(&head, list_cmds(NULL, ft_substr(*ln, j + 1, i - j), 0));
+				else
+					add_front(&head, list_cmds(NULL, ft_substr(*ln, j + 1, i - j - 1), 0));
 			}
+			else
+			{
+				if (!(*ln)[i + 1] && (*ln)[i] != ';')
+					head = list_cmds(NULL, ft_substr(*ln, j, i + 1), 0);
+				else
+					head = list_cmds(NULL, ft_substr(*ln, j, i), 0);
+			}
+			j = -1;
 		}
-		if ((*ln)[i] != '\\' && cmds->ignore)
-			cmds->ignore = 0;
+		((*ln)[i] != '\\' && cmds->ignore) ? cmds->ignore = 0 : 0;
+		(j == -1) ? j = i : 0;
 	}
+	if (!head)
+		head = list_cmds(NULL, ft_substr(*ln, j, i), 0);
 	while (head->prev != NULL)
 		head = head->prev;
 	cmds->cmd_list = head;
+	//(*ln) ? ft_free_str(ln) : 0;
 }

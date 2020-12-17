@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/12 20:29:02 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 13:30:42 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ typedef struct	s_cmds
 	char		*buff;
 	char		*pwd;
 	char		*join_arg;
-	char		*data;
+	char		*line;
 	int			exit_status;
 	char		**split_cmd;
 	char		**f_parse_line;
@@ -96,7 +96,7 @@ int			cmd_env(t_cmds *cmds, t_cmd_list *list);
 
 void	    cmd_pwd(t_cmds *cmds);
 void		cmd_echo(t_cmd_list *list);
-void		cmd_exit();
+void		cmd_exit(t_cmds *cmds);
 void		print_cmds(t_cmd_list *cmds);
 void		cmd_export(t_cmd_list *list, t_cmds *cmds);
 void		cmd_unset(t_cmd_list *list, t_cmds *cmds);
@@ -134,4 +134,6 @@ int			handle_stx_err(char **ln, t_cmds *cmds);
 int			check_redir(char **ln, t_cmds *cmds);
 int			check_q(char **ln, t_cmds *cmds);
 int			get_sy_err();
+void		ft_free_str(char **str);
+void		free_cmd_list(t_cmds *list);
 #endif
