@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 18:11:37 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 19:18:40 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,16 @@
 
 
 ////////////////////////////////////////////
+
+void	ft_free_arr(char **str)
+{
+	int		i;
+
+	i = -1;
+	while (str[++i])
+		ft_free_str(&str[i]);
+	free(str);
+}
 
 int		ft_access(char *path, int mode)
 {
@@ -67,13 +77,13 @@ char	*get_bin_path(char *cmdfile, char **env)
 		{
 			if ((acc_path = try_path(cmdfile, split_path[i])))
 			{
-				//ft_free_arr(split_path);
+				ft_free_arr(split_path);
 				return (acc_path);
 			}
 			i++;
 		}
 	}
-	//ft_free_arr(split_path);
+	ft_free_arr(split_path);
 	return (cmdfile);
 }
 
@@ -323,7 +333,7 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 	// while (head)
 	// {
 		///////////////////////////////////////////////////
-	head->args = split_cmd(head->data, ' ', cmds);
+	//head->args = split_cmd(head->data, ' ', cmds);
 	cmds->num_pipe = get_num_pipes(head);
 	cmds->pipe.file_num = 0;
 	if (cmds->num_pipe)
@@ -340,7 +350,7 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 		cmds->pipe.file_num = 0;
 		while (head)
 		{
-			head->args = split_cmd(head->data, ' ', cmds);
+			//head->args = split_cmd(head->data, ' ', cmds);
 			//if (cmds->num_pipe)
 			//{
 			//if (head->redir)
@@ -454,8 +464,7 @@ void	free_cmd_list(t_cmds *cmds)
 			(cmds->cmd_list->line) ? ft_free_str(&cmds->cmd_list->line) : 0;
 			(cmds->cmd_list->data) ? ft_free_str(&cmds->cmd_list->data) : 0;
 			while (cmds->cmd_list->args && cmds->cmd_list->args[++i])
-				if (cmds->cmd_list->args[i])
-					ft_free_str(&cmds->cmd_list->args[i]);
+				ft_free_str(&cmds->cmd_list->args[i]);
 			free(cmds->cmd_list->args);
 			tmp = cmds->cmd_list->next;
 			free(cmds->cmd_list);
@@ -487,15 +496,11 @@ void	initialization(t_cmds **cmds, char **envp)
 	*cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	(*cmds)->cmd_list = NULL;
 	(*cmds)->index = 0;
-	(*cmds)->oldpwd = NULL;
 	(*cmds)->cd = 0;
 	(*cmds)->minus = 0;
     (*cmds)->envir = envp;
-	(*cmds)->index = 0;
 	(*cmds)->oldpwd = NULL;
 	(*cmds)->save_oldpwd = NULL;
-	(*cmds)->cd = 0;
-	(*cmds)->minus = 0;
     (*cmds)->env_val = NULL;
     (*cmds)->env_arg = NULL;
 	(*cmds)->quote = 0;

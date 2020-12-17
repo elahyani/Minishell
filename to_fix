@@ -5,7 +5,7 @@
 (✅) '	ls' (ignore whitespaces) 
 (❌) free_leaks 					 
 (❌) exit_status $? 				 
-(❌) ./srcs (erros type output) 	 
+(✅) ./srcs (erros type output) 	 
 (✅) Invalid read of size 		 
 (✅) valgrind				 		 
 [✅] stx err: ['';], [''|'';''|'';'';';';'|'] 
@@ -31,7 +31,7 @@
 [✅] [\\] , [\], [cmd\] 
 
 ======================================================================================
-[❌].\/Desktop
+[✅].\/Desktop
 
 ======================================================================================
 [✅] export a = b ==> then check env and export
@@ -40,7 +40,7 @@
 [✅] export b=c
 [✅] export e=$b
 [✅] export z=\v ==> it gives z="v"
-[❌] export _=sakdjh ==> u shouldn't have change this var u have to protect the var _
+[✅] export _=sakdjh ==> u shouldn't have change this var u have to protect the var _
 [✅] unset PATH
 [✅] export PATH=/bin:/usr/bin ==> should work
 
@@ -60,11 +60,11 @@
 
 ======================================================================================
 [✅] echo -n
-[❌] echo -n -n -n -n
+[✅] echo -n -n -n -n
 [✅] echo -nnnnnnn
-[🔶] echo $?
-[🔶] echo hello$?hi
-[🔶] $?????????????
+[✅] echo $?
+[❌] echo hello$?hi
+[❌] $?????????????
 [✅] echo hello$PWD
 [✅] echo $PWD
 [✅] echo "$"PWD
@@ -83,15 +83,15 @@
 [✅] a ; b | c | d ; e ; f | g | h ; i ; j ; k ; l ; m | n
 ======================================================================================
 [✅] \\
-[❌] /
-[❌] //
-[❌] ./ls
+[✅] /
+[✅] //
+[✅] ./ls
 [✅] \ls
 
 ======================================================================================
 [✅] '/bin/ls'
 [✅] 'anycmd' ==> should work
-[❌] '/bin/ls ; /bin/pwd' ==> shouldn't work
+[✅] '/bin/ls ; /bin/pwd' ==> shouldn't work
 [❌] any test contains double quetes or signle quetes
 
 ======================================================================================
@@ -107,7 +107,7 @@
 
 ======================================================================================
 signals:
-[🔶] try ctrl-C
+[✅] try ctrl-C
 [🔶] try ctrl-C ctrl-\ ctrl-D in an empty prompt then check echo $?
 [🔶] try ctrl-C ctrl-\ ctrl-D after u wrote some stuff then check echo $?
 [🔶] try ctrl-C ctrl-\ ctrl-D after u run a blocking cmd like cat or wc or sleep 5 then check echo $?

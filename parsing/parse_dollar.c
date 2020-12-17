@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:24 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 18:02:24 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 18:53:56 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_free_str(char **str)
 {
 	if (*str)
 		free(*str);
-	*str = NULL;
+	// *str = NULL;
 }
 
 char	*get_env_val(t_cmds *cmds, char *join_arg)
@@ -41,15 +41,12 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 	if (!ft_strcmp(cmds->join_arg, "$"))
 		return (ft_strdup("$"));
 	else if (!ft_strcmp(cmds->join_arg, "$?"))
-	{
 		return (ft_itoa(cmds->ret));
-	}
 	j = 0;
 	while (cmds->join_arg[++j])
 		if (ft_isalpha(cmds->join_arg[j]))
 			return (ft_strdup(""));
 	return (cmds->join_arg);
-	return (NULL);
 }
 
 int		b_point(char *arg)
@@ -98,9 +95,9 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 			l = b_point(*line_list + i);
 			cmds->join_arg = ft_substr(*line_list + i, 0, l);
 			cmds->env_val = get_env_val(cmds, cmds->join_arg);
+			//ft_free_str(&cmds->join_arg);
 			tmp = ft_strjoin(arg, cmds->env_val);
 			ft_free_str(&cmds->env_val);
-			ft_free_str(&cmds->join_arg);
 			ft_free_str(&arg);
 			arg = tmp;
 			// ft_free_str(&tmp);

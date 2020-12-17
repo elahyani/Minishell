@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:28 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 18:05:52 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 19:13:01 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,8 @@
 
 int		get_sy_err(t_cmds *cmds)
 {
-	// t_cmd_list *tmp;
-	
-	//puts("________________1");
 	ft_putendl_fd("minishell: syntax error", 1);
 	cmds->ret = 258;
-	// if (cmds->cmd_list)
-	// {
-	// 	puts("________________2");
-	// 	while (cmds->cmd_list)b
-	// 	{
-	// 		puts("________________3");
-	// 		tmp = cmds->cmd_list->next;
-	// 		free(cmds->cmd_list);
-	// 		cmds->cmd_list = tmp;
-	// 	}
-	// }
 	return (1);
 }
 
@@ -57,16 +43,16 @@ void	parse_line(char **ln, t_cmds *cmds)
 			if (head)
 			{
 				if (!(*ln)[i + 1] && (*ln)[i] != ';')
-					add_front(&head, list_cmds(NULL, ft_substr(*ln, j + 1, i - j), 0));
+					add_front(&head, list_cmds(ft_substr(*ln, j + 1, i - j)));
 				else
-					add_front(&head, list_cmds(NULL, ft_substr(*ln, j + 1, i - j - 1), 0));
+					add_front(&head, list_cmds(ft_substr(*ln, j + 1, i - j - 1)));
 			}
 			else
 			{
 				if (!(*ln)[i + 1] && (*ln)[i] != ';')
-					head = list_cmds(NULL, ft_substr(*ln, j, i + 1), 0);
+					head = list_cmds(ft_substr(*ln, j, i + 1));
 				else
-					head = list_cmds(NULL, ft_substr(*ln, j, i), 0);
+					head = list_cmds(ft_substr(*ln, j, i));
 			}
 			j = -1;
 		}
@@ -74,9 +60,8 @@ void	parse_line(char **ln, t_cmds *cmds)
 		(j == -1) ? j = i : 0;
 	}
 	if (!head)
-		head = list_cmds(NULL, ft_substr(*ln, j, i), 0);
+		head = list_cmds(ft_substr(*ln, j, i));
 	while (head->prev != NULL)
 		head = head->prev;
 	cmds->cmd_list = head;
-	//(*ln) ? ft_free_str(ln) : 0;
 }

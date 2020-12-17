@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/17 18:06:45 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 19:08:51 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ int				g_ret;
 int			get_next_line(int fd, char **line);
 void		parse_list_line(char **line_list, t_cmd_list *list, t_cmds *cmds);
 void		parse_line(char	**line, t_cmds *cmds);
-t_cmd_list	*list_line_cmds(t_cmd_list *list, char *data, int k);
-t_cmd_list	*list_cmds(t_cmd_list *list, char *data, int k);
+t_cmd_list	*list_line_cmds(char *data);
+t_cmd_list	*list_cmds(char *data);
 void		update_list(t_cmd_list **head, t_cmd_list **next ,t_cmd_list *new);
 void		add_front(t_cmd_list **head, t_cmd_list *new);
 t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head);

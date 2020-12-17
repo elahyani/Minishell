@@ -6,24 +6,18 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:53:48 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 13:22:31 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/17 19:08:39 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_cmd_list	*list_cmds(t_cmd_list *list, char *data, int k)
+t_cmd_list	*list_cmds(char *data)
 {
 	t_cmd_list	*head;
 
-	if (!list)
-		head = (t_cmd_list *)malloc(sizeof(t_cmd_list));
-	else
-		head = list;
-	if (k)
-		head->data = data;
-	else
-		head->line = data;
+	head = (t_cmd_list *)malloc(sizeof(t_cmd_list));
+	head->line = data;
 	head->next = NULL;
 	head->prev = NULL;
 	head->start = 0;
@@ -32,25 +26,18 @@ t_cmd_list	*list_cmds(t_cmd_list *list, char *data, int k)
 	return (head);
 }
 
-t_cmd_list	*list_line_cmds(t_cmd_list *list, char *data, int k)
+t_cmd_list	*list_line_cmds(char *data)
 {
 	t_cmd_list	*head;
 
-	if (!list)
-		head = (t_cmd_list *)malloc(sizeof(t_cmd_list));
-	else
-		head = list;
-	head->data = NULL;
-	if (k)
-		head->data = data;
-	else
-		head->line = data;
+	head = (t_cmd_list *)malloc(sizeof(t_cmd_list));
+	head->data = data;
 	head->p = 0;
-	head->next = list ? head->next : NULL;
-	head->prev = list ? head->prev : NULL;
-	head->start = list ? head->start : 0;
-	head->end = list ? head->end : 0;
-	head->redir = list ? head->redir : 0;
+	head->next = NULL;
+	head->prev =  NULL;
+	head->start =  0;
+	head->end = 0;
+	head->redir = 0;
 	if (!head->start)
 		head->line = NULL;
 	return (head);
