@@ -2,4 +2,5 @@
 minishell*
 debuger
 debug
-libft*
+libft/*.o
+libft/libft*
