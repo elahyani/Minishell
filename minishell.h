@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/17 13:26:29 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/18 11:24:56 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int			cmd_env(t_cmds *cmds, t_cmd_list *list);
 
 int	    cmd_pwd(t_cmds *cmds);
 int			cmd_echo(t_cmd_list *list);
-int		cmd_exit();
+int		cmd_exit(t_cmd_list *list);
 void		print_cmds(t_cmd_list *cmds);
 int		cmd_export(t_cmd_list *list, t_cmds *cmds);
 int		cmd_unset(t_cmd_list *list, t_cmds *cmds);
@@ -145,5 +145,6 @@ void		sig_handle(int sig);
 void	exit_error(char *str, int status, t_cmds *cmds, t_cmd_list *list);
 int		exec_cmds(t_cmds *cmds, t_cmd_list *list);
 int		print_error(char *cmd, char *arg, int err);
-//int cmd_exit(t_cmds *cmds, t_cmd_list *list);
+t_cmd_list *execute_cmd_by_order(t_cmds *cmds, t_cmd_list *list);
+//int		cmd_exit(t_cmds *cmds, t_cmd_list *list);
 #endif

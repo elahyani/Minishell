@@ -6,14 +6,13 @@
 #    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/12/17 13:24:33 by ichejra          ###   ########.fr        #
+#    Updated: 2020/12/17 19:00:51 by ichejra          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell.a
 
-SRCS =	execution.c \
-		exp_cmd.c \
+SRCS =	exp_cmd.c \
 		cd_cmd.c \
 		echo_cmd.c \
 		env_cmd.c \
@@ -29,7 +28,8 @@ SRCS =	execution.c \
 		parsing/manag_quotes.c \
 		parsing/split_cmds.c \
 		errors.c \
-		#exit_cmd \
+		execution.c \
+		# exit_cmd \
 		# cmds.c \
 
 SRC_GNL = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c

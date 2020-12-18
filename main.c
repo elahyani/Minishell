@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 13:25:46 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/18 11:31:22 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,6 @@ void			check_file(char *file, int cas, t_cmds *cmds, t_cmd_list *list)
 			exit_error(strerror(errno), 200, cmds, list);
 		if (!ft_access(file, 1))
 			exit_error("Permission denied", 126, cmds, list);
-		// if (stat(file, &file_stat) == 0)
 		if (file_stat.st_mode == 16877)
 			exit_error("is a directory", 126, cmds, list);
 
@@ -216,28 +215,26 @@ void			check_file(char *file, int cas, t_cmds *cmds, t_cmd_list *list)
 		if (file_stat.st_mode == 16877)
 			exit_error("is a directory", 126, cmds, list);
 		if (stat(file, &file_stat) < 0)
-			exit_error(strerror(errno), 127, cmds, list);
+			exit_error(strerror(errno), 1 , cmds, list);
 	}
 }
 
 void 		check_cmd(t_cmds *cmds, t_cmd_list *list)
 {
-	int ret = 0;
+	int ret;
 	char *path;
 
-	if ((list->args[0][0] == '.' && list->args[0][1] == '/')
-	|| (list->args[0][0] == '.' && list->args[0][1] == '.' && list->args[0][2] == '/')
-	|| (ft_strchr(list->args[0], '/')))
+	ret = 0;
+	// if ((list->args[0][0] == '.' && list->args[0][1] == '/')
+	// || (list->args[0][0] == '.' && list->args[0][1] == '.' && list->args[0][2] == '/')
+	// || (ft_strchr(list->args[0], '/')))
+	if ((list->args[0][0] == '.' && list->args[0][1] == '/') ||
+		(ft_strchr(list->args[0], '/')))
 	{
 		if (list->args[0][ft_strlen(list->args[0]) - 1] == '/')
-		{
 			check_file(list->args[0], 2, cmds, list);
-
-		}
 		else
-		{
 			check_file(list->args[0], 1, cmds, list);
-		}
 		execve(list->args[0], list->args, cmds->envir);
 	}
 	else
@@ -293,6 +290,7 @@ int		exec_cmds(t_cmds *cmds, t_cmd_list *list)
 	int ret;
 
 	ret = 1;
+	
 	if (ft_strcmp(list->args[0], "cd") == 0)
 		ret = cmd_cd(list, cmds);
 	else if (ft_strcmp(list->args[0], "pwd") == 0)
@@ -302,7 +300,7 @@ int		exec_cmds(t_cmds *cmds, t_cmd_list *list)
 	else if (ft_strcmp(list->args[0], "unset") == 0)
 		ret = cmd_unset(list, cmds);
 	else if (ft_strcmp(list->args[0], "exit") == 0)
-		ret = cmd_exit();
+		ret = cmd_exit(list);
 	else if (ft_strcmp(list->args[0], "echo") == 0)
 		ret = cmd_echo(list);
 	else if (ft_strcmp(list->args[0], "env") == 0)
@@ -315,11 +313,45 @@ int		exec_cmds(t_cmds *cmds, t_cmd_list *list)
 	return (ret);
 }
 
+
+t_cmd_list *execute_cmd_by_order(t_cmds *cmds, t_cmd_list *list)
+{
+	pid_t pid;
+
+	if ((list->next && !list->end) || !is_builtin(list->args[0]))
+	{
+		cmds->pipe.fds = pipe_fds(cmds->num_pipe, cmds->pipe.fds);
+		save_fds(cmds->pipe.backup);
+		cmds->pipe.file_num = 0;
+		while (list)
+		{
+			list->args = split_cmd(list->data, ' ', cmds);
+			pid = exec_child(cmds, list);
+			//list = skip_append(list);
+			list = skip_redir(list);
+			cmds->pipe.file_num += 2;
+			if (list->end)
+				break ;
+			// else
+				list = list->next;
+		}
+		restore_fds(cmds->pipe.backup);
+		get_cmd_help(cmds, list, pid);
+	}
+	else if (list->args[0])
+	{
+		cmds->ret = exec_cmds(cmds, list);
+		//printf("1ret====|%d|\n", cmds->ret);
+	}
+	return (list);
+}
+
+
 t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 {
 	//char *path;
 	//int ret = 0;
-	pid_t pid;
+	//pid_t pid;
 	// while (head)
 	// {
 		///////////////////////////////////////////////////
@@ -328,68 +360,7 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 	cmds->pipe.file_num = 0;
 	if (cmds->num_pipe)
 		cmds->pipe.pids = malloc(sizeof(int) * (cmds->num_pipe + 1));
-	//head = excute_command_by_order(cmds, cmds);
-	// printf("0|%s|\n", head->args[0]);
-	// printf("1|%s|\n", head->args[1]);
-	// printf("2|%s|\n", head->args[2]);
-	// printf("3|%s|\n", head->args[3]);
-	if ((head->next && !head->end) || !is_builtin(head->args[0]))
-	{
-		cmds->pipe.fds = pipe_fds(cmds->num_pipe, cmds->pipe.fds);
-		save_fds(cmds->pipe.backup);
-		cmds->pipe.file_num = 0;
-		while (head)
-		{
-			head->args = split_cmd(head->data, ' ', cmds);
-			//if (cmds->num_pipe)
-			//{
-			//if (head->redir)
-			//{
-				// puts("jj");
-				pid = exec_child(cmds, head);
-				//head = skip_append(head);
-				head = skip_redir(head);
-
-				cmds->pipe.file_num += 2;
-					
-			//}
-			//}
-			if (head->end)
-				break ;
-			// else
-				head = head->next;
-		}
-		restore_fds(cmds->pipe.backup);
-		get_cmd_help(cmds, head, pid);
-	}
-	else if (head->args[0])
-	{
-		///////////////////////////////////////////////////
-		cmds->ret = exec_cmds(cmds, head);
-		printf("1ret====|%d|\n", cmds->ret);
-		/* if (ft_strcmp(head->args[0], "cd") == 0)
-		{
-			cmd_cd(head, cmds);
-		}
-		else if (ft_strcmp(head->args[0], "pwd") == 0)
-			cmd_pwd(cmds);
-		else if (ft_strcmp(head->args[0], "export") == 0)
-			cmd_export(head, cmds);
-		else if (ft_strcmp(head->args[0], "unset") == 0)
-			cmd_unset(head, cmds);
-		else if (ft_strcmp(head->args[0], "exit") == 0)
-			cmd_exit();
-		else if (ft_strcmp(head->args[0], "echo") == 0)
-		{
-			cmd_echo(head);
-		}
-		else if (ft_strcmp(head->args[0], "env") == 0)
-			cmd_env(cmds, head);
-		else
-		{
-			check_cmd(cmds, head);
-		} */
-	}
+	head = execute_cmd_by_order(cmds, head);
 		// if (head->end)
 		// 	break ;
 		// head = head->next;
@@ -436,7 +407,6 @@ int		main(int argc, char **argv, char **envp)
     t_cmd_list	*list;
     char		*line;
     int			status;
-	int			st;
 	int			i;
 
     cmds = (t_cmds *)malloc(sizeof(t_cmds));
@@ -465,26 +435,14 @@ int		main(int argc, char **argv, char **envp)
 	status = 1;
     while (status)
     {
-		//signal(SIGQUIT, SIG_IGN);
 		signal(SIGQUIT, sig_handle);
 		signal(SIGINT, sig_handle);
-		st = cmds->ret;
-		// printf("1|%d|\n", g_ret);
-		// if (g_ret == 1)
-		// 	st = 130;
 		if (cmds->ret != 130)
 			ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
-		// if (cmds->ret != 130 && cmds->sig != 1 && status != 0 && cmds->ret == 0)
-		// {
-		// 	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
-		// }
-		// else if (cmds->ret != 130 && cmds->sig != 1 && status != 0)
-		// 	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
-		// printf("2|%d|\n", st);
 		cmds->sig = 0;
 		status = get_next_line(0, &line);
 		if (status == 0)
-			cmd_exit();
+			cmd_exit(list);
         if (ft_strcmp(line, ""))
         {
         	parse_line(&line, cmds);
@@ -511,8 +469,6 @@ int		main(int argc, char **argv, char **envp)
 			g_ret = 0;
             free(line);
         }
-		// if (cmds->ret != 130)
-        // 	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
     }
 	//free_cmds(cmds);
     return (0);

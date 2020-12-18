@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 10:26:16 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/15 13:03:24 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/18 11:35:15 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,6 @@ void	redir_fd_io(t_cmds *cmds)
 		close(cmds->pipe.fdin);
 	}
 }
-
-/* static t_cmd_list *skip_append(t_cmd_list *list)
-{
-	while (list && list->redir > 0)
-	{
-		if (!list->next)
-			break ;
-		list = list->next;
-	}
-	return (list);
-} */
 
 int open_input(char *file)
 {
@@ -178,46 +167,27 @@ int		*create_fds(t_cmd_list *list, t_cmds *cmds,int j, int *fds)
 pid_t			exec_child(t_cmds *cmds, t_cmd_list *list)
 {
 	pid_t	pid;
+
 	pid = fork();
 	if (pid == 0)
 	{
 		cmds->pipe.fdin = 0;
 		cmds->pipe.fdout = 0;
-		(cmds->num_pipe) ? cmds->pipe.fds = create_fds(list, cmds,cmds->pipe.file_num, cmds->pipe.fds) : 0;
+		(cmds->num_pipe) ? cmds->pipe.fds = create_fds(list,
+			cmds,cmds->pipe.file_num, cmds->pipe.fds) : 0;
 		close_pipes(cmds->pipe.fds, cmds->num_pipe);
 		if (list->redir)
-		{
 			exec_io_redi(cmds, list);
-		}
-		if (list->args[0] && (!list->prev || (list->prev  && !list->prev->redir)))
+		if (list->args[0] && (!list->prev ||
+			(list->prev  && !list->prev->redir)))
 		{
 			cmds->ret = exec_cmds(cmds, list);
 			printf("2ret====|%d|\n", cmds->ret);
-			/* if (ft_strcmp(list->args[0], "cd") == 0)
-				cmd_cd(list, cmds);
-			else if (ft_strcmp(list->args[0], "pwd") == 0)
-				cmd_pwd(cmds);
-			else if (ft_strcmp(list->args[0], "export") == 0)
-				cmd_export(list, cmds);
-			else if (ft_strcmp(list->args[0], "unset") == 0)
-				cmd_unset(list, cmds);
-			else if (ft_strcmp(list->args[0], "exit") == 0)
-				cmd_exit();
-			else if (ft_strcmp(list->args[0], "echo") == 0)
-				cmd_echo(list);
-			else if (ft_strcmp(list->args[0], "env") == 0)
-				cmd_env(cmds, list);
-			else
-			{
-				check_cmd(cmds, list);
-			} */
 		}
 		exit(0);
 	}
 	else if (pid < 0)
-	{
 		exit_error("Fork error", 1, cmds, list);
-	}
 	if (cmds->num_pipe)
 		cmds->pipe.pids[cmds->pipe.file_num / 2] = pid;
 	return (pid);
