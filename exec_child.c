@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 10:26:16 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/18 12:18:25 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/18 12:49:19 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,103 +28,103 @@ void	redir_fd_io(t_cmds *cmds)
 	}
 }
 
-int open_input(char *file)
-{
-	int fd;
+// int open_input(char *file)
+// {
+// 	int fd;
 
-	fd = 0;
-	if ((fd = open(file, O_RDONLY)) < 0)
-	{
-		ft_putendl_fd("error opening file", 1);
-		exit(1);
-	}
-	return (fd);
-}
+// 	fd = 0;
+// 	if ((fd = open(file, O_RDONLY)) < 0)
+// 	{
+// 		ft_putendl_fd("error opening file", 1);
+// 		exit(1);
+// 	}
+// 	return (fd);
+// }
 
-int		backward_redir(t_cmd_list *list/* , t_cmds *cmds */)
-{
-	int i;
-	char *file;
-	struct stat file_stat;
+// int		backward_redir(t_cmd_list *list/* , t_cmds *cmds */)
+// {
+// 	int i;
+// 	char *file;
+// 	struct stat file_stat;
 
-	i = -1;
-	//list->args = split_cmd(list->data, ' ', cmds);
-	while (list->args[++i])
-	{
-		file = list->args[i];
-		if (stat(file, &file_stat) < 0)
-		{
-			ft_putstr_fd("minishell: ", 1);
-			ft_putstr_fd(file, 1);
-			ft_putendl_fd(": No such file or directory", 1);
-			exit (1);
-		}
-	}
-	return (open_input(file));
+// 	i = -1;
+// 	//list->args = split_cmd(list->data, ' ', cmds);
+// 	while (list->args[++i])
+// 	{
+// 		file = list->args[i];
+// 		if (stat(file, &file_stat) < 0)
+// 		{
+// 			ft_putstr_fd("minishell: ", 1);
+// 			ft_putstr_fd(file, 1);
+// 			ft_putendl_fd(": No such file or directory", 1);
+// 			exit (1);
+// 		}
+// 	}
+// 	return (open_input(file));
 	
-}
+// }
 
-int		open_output(t_cmd_list *list, char redir)
-{
-	int fd;
-	int flag;
-	int flag_mode;
+// int		open_output(t_cmd_list *list, char redir)
+// {
+// 	int fd;
+// 	int flag;
+// 	int flag_mode;
 
-	fd = 0;
-	flag = O_WRONLY | O_CREAT;
-	flag_mode = S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH;
-	if (redir == 'a')
-		flag = flag | O_APPEND;
-	else if (redir == '>')
-		flag = flag | O_TRUNC;
-	if ((fd = open(list->args[0], flag, flag_mode)) < 0)
-	{
-		ft_putendl_fd("error opening file", 1);
-		exit(1);
-	}
-	return (fd);
-}
+// 	fd = 0;
+// 	flag = O_WRONLY | O_CREAT;
+// 	flag_mode = S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH;
+// 	if (redir == 'a')
+// 		flag = flag | O_APPEND;
+// 	else if (redir == '>')
+// 		flag = flag | O_TRUNC;
+// 	if ((fd = open(list->args[0], flag, flag_mode)) < 0)
+// 	{
+// 		ft_putendl_fd("error opening file", 1);
+// 		exit(1);
+// 	}
+// 	return (fd);
+// }
 
-int		forward_redir(t_cmd_list *tmp, t_cmd_list *list/* , t_cmds *cmds */)
-{
-	int i;
+// int		forward_redir(t_cmd_list *tmp, t_cmd_list *list/* , t_cmds *cmds */)
+// {
+// 	int i;
 	
-	//tmp->next->args = split_cmd(list->next->data, ' ', cmds);
-	if (ft_arr_len(tmp->next->args) > 1 && !tmp->next->start)
-	{
-		i = 1;
-		while (tmp->next->args[i])
-		{
-			list->args = ft_get_arr(tmp->next->args[i], list->args);
-			i++;
-		}
-	}
-	return (open_output(tmp->next, tmp->redir));
-}
+// 	//tmp->next->args = split_cmd(list->next->data, ' ', cmds);
+// 	if (ft_arr_len(tmp->next->args) > 1 && !tmp->next->start)
+// 	{
+// 		i = 1;
+// 		while (tmp->next->args[i])
+// 		{
+// 			list->args = ft_get_arr(tmp->next->args[i], list->args);
+// 			i++;
+// 		}
+// 	}
+// 	return (open_output(tmp->next, tmp->redir));
+// }
 
-void	exec_io_redi(t_cmds *cmds, t_cmd_list *list)
-{
-	t_cmd_list *tmp;
-	tmp = list;
-	while (tmp && tmp->redir)
-	{
-		if (tmp->redir == '>' || tmp->redir == 'a')
-		{
-			cmds->pipe.fdout = forward_redir(tmp, list/* , cmds */);
-			if (!cmds->pipe.fdout)
-				cmds->ret = 1;
+// void	exec_io_redi(t_cmds *cmds, t_cmd_list *list)
+// {
+// 	t_cmd_list *tmp;
+// 	tmp = list;
+// 	while (tmp && tmp->redir)
+// 	{
+// 		if (tmp->redir == '>' || tmp->redir == 'a')
+// 		{
+// 			cmds->pipe.fdout = forward_redir(tmp, list/* , cmds */);
+// 			if (!cmds->pipe.fdout)
+// 				cmds->ret = 1;
 				
-		}
-		else if (tmp->redir == '<')
-		{
-			cmds->pipe.fdin = backward_redir(tmp->next/* , cmds */);
-			if (!cmds->pipe.fdin)
-				cmds->ret = 1;
-		}
-		tmp = tmp->next;
-	}
-	redir_fd_io(cmds);
-}
+// 		}
+// 		else if (tmp->redir == '<')
+// 		{
+// 			cmds->pipe.fdin = backward_redir(tmp->next/* , cmds */);
+// 			if (!cmds->pipe.fdin)
+// 				cmds->ret = 1;
+// 		}
+// 		tmp = tmp->next;
+// 	}
+// 	redir_fd_io(cmds);
+// }
 
 
 //////////////redir//////////////////////////

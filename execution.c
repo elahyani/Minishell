@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 10:14:42 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/18 12:20:53 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/18 13:06:46 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,45 +14,45 @@
 
 ////////////// A Ajouter a libft //////////////////////
 
-static long	ft_check_long(long n, int sign)
-{
-	if (n < 0 && sign > 0)
-		return (-1);
-	if (n > 0 && sign < 0)
-		return (0);
-	return (n);
-}
+// static long	ft_check_long(long n, int sign)
+// {
+// 	if (n < 0 && sign > 0)
+// 		return (-1);
+// 	if (n > 0 && sign < 0)
+// 		return (0);
+// 	return (n);
+// }
 
-long	ft_atoi_l(const char *str)
-{
-	int			i;
-	long long	n;
-	int			sign;
+// long	ft_atoi_l(const char *str)
+// {
+// 	int			i;
+// 	long long	n;
+// 	int			sign;
 
-	i = 0;
-	n = 0;
-	sign = 1;
-	while (str[i] == '\t' || str[i] == ' ' || str[i] == '\n' ||
-		str[i] == '\v' || str[i] == '\r' || str[i] == '\f')
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-			sign *= -1;
-		i++;
-	}
-	while (str[i] != '\0' && str[i] >= '0' && str[i] <= '9')
-	{
-		n = n * 10 + (str[i] - 48);
-		i++;
-	}
-	n = n * sign;
-	return (ft_check_long(n, sign));
-}
+// 	i = 0;
+// 	n = 0;
+// 	sign = 1;
+// 	while (str[i] == '\t' || str[i] == ' ' || str[i] == '\n' ||
+// 		str[i] == '\v' || str[i] == '\r' || str[i] == '\f')
+// 		i++;
+// 	if (str[i] == '-' || str[i] == '+')
+// 	{
+// 		if (str[i] == '-')
+// 			sign *= -1;
+// 		i++;
+// 	}
+// 	while (str[i] != '\0' && str[i] >= '0' && str[i] <= '9')
+// 	{
+// 		n = n * 10 + (str[i] - 48);
+// 		i++;
+// 	}
+// 	n = n * sign;
+// 	return (ft_check_long(n, sign));
+// }
 
 ////////////// A Ajouter a libft //////////////////////
 
-static int		valid_first_arg(char *arg)
+static int	valid_first_arg(char *arg)
 {
 	int		i;
 
@@ -62,7 +62,7 @@ static int		valid_first_arg(char *arg)
 	return ((arg[i] == '\0') ? 1 : 0);
 }
 
-static int		check_args_len(t_cmd_list *list)
+static int	check_args_len(t_cmd_list *list)
 {
 	if (list && list->args)
 	{
@@ -76,9 +76,9 @@ static int		check_args_len(t_cmd_list *list)
 	return (1);
 }
 
-static int		ft_nbr_len(long n)
+static int	ft_nbr_len(long n)
 {
-	int i;
+	int		i;
 
 	i = 1;
 	while (n / 10)
@@ -89,9 +89,7 @@ static int		ft_nbr_len(long n)
 	return (i);
 }
 
-
-
-long	valid_status(char *arg)
+long		valid_status(char *arg)
 {
 	int		i;
 	int		sign;
@@ -112,9 +110,9 @@ long	valid_status(char *arg)
 	return (255);
 }
 
-int	cmd_exit(t_cmd_list *list, t_cmds *cmds)
+int			cmd_exit(t_cmd_list *list, t_cmds *cmds)
 {
-	long status;
+	long	status;
 
 	status = 0;
 	if (!check_args_len(list))

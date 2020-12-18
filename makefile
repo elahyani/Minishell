@@ -6,7 +6,7 @@
 #    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/12/17 19:00:51 by ichejra          ###   ########.fr        #
+#    Updated: 2020/12/18 12:50:19 by ichejra          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRCS =	exp_cmd.c \
 		parsing/manag_quotes.c \
 		parsing/split_cmds.c \
 		errors.c \
+		io_redir.c \
 		execution.c \
 		# exit_cmd \
 		# cmds.c \

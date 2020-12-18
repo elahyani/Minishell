@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/18 12:26:22 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/18 12:50:36 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,5 +148,7 @@ void	exit_error(char *str, int status, t_cmds *cmds, t_cmd_list *list);
 int		exec_cmds(t_cmds *cmds, t_cmd_list *list);
 int		print_error(char *cmd, char *arg, int err);
 t_cmd_list *execute_cmd_by_order(t_cmds *cmds, t_cmd_list *list);
+void	exec_io_redi(t_cmds *cmds, t_cmd_list *list);
+void	redir_fd_io(t_cmds *cmds);
 //int		cmd_exit(t_cmds *cmds, t_cmd_list *list);
 #endif

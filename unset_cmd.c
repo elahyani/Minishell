@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:35:54 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/17 12:25:18 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/18 13:03:17 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		ft_isalnum_str(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (ft_isalnum(str[i]) || str[i] == '=' || str[i] == '_')
@@ -31,12 +31,12 @@ int		valid_arg_name(char *val)
 	return (1);
 }
 
-int	cmd_unset(t_cmd_list *list, t_cmds *cmds)
+int		cmd_unset(t_cmd_list *list, t_cmds *cmds)
 {
-	int j;
-	int i;
-	int k;
-	int err;
+	int	j;
+	int	i;
+	int	k;
+	int	err;
 
 	k = 1;
 	i = 0;
