@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/09 12:22:59 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/05 11:37:02 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/14 14:28:30 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void        print_cmds(t_cmd_list *cmds)
 {
     FILE *f;
 
-    f = fopen("/Users/ichejra/Desktop/Minishell/debug", "w+");
+    f = fopen("/Users/elahyani/Desktop/Minishell/debug", "w+");
+   // f = fopen("/Users/ichejra/Desktop/Minishell/debug", "w+");
     if (cmds == NULL)
         fputs("\nERROR: ==> cmds is NULL\n", f);
     while (cmds)

@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/18 11:31:22 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/18 12:25:38 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,16 @@
 
 
 ////////////////////////////////////////////
+
+void	ft_free_arr(char **str)
+{
+	int		i;
+
+	i = -1;
+	while (str[++i])
+		ft_free_str(&str[i]);
+	free(str);
+}
 
 int		ft_access(char *path, int mode)
 {
@@ -67,13 +77,13 @@ char	*get_bin_path(char *cmdfile, char **env)
 		{
 			if ((acc_path = try_path(cmdfile, split_path[i])))
 			{
-				//ft_free_arr(split_path);
+				ft_free_arr(split_path);
 				return (acc_path);
 			}
 			i++;
 		}
 	}
-	//ft_free_arr(split_path);
+	ft_free_arr(split_path);
 	return (cmdfile);
 }
 
@@ -300,7 +310,7 @@ int		exec_cmds(t_cmds *cmds, t_cmd_list *list)
 	else if (ft_strcmp(list->args[0], "unset") == 0)
 		ret = cmd_unset(list, cmds);
 	else if (ft_strcmp(list->args[0], "exit") == 0)
-		ret = cmd_exit(list);
+		ret = cmd_exit(list, cmds);
 	else if (ft_strcmp(list->args[0], "echo") == 0)
 		ret = cmd_echo(list);
 	else if (ft_strcmp(list->args[0], "env") == 0)
@@ -325,7 +335,6 @@ t_cmd_list *execute_cmd_by_order(t_cmds *cmds, t_cmd_list *list)
 		cmds->pipe.file_num = 0;
 		while (list)
 		{
-			list->args = split_cmd(list->data, ' ', cmds);
 			pid = exec_child(cmds, list);
 			//list = skip_append(list);
 			list = skip_redir(list);
@@ -370,12 +379,19 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 
 void	free_cmd_list(t_cmds *cmds)
 {
-	t_cmd_list *tmp;
+	int			i;
+	t_cmd_list	*tmp;
 
 	if (cmds->cmd_list)
 	{
 		while (cmds->cmd_list)
 		{
+			i = -1;
+			(cmds->cmd_list->line) ? ft_free_str(&cmds->cmd_list->line) : 0;
+			(cmds->cmd_list->data) ? ft_free_str(&cmds->cmd_list->data) : 0;
+			while (cmds->cmd_list->args && cmds->cmd_list->args[++i])
+				ft_free_str(&cmds->cmd_list->args[i]);
+			free(cmds->cmd_list->args);
 			tmp = cmds->cmd_list->next;
 			free(cmds->cmd_list);
 			cmds->cmd_list = tmp;
@@ -401,38 +417,37 @@ void		sig_handle(int sig)
 	}
 }
 
+void	initialization(t_cmds **cmds, char **envp)
+{
+	*cmds = (t_cmds *)malloc(sizeof(t_cmds));
+	(*cmds)->cmd_list = NULL;
+	(*cmds)->index = 0;
+	(*cmds)->cd = 0;
+	(*cmds)->minus = 0;
+    (*cmds)->envir = envp;
+	(*cmds)->oldpwd = NULL;
+	(*cmds)->save_oldpwd = NULL;
+    (*cmds)->env_val = NULL;
+    (*cmds)->env_arg = NULL;
+	(*cmds)->quote = 0;
+	(*cmds)->ignore = 0;
+	(*cmds)->ret = 0;
+	(*cmds)->sig = 0;
+}
+
 int		main(int argc, char **argv, char **envp)
 {
+    int			status;
+    char		*line;
     t_cmds		*cmds;
     t_cmd_list	*list;
-    char		*line;
-    int			status;
 	int			i;
 
-    cmds = (t_cmds *)malloc(sizeof(t_cmds));
+	initialization(&cmds, envp);
 	g_ret = 0;
-	cmds->cmd_list = NULL;
-	cmds->index = 0;
-	cmds->oldpwd = NULL;
-	cmds->cd = 0;
-	cmds->minus = 0;
-    cmds->envir = envp;
-	cmds->index = 0;
-	cmds->oldpwd = NULL;
-	cmds->save_oldpwd = NULL;
-	cmds->cd = 0;
-	cmds->minus = 0;
-    cmds->env_val = NULL;
-    cmds->env_arg = NULL;
-	cmds->quote = 0;
-	cmds->ignore = 0;
-	cmds->ret = 0;
-	cmds->sig = 0;
-	// ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
-	//signal(SIGQUIT, sig_handle);
-	signal(SIGINT, sig_handle);
 	signal(SIGQUIT, SIG_IGN);
-	status = 1;
+	signal(SIGINT, sig_handle);
+    status = 1;
     while (status)
     {
 		signal(SIGQUIT, sig_handle);
@@ -441,8 +456,9 @@ int		main(int argc, char **argv, char **envp)
 			ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
 		cmds->sig = 0;
 		status = get_next_line(0, &line);
+		cmds->line = line;
 		if (status == 0)
-			cmd_exit(list);
+			cmd_exit(list, cmds);
         if (ft_strcmp(line, ""))
         {
         	parse_line(&line, cmds);
@@ -452,28 +468,21 @@ int		main(int argc, char **argv, char **envp)
 				list = cmds->cmd_list;
 				while (list)
 				{
-					// printf("***** LINE %s\n", list->line);
-					if (!list->line)
-						break ;
+					//printf("***** LINE %s\n", list->line);
+					// if (!list->line)
+					// 	break ;
 					parse_list_line(&list->line, list, cmds);
 					list = get_cmd(cmds, list);
-					// puts(list->data);
-					// if (list->end)
-					// 	break ;
-					if (list)
-						list = list->next;
+					list = list->next;
 				}
-            	//print_cmds(cmds->cmd_list);
+            	// print_cmds(cmds->cmd_list);
 				free_cmd_list(cmds);
 			}
-			g_ret = 0;
-            free(line);
         }
+		g_ret = 0;
+		free(line);
+		// if (cmds->ret != 130)
+        // 	ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
     }
-	//free_cmds(cmds);
     return (0);
 }
-
-//	free leaks
-//	manag sy err
-//	$?

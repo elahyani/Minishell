@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/18 11:24:56 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/18 12:26:22 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ typedef struct	s_cmds
 	char		*buff;
 	char		*pwd;
 	char		*join_arg;
-	char		*data;
+	char		*line;
 	int			exit_status;
 	char		**split_cmd;
 	char		**f_parse_line;
@@ -89,8 +89,8 @@ int				g_ret;
 int			get_next_line(int fd, char **line);
 void		parse_list_line(char **line_list, t_cmd_list *list, t_cmds *cmds);
 void		parse_line(char	**line, t_cmds *cmds);
-t_cmd_list	*list_line_cmds(t_cmd_list *list, char *data, int k);
-t_cmd_list	*list_cmds(t_cmd_list *list, char *data, int k);
+t_cmd_list	*list_line_cmds(char *data);
+t_cmd_list	*list_cmds(char *data);
 void		update_list(t_cmd_list **head, t_cmd_list **next ,t_cmd_list *new);
 void		add_front(t_cmd_list **head, t_cmd_list *new);
 t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head);
@@ -101,7 +101,7 @@ int			cmd_env(t_cmds *cmds, t_cmd_list *list);
 
 int	    cmd_pwd(t_cmds *cmds);
 int			cmd_echo(t_cmd_list *list);
-int		cmd_exit(t_cmd_list *list);
+int		cmd_exit(t_cmd_list *list, t_cmds *cmds);
 void		print_cmds(t_cmd_list *cmds);
 int		cmd_export(t_cmd_list *list, t_cmds *cmds);
 int		cmd_unset(t_cmd_list *list, t_cmds *cmds);
@@ -140,7 +140,9 @@ int			quote_activer(int c, int quote);
 int			handle_stx_err(char **ln, t_cmds *cmds);
 int			check_redir(char **ln, t_cmds *cmds);
 int			check_q(char **ln, t_cmds *cmds);
-int			get_sy_err();
+int			get_sy_err(t_cmds *cmds);
+void		ft_free_str(char **str);
+void		free_cmd_list(t_cmds *list);
 void		sig_handle(int sig);
 void	exit_error(char *str, int status, t_cmds *cmds, t_cmd_list *list);
 int		exec_cmds(t_cmds *cmds, t_cmd_list *list);

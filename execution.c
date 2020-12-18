@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 10:14:42 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/18 10:50:48 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/18 12:20:53 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ long	valid_status(char *arg)
 	return (255);
 }
 
-int	cmd_exit(t_cmd_list *list)
+int	cmd_exit(t_cmd_list *list, t_cmds *cmds)
 {
 	long status;
 
@@ -123,5 +123,8 @@ int	cmd_exit(t_cmd_list *list)
 		status = valid_status(list->args[1]);
 	ft_putstr_fd("exit\n", 2);
 	(status > 200 && status < 300) ? print_error("exit", list->args[1], 33) : 0;
+	free_cmd_list(cmds);
+	free(cmds->line);
+	free(cmds);
 	exit(status);
 }

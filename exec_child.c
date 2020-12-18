@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 10:26:16 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/18 11:35:15 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/18 12:18:25 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,14 @@ int open_input(char *file)
 	return (fd);
 }
 
-
-int		backward_redir(t_cmd_list *list, t_cmds *cmds)
+int		backward_redir(t_cmd_list *list/* , t_cmds *cmds */)
 {
 	int i;
 	char *file;
 	struct stat file_stat;
 
 	i = -1;
-	list->args = split_cmd(list->data, ' ', cmds);
+	//list->args = split_cmd(list->data, ' ', cmds);
 	while (list->args[++i])
 	{
 		file = list->args[i];
@@ -86,11 +85,11 @@ int		open_output(t_cmd_list *list, char redir)
 	return (fd);
 }
 
-int		forward_redir(t_cmd_list *tmp, t_cmd_list *list, t_cmds *cmds)
+int		forward_redir(t_cmd_list *tmp, t_cmd_list *list/* , t_cmds *cmds */)
 {
 	int i;
 	
-	tmp->next->args = split_cmd(list->next->data, ' ', cmds);
+	//tmp->next->args = split_cmd(list->next->data, ' ', cmds);
 	if (ft_arr_len(tmp->next->args) > 1 && !tmp->next->start)
 	{
 		i = 1;
@@ -111,14 +110,14 @@ void	exec_io_redi(t_cmds *cmds, t_cmd_list *list)
 	{
 		if (tmp->redir == '>' || tmp->redir == 'a')
 		{
-			cmds->pipe.fdout = forward_redir(tmp, list, cmds);
+			cmds->pipe.fdout = forward_redir(tmp, list/* , cmds */);
 			if (!cmds->pipe.fdout)
 				cmds->ret = 1;
 				
 		}
 		else if (tmp->redir == '<')
 		{
-			cmds->pipe.fdin = backward_redir(tmp->next, cmds);
+			cmds->pipe.fdin = backward_redir(tmp->next/* , cmds */);
 			if (!cmds->pipe.fdin)
 				cmds->ret = 1;
 		}
@@ -182,7 +181,7 @@ pid_t			exec_child(t_cmds *cmds, t_cmd_list *list)
 			(list->prev  && !list->prev->redir)))
 		{
 			cmds->ret = exec_cmds(cmds, list);
-			printf("2ret====|%d|\n", cmds->ret);
+			//printf("2ret====|%d|\n", cmds->ret);
 		}
 		exit(0);
 	}
