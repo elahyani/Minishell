@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:53:48 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 19:08:39 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/18 10:22:58 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ t_cmd_list	*list_cmds(char *data)
 
 	head = (t_cmd_list *)malloc(sizeof(t_cmd_list));
 	head->line = data;
+	head->data = NULL;
 	head->next = NULL;
 	head->prev = NULL;
 	head->start = 0;

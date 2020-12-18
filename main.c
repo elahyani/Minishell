@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 19:18:40 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/18 10:50:58 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -563,7 +563,7 @@ int		main(int argc, char **argv, char **envp)
 					list = get_cmd(cmds, list);
 					list = list->next;
 				}
-            	print_cmds(cmds->cmd_list);
+            	// print_cmds(cmds->cmd_list);
 				free_cmd_list(cmds);
 			}
         }

@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:24 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 18:53:56 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/18 12:07:11 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	ft_free_str(char **str)
 {
 	if (*str)
 		free(*str);
-	// *str = NULL;
 }
 
 char	*get_env_val(t_cmds *cmds, char *join_arg)
@@ -40,13 +39,13 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 	}
 	if (!ft_strcmp(cmds->join_arg, "$"))
 		return (ft_strdup("$"));
-	else if (!ft_strcmp(cmds->join_arg, "$?"))
+	else if (cmds->join_arg[1] == '?')
 		return (ft_itoa(cmds->ret));
 	j = 0;
 	while (cmds->join_arg[++j])
 		if (ft_isalpha(cmds->join_arg[j]))
 			return (ft_strdup(""));
-	return (cmds->join_arg);
+	return (ft_strdup(cmds->join_arg));
 }
 
 int		b_point(char *arg)
@@ -59,8 +58,6 @@ int		b_point(char *arg)
 			return (i);
 	return (i);
 }
-
-
 
 char	*parse_dollar(t_cmds *cmds, char **line_list)
 {
@@ -92,15 +89,14 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 			i++;
 		if ((*line_list)[i] == '$' && !cmds->ignore && !cmds->quote)
 		{
-			l = b_point(*line_list + i);
+			(!ft_isdigit(arg[i])) ? l = b_point(*line_list + i) : (l = 2);
 			cmds->join_arg = ft_substr(*line_list + i, 0, l);
 			cmds->env_val = get_env_val(cmds, cmds->join_arg);
-			//ft_free_str(&cmds->join_arg);
+			ft_free_str(&cmds->join_arg);
 			tmp = ft_strjoin(arg, cmds->env_val);
 			ft_free_str(&cmds->env_val);
 			ft_free_str(&arg);
 			arg = tmp;
-			// ft_free_str(&tmp);
 			i += l - 1;
 		}
 		else
@@ -110,11 +106,8 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 			tmp1 = ft_strjoin(arg, tmp2);
 			ft_free_str(&arg);
 			arg = tmp1;
-			// ft_free_str(&tmp1);
 		}
 		((*line_list)[i] != '\\' && cmds->ignore) ? cmds->ignore = 0 : 0;
 	}
-	// free(*line_list);
-	// *line_list = NULL;
 	return (arg);
 }

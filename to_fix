@@ -3,8 +3,8 @@
 (✅) echo "a ; echo b" 			 
 (✅) echo "a | echo b"			 
 (✅) '	ls' (ignore whitespaces) 
-(❌) free_leaks 					 
-(❌) exit_status $? 				 
+(✅) free_leaks 					 
+(✅) exit_status $? 				 
 (✅) ./srcs (erros type output) 	 
 (✅) Invalid read of size 		 
 (✅) valgrind				 		 
@@ -15,7 +15,7 @@
 
 [✅] echo $"PWD" 
 [✅] echo "$"PWD 
-[✅] echo ' pp"$PWD" ' 
+[✅] echo ' pp"$PWD" '
 [✅] echo " pp'$PWD' " 
 [✅] echo $ 
 [✅] echo $/ 
@@ -34,7 +34,7 @@
 [✅].\/Desktop
 
 ======================================================================================
-[✅] export a = b ==> then check env and export
+[❌] export a = b ==> then check env and export
 [✅] export a
 [✅] export a=
 [✅] export b=c
@@ -63,8 +63,8 @@
 [✅] echo -n -n -n -n
 [✅] echo -nnnnnnn
 [✅] echo $?
-[❌] echo hello$?hi
-[❌] $?????????????
+[✅] echo hello$?hi
+[✅] $?????????????
 [✅] echo hello$PWD
 [✅] echo $PWD
 [✅] echo "$"PWD
@@ -92,10 +92,10 @@
 [✅] '/bin/ls'
 [✅] 'anycmd' ==> should work
 [✅] '/bin/ls ; /bin/pwd' ==> shouldn't work
-[❌] any test contains double quetes or signle quetes
+[✅] any test contains double quetes or signle quetes
 
 ======================================================================================
-[🔶] exit ==> echo $? == 0
+[✅] exit ==> echo $? == 0
 [🔶] exit 1 ==> echo $? == 1
 [🔶] exit 9 ==> echo $? == 9
 [🔶] exit 255 ==> echo $? == 255

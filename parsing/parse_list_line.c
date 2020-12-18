@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:31 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 19:42:56 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/18 10:23:03 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ void	parse_list_line(char **line, t_cmd_list *list, t_cmds *cmds)
 	i = -1;
 	hd = list;
 	tmp = NULL;
-	hd->data = NULL;
 	cmds->quote = 0;
 	cmds->ignore = 0;
 	if (ft_strchr(*line, '$'))
