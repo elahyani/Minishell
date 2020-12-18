@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_dollar.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:24 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/18 12:32:35 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/18 14:06:39 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,7 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 	if (!ft_strcmp(cmds->join_arg, "$"))
 		return (ft_strdup("$"));
 	else if (cmds->join_arg[1] == '?')
-	{
-		if (g_ret == 1)
-		{
-			cmds->ret = !cmds->ret ? 1 : cmds->ret;
-			g_ret = 0;
-    	}
 		return (ft_itoa(cmds->ret));
-	}
 	j = 0;
 	while (cmds->join_arg[++j])
 		if (ft_isalpha(cmds->join_arg[j]))
@@ -60,6 +53,8 @@ int		b_point(char *arg)
 	int i;
 
 	i = 0;
+	if (arg[i + 1] == '?')
+		return (i + 2);
 	while (arg[++i])
 		if (ft_strchr("$\\\"';| ", arg[i]))
 			return (i);
@@ -96,7 +91,7 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 			i++;
 		if ((*line_list)[i] == '$' && !cmds->ignore && !cmds->quote)
 		{
-			(!ft_isdigit(arg[i])) ? l = b_point(*line_list + i) : (l = 2);
+			l = b_point(*line_list + i);
 			cmds->join_arg = ft_substr(*line_list + i, 0, l);
 			cmds->env_val = get_env_val(cmds, cmds->join_arg);
 			ft_free_str(&cmds->join_arg);
