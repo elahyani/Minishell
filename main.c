@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/18 12:25:38 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/19 13:39:44 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,6 @@ char	*get_bin_path(char *cmdfile, char **env)
 	ft_free_arr(split_path);
 	return (cmdfile);
 }
-
-
-////////////////////////////////////////////
-
-
-
-// fds[0] = dup(0);
-// fds[1] = dup(1);
-// fds[2] = dup(2);
-
 
 int		*pipe_fds(int num_pipe, int *fds)
 {
@@ -300,7 +290,7 @@ int		exec_cmds(t_cmds *cmds, t_cmd_list *list)
 	int ret;
 
 	ret = 1;
-	
+
 	if (ft_strcmp(list->args[0], "cd") == 0)
 		ret = cmd_cd(list, cmds);
 	else if (ft_strcmp(list->args[0], "pwd") == 0)
@@ -326,7 +316,7 @@ int		exec_cmds(t_cmds *cmds, t_cmd_list *list)
 
 t_cmd_list *execute_cmd_by_order(t_cmds *cmds, t_cmd_list *list)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	if ((list->next && !list->end) || !is_builtin(list->args[0]))
 	{
@@ -335,6 +325,7 @@ t_cmd_list *execute_cmd_by_order(t_cmds *cmds, t_cmd_list *list)
 		cmds->pipe.file_num = 0;
 		while (list)
 		{
+			// check_cmd(cmds, list);
 			pid = exec_child(cmds, list);
 			//list = skip_append(list);
 			list = skip_redir(list);
@@ -355,7 +346,6 @@ t_cmd_list *execute_cmd_by_order(t_cmds *cmds, t_cmd_list *list)
 	return (list);
 }
 
-
 t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 {
 	//char *path;
@@ -364,7 +354,7 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 	// while (head)
 	// {
 		///////////////////////////////////////////////////
-	head->args = split_cmd(head->data, ' ', cmds);
+	//head->args = split_cmd(head->data, ' ', cmds);
 	cmds->num_pipe = get_num_pipes(head);
 	cmds->pipe.file_num = 0;
 	if (cmds->num_pipe)

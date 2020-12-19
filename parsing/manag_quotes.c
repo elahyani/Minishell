@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manag_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 11:04:14 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/15 09:43:54 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/19 10:37:47 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ char	*ft_remove_quotes(char *res)
 	quote = 0;
 	ignore = 0;
 	i = 0;
+	// res = ft_strtrim(res, "\t\v\r");
 	while (res[i])
 	{
 		j = 0;

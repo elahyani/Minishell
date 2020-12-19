@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 10:37:00 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/17 19:21:41 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/19 10:13:03 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	**ft_get_arr(char *value, char **arr)
 		return (NULL);
 	while (arr[++i] != NULL)
 		new_arr[i] = ft_strdup(arr[i]);
-	//ft_free_arr(arr);
+	ft_free_arr(arr);
 	new_arr[i] = value;
 	new_arr[i + 1] = NULL;
 	return (new_arr);
@@ -101,18 +101,14 @@ int		ft_getenv(char *name, char **env)
 		tmp = ft_get_first(env[i], '=');
 		if (ft_strcmp(tmp, search) == 0)
 		{
-			// ft_del(search);
 			ft_free_str(&search);
 			ft_free_str(&tmp);
-			// ft_del(tmp);
 			return (i);
 		}
-		// ft_del(tmp);
 		ft_free_str(&tmp);
 		i++;
 	}
 	ft_free_str(&search);
-	// ft_del(search);
 	return (-1);
 }
 
@@ -131,9 +127,10 @@ char	**ft_setenv(char *var, char *path, char **env)
 	if ((i = ft_getenv(var, env)) >= 0)
 	{
 		// free(env[i]);
+		ft_free_str(&env[i]);
 		ft_bzero(env[i], 0);
 		env[i] = ft_strdup(record);
-		// free(record);
+		free(record);
 		// ft_del(record);
 	}
 	else
