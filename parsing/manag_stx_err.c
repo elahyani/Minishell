@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 13:10:55 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/17 18:06:07 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/19 10:27:02 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,15 +95,15 @@ int		semi_pipe_stx_err(char **ln, t_cmds *cmds)
 			j = -1;
 			if ((*ln)[i] == '|' && !(*ln)[i + 1])
 			{
-				ft_free_str(&iscmd);
+				ft_free_str(iscmd);
 				return (get_sy_err(cmds));
 			}
 			else if (check_cmd_sep(iscmd))
 			{
-				ft_free_str(&iscmd);
+				ft_free_str(iscmd);
 				return (get_sy_err(cmds));
 			}
-			ft_free_str(&iscmd);
+			ft_free_str(iscmd);
 		}
 		(j == -1) ? j = i : 0;
 	}

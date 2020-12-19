@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 10:37:00 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/17 19:21:41 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/19 10:27:47 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,16 +102,16 @@ int		ft_getenv(char *name, char **env)
 		if (ft_strcmp(tmp, search) == 0)
 		{
 			// ft_del(search);
-			ft_free_str(&search);
-			ft_free_str(&tmp);
+			ft_free_str(search);
+			ft_free_str(tmp);
 			// ft_del(tmp);
 			return (i);
 		}
 		// ft_del(tmp);
-		ft_free_str(&tmp);
+		ft_free_str(tmp);
 		i++;
 	}
-	ft_free_str(&search);
+	ft_free_str(search);
 	// ft_del(search);
 	return (-1);
 }

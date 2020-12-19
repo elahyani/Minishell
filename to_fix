@@ -20,7 +20,6 @@
 [✅] echo $ 
 [✅] echo $/ 
 [✅] echo $++++++$HOME 
-[❌] echo a		b		c (should ignore whitespaces || tabs) 
 
 ======================================================================================
 [✅]	[;], [_;cmd], [cmd;;], [;cmd]
@@ -99,14 +98,14 @@
 
 ======================================================================================
 [✅] exit ==> echo $? == 0
-[🔶] exit 1 ==> echo $? == 1
-[🔶] exit 9 ==> echo $? == 9
-[🔶] exit 255 ==> echo $? == 255
-[🔶] exit 256 ==> echo $? == 0
-[🔶] exit MAX_LONG_INT ==> echo $? == 255
-[🔶] exit MAX_LONG_INT + 1 ==> print Error msg eceho $? == 255
-[🔶] exit MIN_LONG_INT ==> echo $? == 1
-[🔶] exit g h and try exit 8 9
+[✅] exit 1 ==> echo $? == 1
+[✅] exit 9 ==> echo $? == 9
+[✅] exit 255 ==> echo $? == 255
+[✅] exit 256 ==> echo $? == 0
+[✅] exit MAX_LONG_INT ==> echo $? == 255
+[✅] exit MAX_LONG_INT + 1 ==> print Error msg eceho $? == 255
+[✅] exit MIN_LONG_INT ==> echo $? == 1
+[✅] exit g h and try exit 8 9
 
 ======================================================================================
 signals:

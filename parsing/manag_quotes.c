@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 11:04:14 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/15 09:43:54 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/19 12:03:19 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,6 @@ char	*ft_remove_quotes(char *res)
 		(ignore || !j) ? i++ : 0;
 		(res[i] != '\\' && ignore) ? ignore = 0 : 0;
 	}
+	res = ft_strtrim(res, "\t\v\r");
 	return (res);
 }

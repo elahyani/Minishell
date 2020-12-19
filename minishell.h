@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/18 12:50:36 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/19 10:33:50 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,8 +141,8 @@ int			handle_stx_err(char **ln, t_cmds *cmds);
 int			check_redir(char **ln, t_cmds *cmds);
 int			check_q(char **ln, t_cmds *cmds);
 int			get_sy_err(t_cmds *cmds);
-void		ft_free_str(char **str);
-void		free_cmd_list(t_cmds *list);
+void		ft_free_str(char *str);
+void		free_cmd_list(t_cmds *cmds);
 void		sig_handle(int sig);
 void	exit_error(char *str, int status, t_cmds *cmds, t_cmd_list *list);
 int		exec_cmds(t_cmds *cmds, t_cmd_list *list);
