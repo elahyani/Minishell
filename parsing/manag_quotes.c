@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 11:04:14 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/19 10:37:47 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/19 13:42:53 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,6 @@ char	*ft_remove_quotes(char *res)
 		(ignore || !j) ? i++ : 0;
 		(res[i] != '\\' && ignore) ? ignore = 0 : 0;
 	}
+	res = ft_strtrim(res, "\t\v\r");
 	return (res);
 }

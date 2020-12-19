@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/19 13:39:44 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/19 13:44:00 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_free_arr(char **str)
 
 	i = -1;
 	while (str[++i])
-		ft_free_str(&str[i]);
+		ft_free_str(str[i]);
 	free(str);
 }
 
@@ -313,7 +313,6 @@ int		exec_cmds(t_cmds *cmds, t_cmd_list *list)
 	return (ret);
 }
 
-
 t_cmd_list *execute_cmd_by_order(t_cmds *cmds, t_cmd_list *list)
 {
 	pid_t	pid;
@@ -354,7 +353,6 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 	// while (head)
 	// {
 		///////////////////////////////////////////////////
-	//head->args = split_cmd(head->data, ' ', cmds);
 	cmds->num_pipe = get_num_pipes(head);
 	cmds->pipe.file_num = 0;
 	if (cmds->num_pipe)
@@ -377,10 +375,10 @@ void	free_cmd_list(t_cmds *cmds)
 		while (cmds->cmd_list)
 		{
 			i = -1;
-			(cmds->cmd_list->line) ? ft_free_str(&cmds->cmd_list->line) : 0;
-			(cmds->cmd_list->data) ? ft_free_str(&cmds->cmd_list->data) : 0;
+			(cmds->cmd_list->line) ? ft_free_str(cmds->cmd_list->line) : 0;
+			(cmds->cmd_list->data) ? ft_free_str(cmds->cmd_list->data) : 0;
 			while (cmds->cmd_list->args && cmds->cmd_list->args[++i])
-				ft_free_str(&cmds->cmd_list->args[i]);
+				ft_free_str(cmds->cmd_list->args[i]);
 			free(cmds->cmd_list->args);
 			tmp = cmds->cmd_list->next;
 			free(cmds->cmd_list);
@@ -443,7 +441,7 @@ int		main(int argc, char **argv, char **envp)
 		signal(SIGQUIT, sig_handle);
 		signal(SIGINT, sig_handle);
 		if (cmds->ret != 130)
-			ft_putstr_fd("\e[1;31mminishell~>\e[0m", 1);
+			ft_putstr_fd("\e[1;31mminishell~>\e[0m ", 1);
 		cmds->sig = 0;
 		status = get_next_line(0, &line);
 		cmds->line = line;

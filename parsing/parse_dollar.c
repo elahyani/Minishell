@@ -6,16 +6,16 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:24 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/18 14:06:39 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/19 10:26:47 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_free_str(char **str)
+void	ft_free_str(char *str)
 {
-	if (*str)
-		free(*str);
+	if (str)
+		free(str);
 }
 
 char	*get_env_val(t_cmds *cmds, char *join_arg)
@@ -31,10 +31,10 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 		env_val_w = ft_get_first(cmds->envir[j], '=');
 		if (ft_strcmp(env_val_w, join_arg + 1) == 0)
 		{
-			ft_free_str(&env_val_w);
+			ft_free_str(env_val_w);
 			return (ft_strdup(cmds->envir[j] + ft_strlen(join_arg + 1) + 1));
 		}
-		ft_free_str(&env_val_w);
+		ft_free_str(env_val_w);
 		j++;
 	}
 	if (!ft_strcmp(cmds->join_arg, "$"))
@@ -94,10 +94,10 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 			l = b_point(*line_list + i);
 			cmds->join_arg = ft_substr(*line_list + i, 0, l);
 			cmds->env_val = get_env_val(cmds, cmds->join_arg);
-			ft_free_str(&cmds->join_arg);
+			ft_free_str(cmds->join_arg);
 			tmp = ft_strjoin(arg, cmds->env_val);
-			ft_free_str(&cmds->env_val);
-			ft_free_str(&arg);
+			ft_free_str(cmds->env_val);
+			ft_free_str(arg);
 			arg = tmp;
 			i += l - 1;
 		}
@@ -106,7 +106,7 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 			tmp2[0] = (*line_list)[i];
 			tmp2[1] = '\0';
 			tmp1 = ft_strjoin(arg, tmp2);
-			ft_free_str(&arg);
+			ft_free_str(arg);
 			arg = tmp1;
 		}
 		((*line_list)[i] != '\\' && cmds->ignore) ? cmds->ignore = 0 : 0;

@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:31 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/18 10:23:03 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/19 10:27:22 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	parse_list_line(char **line, t_cmd_list *list, t_cmds *cmds)
 	if (ft_strchr(*line, '$'))
 	{
 		tmp = parse_dollar(cmds, line);
-		ft_free_str(line);
+		ft_free_str(*line);
 		*line = tmp;
 	}
 	loop_line(line, &hd, &i, &j, cmds);
