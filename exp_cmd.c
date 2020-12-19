@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 10:37:00 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/19 13:43:34 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/19 13:46:45 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ char	**ft_setenv(char *var, char *path, char **env)
 	if ((i = ft_getenv(var, env)) >= 0)
 	{
 		// free(env[i]);
-		ft_free_str(&env[i]);
+		ft_free_str(env[i]);
 		ft_bzero(env[i], 0);
 		env[i] = ft_strdup(record);
 		free(record);
