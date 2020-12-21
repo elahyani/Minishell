@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/19 13:44:42 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/21 19:29:31 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct	s_cmds
 	t_cmd_list	*cmd_list;
 	t_pipe		pipe;
 	int			sig;
+	int			allocated;
 }				t_cmds;
 
 int				g_ret;

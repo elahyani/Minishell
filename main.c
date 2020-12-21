@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/19 13:44:00 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/21 19:30:36 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void	ft_free_arr(char **str)
 
 	i = -1;
 	while (str[++i])
-		ft_free_str(str[i]);
+		if (str[i])
+			ft_free_str(str[i]);
 	free(str);
 }
 
@@ -237,15 +238,17 @@ void 		check_cmd(t_cmds *cmds, t_cmd_list *list)
 			check_file(list->args[0], 1, cmds, list);
 		execve(list->args[0], list->args, cmds->envir);
 	}
+	else if (list->args[0][0] == '<' || list->args[0][0] == '>')
+		return ;
 	else
 	{
 		path = get_bin_path(list->args[0], cmds->envir);
 		ret = execve(path, list->args, cmds->envir);
 		if (ret < 0)
 		{
-			ft_putstr_fd("minishell: ", 1);
-			ft_putstr_fd(list->args[0], 1);
-			ft_putendl_fd(": command not found", 1);
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(list->args[0], 2);
+			ft_putendl_fd(": command not found", 2);
 			exit(127);
 		}
 	}
@@ -362,7 +365,7 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 		// 	break ;
 		// head = head->next;
 	// }
-	return head;
+	return (head);
 }
 
 void	free_cmd_list(t_cmds *cmds)
@@ -393,7 +396,7 @@ void		sig_handle(int sig)
 	{
 		g_ret = 1;
 		ft_putstr_fd("\b\b  \b\b\n", 1);
-		ft_putstr_fd("\e[1;31mminishell\e[0m\033[0;33m~>\033[0m", 1);
+		ft_putstr_fd("\e[1;31mminishell\e[0m\033[0;33m~>\033[0m ", 1);
 	}
 	else if (sig == SIGQUIT)
 	{
@@ -421,6 +424,7 @@ void	initialization(t_cmds **cmds, char **envp)
 	(*cmds)->ignore = 0;
 	(*cmds)->ret = 0;
 	(*cmds)->sig = 0;
+	(*cmds)->allocated = 0;
 }
 
 int		main(int argc, char **argv, char **envp)

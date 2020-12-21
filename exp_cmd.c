@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 10:37:00 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/19 13:46:45 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/21 19:41:26 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,22 @@ char	**ft_get_arr(char *value, char **arr)
 	if (!(new_arr = (char **)malloc(sizeof(char*) * len)))
 		return (NULL);
 	while (arr[++i] != NULL)
+	{
 		new_arr[i] = ft_strdup(arr[i]);
-	ft_free_arr(arr);
-	new_arr[i] = value;
+	}
+	// ft_free_arr(arr);
+	new_arr[i] = ft_strdup(value);
 	new_arr[i + 1] = NULL;
+	// ft_free_str(value);
 	return (new_arr);
 }
 
 char	**ft_add_to_arr(char *value, char **arr)
 {
 	char	**new_arr;
-
 	if (arr == NULL)
 	{
+		// ta t9elbi eliha
 		if (!(new_arr = (char **)malloc(sizeof(char *) * 2)))
 			return (NULL);
 		new_arr[0] = value;
@@ -101,18 +104,14 @@ int		ft_getenv(char *name, char **env)
 		tmp = ft_get_first(env[i], '=');
 		if (ft_strcmp(tmp, search) == 0)
 		{
-			// ft_del(search);
 			ft_free_str(search);
 			ft_free_str(tmp);
-			// ft_del(tmp);
 			return (i);
 		}
-		// ft_del(tmp);
 		ft_free_str(tmp);
 		i++;
 	}
 	ft_free_str(search);
-	// ft_del(search);
 	return (-1);
 }
 
@@ -130,39 +129,36 @@ char	**ft_setenv(char *var, char *path, char **env)
 	ft_strcat(record, path);
 	if ((i = ft_getenv(var, env)) >= 0)
 	{
-		// free(env[i]);
-		ft_free_str(env[i]);
-		ft_bzero(env[i], 0);
+		ft_bzero(env[i], ft_strlen(env[i]));
 		env[i] = ft_strdup(record);
-		free(record);
-		// ft_del(record);
+		ft_free_str(record);
 	}
 	else
 		return (ft_add_to_arr(record, env));
 	return (env);
 }
 
-char	**add_to_arr(char **arr, char *value, int opt)
-{
-	int		i;
-	int		len;
-	char	**new_arr;
+// char	**add_to_arr(char **arr, char *value, int opt)
+// {
+// 	int		i;
+// 	int		len;
+// 	char	**new_arr;
 
-	len = (!opt) ? ft_arr_len(arr) + 1 : ft_arr_len(arr) + 2;
-	if (!(new_arr = (char **)malloc(sizeof(char *) * len)))
-		return (NULL);
-	i = -1;
-	while (arr[++i])
-		new_arr[i] = ft_strdup(arr[i]);
-	if (!opt)
-		new_arr[i] = NULL;
-	if (opt)
-	{
-		new_arr[i] = value;
-		new_arr[i + 1] = NULL;
-	}
-	return (new_arr);
-}
+// 	len = (!opt) ? ft_arr_len(arr) + 1 : ft_arr_len(arr) + 2;
+// 	if (!(new_arr = (char **)malloc(sizeof(char *) * len)))
+// 		return (NULL);
+// 	i = -1;
+// 	while (arr[++i])
+// 		new_arr[i] = ft_strdup(arr[i]);
+// 	if (!opt)
+// 		new_arr[i] = NULL;
+// 	if (opt)
+// 	{
+// 		new_arr[i] = value;
+// 		new_arr[i + 1] = NULL;
+// 	}
+// 	return (new_arr);
+// }
 
 char		*ft_get_first(const char *s, int c)
 {
@@ -242,14 +238,14 @@ int	cmd_export(t_cmd_list *list, t_cmds *cmds)
 	int 	i;
 	int		o;
 	int		c;
-	//int		err;
+	int		err;
 	char	**str;
 	char	**tmp;
 	char	**new_env;
 	char	**env_sort;
 
 	i = 0;
-	//err = 0;
+	err = 0;
 	cmds->exp_oldp = 0;
 	while (cmds->envir[i])
 	{
@@ -270,14 +266,6 @@ int	cmd_export(t_cmd_list *list, t_cmds *cmds)
 		ft_print_export(new_env);
 		return (0);
 	}
-	if (!ft_isalpha(list->args[1][0]))
-	{
-		ft_putstr_fd("minishell: export: `", 1);
-		ft_putstr_fd(list->args[1], 1);
-		ft_putendl_fd("': Invalid identifier", 1);
-		return (1);
-		
-	}
 	if (!cmds->index)
 		while (cmds->envir[cmds->index] != NULL)
 			cmds->index++;
@@ -285,6 +273,22 @@ int	cmd_export(t_cmd_list *list, t_cmds *cmds)
 	while (list->args[i] != NULL)
 	{
 		str = ft_split(list->args[i], '=');
+		if (!ft_strcmp(str[0],"_"))
+		{
+			i++;
+			continue ;
+		}
+		if (!ft_isalpha(list->args[i][0]))
+		{
+			if (list->args[i][0] != '_')
+			{
+				ft_putstr_fd("minishell: export: `", 1);
+				ft_putstr_fd(list->args[i], 1);
+				ft_putendl_fd("': Invalid identifier", 1);
+				err = 1;
+			}
+			
+		}
 		o = i + 1;
 		c = 0;
 		while (list->args[o])
@@ -306,26 +310,22 @@ int	cmd_export(t_cmd_list *list, t_cmds *cmds)
 			cmds->env_line = ft_split(cmds->envir[j], '=');
 			if (ft_strcmp(cmds->env_line[0], str[0]) == 0)
 			{
-				if (ft_strchr(cmds->envir[j], '=') && (ft_strchr(list->args[i], '=')))
+				if ((ft_strchr(cmds->envir[j], '=') && (ft_strchr(list->args[i], '='))) || (!ft_strchr(cmds->envir[j], '=') && (ft_strchr(list->args[i], '='))))
 				{
-					free(cmds->envir[j]);
+					//free(cmds->envir[j]);
 					cmds->envir[j] = ft_strdup(list->args[i]);
-					return (0);
+					break ;
 				}
-				else if (ft_strchr(cmds->envir[j], '=') && !(ft_strchr(list->args[i], '=')))
- 				{
-					return (0);
-				}
-				else if (!ft_strchr(cmds->envir[j], '=') && !(ft_strchr(list->args[i], '=')))
-				{
-					return (0);
-				}
-				else if (!ft_strchr(cmds->envir[j], '=') && (ft_strchr(list->args[i], '=')))
-				{
-					free(cmds->envir[j]);
-					cmds->envir[j] = ft_strdup(list->args[i]);
-					return (0);
-				}
+				else if ((ft_strchr(cmds->envir[j], '=') && !(ft_strchr(list->args[i], '='))) || (!ft_strchr(cmds->envir[j], '=') && !(ft_strchr(list->args[i], '='))))
+					break ;
+				// else if (!ft_strchr(cmds->envir[j], '=') && !(ft_strchr(list->args[i], '=')))
+				// 	break ;
+				// else if (!ft_strchr(cmds->envir[j], '=') && (ft_strchr(list->args[i], '=')))
+				// {
+				// 	//free(cmds->envir[j]);
+				// 	cmds->envir[j] = ft_strdup(list->args[i]);
+				// 	break ;
+				// }
 			}
 		}
 		cmds->envir[j] = ft_strdup(list->args[i]);
@@ -333,5 +333,5 @@ int	cmd_export(t_cmd_list *list, t_cmds *cmds)
 		cmds->index++;
 		i++;
 	}
-	return (0);
+	return (err);
 }
