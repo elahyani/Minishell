@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/19 10:33:50 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/21 14:37:03 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ typedef struct	s_cmds
 	int			exp_oldp;
 	int			num_pipe;
 	int			ret;
+	int			i;
+	int			j;
 	//char		**exp;
 	//int			exp_index;
 
@@ -127,13 +129,14 @@ int		ft_arr_len(char **tab);
 //int		ft_access(char *path, int mode);
 ///////////////////////////////////////////////////
 
-
+void	ft_init_stx_err(char **iscmd, t_cmds **cmds);
 
 
 char		*ft_strcat(char *dest, char *src);	
 char		*parse_dollar(t_cmds *cmds, char **line_list);
 // int			check_for_q(char *str, int j);
 char		*ft_remove_quotes(char *res);
+void		check_for_quote(t_cmds **cmds, char **ln, int *i);
 int			is_quote(int c);
 char		**split_cmd(char const *str, char c, t_cmds *cmds);
 int			quote_activer(int c, int quote);

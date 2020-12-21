@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
+#    By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/12/18 12:50:19 by ichejra          ###   ########.fr        #
+#    Updated: 2020/12/21 14:37:54 by elahyani         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,8 @@ SRCS =	exp_cmd.c \
 		parsing/manag_stx_err.c \
 		parsing/manag_quotes.c \
 		parsing/split_cmds.c \
+		parsing/check_for_q.c \
+		parsing/initializations.c \
 		errors.c \
 		io_redir.c \
 		execution.c \

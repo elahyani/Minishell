@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 10:37:00 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/19 10:27:47 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/21 10:58:59 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,21 +269,20 @@ int	cmd_export(t_cmd_list *list, t_cmds *cmds)
 		ft_print_export(new_env);
 		return (0);
 	}
-	if (!ft_isalpha(list->args[1][0]))
-	{
-		ft_putstr_fd("minishell: export: `", 1);
-		ft_putstr_fd(list->args[1], 1);
-		ft_putendl_fd("': Invalid identifier", 1);
-		return (1);
-		
-	}
 	if (!cmds->index)
 		while (cmds->envir[cmds->index] != NULL)
 			cmds->index++;
 	i = 1;
 	while (list->args[i] != NULL)
 	{
-		str = ft_split(list->args[i], '=');
+		if (!ft_isalpha(list->args[i][0]))
+		{
+			ft_putstr_fd("minishell: export: `", 2);
+			ft_putstr_fd(list->args[i], 2);
+			ft_putendl_fd("': Invalid identifier", 2);
+		}
+		if (ft_strchr(list->args[i], '='))
+			str = ft_split(list->args[i], '=');
 		o = i + 1;
 		c = 0;
 		while (list->args[o])
@@ -307,7 +306,7 @@ int	cmd_export(t_cmd_list *list, t_cmds *cmds)
 			{
 				if (ft_strchr(cmds->envir[j], '=') && (ft_strchr(list->args[i], '=')))
 				{
-					free(cmds->envir[j]);
+					//free(cmds->envir[j]);
 					cmds->envir[j] = ft_strdup(list->args[i]);
 					return (0);
 				}
@@ -321,7 +320,7 @@ int	cmd_export(t_cmd_list *list, t_cmds *cmds)
 				}
 				else if (!ft_strchr(cmds->envir[j], '=') && (ft_strchr(list->args[i], '=')))
 				{
-					free(cmds->envir[j]);
+					//free(cmds->envir[j]);
 					cmds->envir[j] = ft_strdup(list->args[i]);
 					return (0);
 				}

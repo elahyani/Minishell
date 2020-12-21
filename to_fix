@@ -106,7 +106,7 @@
 [✅] exit MAX_LONG_INT + 1 ==> print Error msg eceho $? == 255
 [✅] exit MIN_LONG_INT ==> echo $? == 1
 [✅] exit g h and try exit 8 9
-
+ Try ctrl-\ in a prompt after you wrote some stuff
 ======================================================================================
 signals:
 [✅] try ctrl-C

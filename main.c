@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/19 12:22:27 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/21 14:14:48 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,9 +253,9 @@ void 		check_cmd(t_cmds *cmds, t_cmd_list *list)
 		ret = execve(path, list->args, cmds->envir);
 		if (ret < 0)
 		{
-			ft_putstr_fd("minishell: ", 1);
-			ft_putstr_fd(list->args[0], 1);
-			ft_putendl_fd(": command not found", 1);
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(list->args[0], 2);
+			ft_putendl_fd(": command not found", 2);
 			exit(127);
 		}
 	}
@@ -473,7 +473,7 @@ int		main(int argc, char **argv, char **envp)
 					list = get_cmd(cmds, list);
 					list = list->next;
 				}
-            	// print_cmds(cmds->cmd_list);
+            	print_cmds(cmds->cmd_list);
 				free_cmd_list(cmds);
 			}
         }
