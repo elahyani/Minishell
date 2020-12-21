@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/21 14:37:03 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/21 17:37:02 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,10 @@ typedef struct	s_cmds
 	int			ret;
 	int			i;
 	int			j;
+	char		*tmp_d;
+	char		*tmp1_d;
+	char		tmp2_d[2];
+	char		*arg_d;
 	//char		**exp;
 	//int			exp_index;
 

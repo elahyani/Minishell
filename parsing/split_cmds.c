@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 14:18:50 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/11 13:14:47 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/21 17:31:56 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,33 +25,28 @@ static char		**ft_free(char **split)
 
 static char		**ft_sp_index(char **split, char *str, char x, t_cmds *cmds)
 {
-	int i;
-	int j;
 	int k;
 
-	i = -1;
 	k = 0;
-	j = -1;
+	cmds->i = -1;
+	cmds->j = -1;
 	cmds->quote = 0;
 	cmds->ignore = 0;
-	while (str[++i])
+	while (str[++cmds->i])
 	{
-		if (str[i] == '\\' && cmds->quote != 1)
-			cmds->ignore = cmds->ignore ? 0 : 1;
-		if (!cmds->ignore && is_quote(str[i]))
-			cmds->quote = quote_activer(str[i], cmds->quote);
-		if (str[i] == x && j != -1 && !cmds->quote && !cmds->ignore)
+		check_for_quote(&cmds, &str, &cmds->i);
+		if (str[cmds->i] == x && cmds->j != -1 && !cmds->quote && !cmds->ignore)
 		{
-			if (!(split[k++] = ft_substr(str, j, i - j)))
+			if (!(split[k++] = ft_substr(str, cmds->j, cmds->i - cmds->j)))
 				return (ft_free(split));
-			j = -1;
+			cmds->j = -1;
 		}
-		else if (str[i] != x && j == -1)
-			j = i;
-		(str[i] != '\\' && cmds->ignore) ? cmds->ignore = 0 : 0;
+		else if (str[cmds->i] != x && cmds->j == -1)
+			cmds->j = cmds->i;
+		(str[cmds->i] != '\\' && cmds->ignore) ? cmds->ignore = 0 : 0;
 	}
-	if (j != -1)
-		if (!(split[k] = ft_substr(str, j, i - j)))
+	if (cmds->j != -1)
+		if (!(split[k] = ft_substr(str, cmds->j, cmds->i - cmds->j)))
 			return (ft_free(split));
 	return (split);
 }
@@ -59,8 +54,8 @@ static char		**ft_sp_index(char **split, char *str, char x, t_cmds *cmds)
 static int		len_arg(char *str, char c, t_cmds *cmds)
 {
 	int			i;
-	int			start;
 	int			len;
+	int			start;
 
 	i = -1;
 	len = 0;
@@ -69,17 +64,11 @@ static int		len_arg(char *str, char c, t_cmds *cmds)
 	cmds->ignore = 0;
 	while (str[++i])
 	{
-		if (str[i] == '\\' && cmds->quote != 1)
-			cmds->ignore = cmds->ignore ? 0 : 1;
-		if (!cmds->ignore && is_quote(str[i]))
-			cmds->quote = quote_activer(str[i], cmds->quote);
-		if (str[i] == c && !cmds->ignore && !cmds->quote)
+		check_for_quote(&cmds, &str, &i);
+		if (str[i] == c && !cmds->ignore && !cmds->quote && start == 1)
 		{
-			if (start == 1)
-			{
-				len++;
-				start = 0;
-			}
+			len++;
+			start = 0;
 		}
 		else if (str[i] != c)
 			start = 1;
