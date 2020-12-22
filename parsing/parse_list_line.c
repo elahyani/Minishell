@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:31 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/21 14:28:55 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/22 12:57:10 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,21 +43,32 @@ void			parse_redir(char **line, t_cmd_list **hd, t_cmds *cmds)
 
 void			loop_line(char **line, t_cmd_list **hd, t_cmds *cmds)
 {
-	while ((*line)[++(cmds->i)])
+	cmds->j = 0;
+	cmds->i = -1;
+	puts(*line);
+	while ((*line)[++cmds->i])
 	{
 		check_for_quote(&cmds, line, &cmds->i);
 		if ((*line)[cmds->i + 1] == '\0' && ((*hd)->end = 1) &&
 		!cmds->ignore && !cmds->quote)
 		{
+			puts("===> END \\0 ");
+			printf("Before : i=|%d|\n", cmds->i);
 			if (((*hd)->prev && (*hd)->prev->end) || !(*hd)->prev)
 				(*hd)->start = 1;
 			(*hd)->data = ft_substr(*line, cmds->j, cmds->i - cmds->j + 1);
+			printf("After : i=|%d|\n", cmds->i);
+			sleep(1);
 		}
 		else if ((*line)[cmds->i] == '|' && (*line)[cmds->i - 1] != '\\' &&
 		!cmds->ignore && !cmds->quote)
 		{
+			puts("===> PIPE ");
+			printf("Before : i=|%d|\n", cmds->i);
 			parse_pipe(line, &(*hd), cmds);
 			cmds->j = cmds->i + 1;
+			printf("After : i=|%d|\n", cmds->i);
+			sleep(1);
 		}
 		else if (((*line)[cmds->i] == '<' || (*line)[cmds->i] == '>') &&
 		!cmds->ignore && !cmds->quote)
@@ -65,17 +76,17 @@ void			loop_line(char **line, t_cmd_list **hd, t_cmds *cmds)
 			parse_redir(line, &(*hd), cmds);
 			cmds->j = cmds->i + 1;
 		}
-		((*line)[cmds->i] != '\\' && cmds->ignore) ? cmds->ignore = 0 : 0;
+		cmds->ignore = ((*line)[cmds->i] != '\\' && cmds->ignore) ?  0 : cmds->ignore;
 	}
 }
+
+// echo hello$PWD ; echo $PWD | echo "$"PWD | echo $"PWD" ; echo "$PWD" ; echo '$PWD' | echo '$'PWD | echo " "$PWD" " ; echo '" '$PWD' "' ; echo \$\$\$\$ ; echo \anychar\anychar\anychar ; echo \'\'\'\' ;  echo \"\"\" | echo \\"$PWD"
 
 void			parse_list_line(char **line, t_cmd_list *list, t_cmds *cmds)
 {
 	char		*tmp;
 	t_cmd_list	*hd;
 
-	cmds->j = 0;
-	cmds->i = -1;
 	hd = list;
 	tmp = NULL;
 	cmds->quote = 0;
@@ -95,3 +106,4 @@ void			parse_list_line(char **line, t_cmd_list *list, t_cmds *cmds)
 	hd->args = split_cmd(hd->data, ' ', cmds);
 	list = hd;
 }
+ echo /Users/elahyani/Desktop/Minishell | echo "$"PWD | echo "PWD"

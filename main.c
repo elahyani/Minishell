@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/21 14:14:48 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/22 12:05:25 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -466,7 +466,7 @@ int		main(int argc, char **argv, char **envp)
 				list = cmds->cmd_list;
 				while (list)
 				{
-					//printf("***** LINE %s\n", list->line);
+				//	printf("***** LINE |%s|\n", list->line);
 					// if (!list->line)
 					// 	break ;
 					parse_list_line(&list->line, list, cmds);

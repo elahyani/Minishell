@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/21 17:37:02 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/22 11:56:25 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,12 @@ typedef struct		s_cmd_list
 	struct s_cmd_list	*prev;
 }					t_cmd_list;
 
+typedef struct		s_inc
+{
+	int		i;
+	int		j;
+}					t_inc;
+
 typedef struct	s_cmds
 {
 	int			index;
@@ -87,6 +93,7 @@ typedef struct	s_cmds
 	char		**f_parse_line;
 	t_cmd_list	*cmd_list;
 	t_pipe		pipe;
+	t_inc		inc;
 	int			sig;
 }				t_cmds;
 

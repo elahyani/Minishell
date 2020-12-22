@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:24 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/21 20:15:03 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/22 10:15:27 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,24 @@ void	parse_dollar_init(t_cmds **cmds, int *i, int *l, int *is_in_dq)
 	(*cmds)->arg_d = ft_strdup("");
 }
 
+// void	manag_quotes_d(char **line_list, t_cmds **cmds, int *i, int *is_in_dq)
+// {
+// 	if ((*line_list)[*i] == '\\' && (*cmds)->quote != 1)
+// 		(*cmds)->ignore = (*cmds)->ignore ? 0 : 1;
+// 	if (!(*cmds)->ignore && (*line_list)[*i] == '"' && !(*cmds)->quote)
+// 		*is_in_dq = !(*is_in_dq);
+// 	if (!(*is_in_dq) && !(*cmds)->ignore && is_quote((*line_list)[*i]) == 1)
+// 		(*cmds)->quote = quote_activer((*line_list)[*i], (*cmds)->quote);
+// 	if ((*line_list)[*i] == '$' && is_quote((*line_list)[*i + 1]) &&
+// 	!(*cmds)->ignore && ((*i && !is_quote((*line_list)[*i - 1])) || !(*i)))
+// 		(*i)++;
+// }
+
+// void	set_env_val()
+// {
+	
+// }
+
 char	*parse_dollar(t_cmds *cmds, char **line_list)
 {
 	int			i;
@@ -91,6 +109,7 @@ char	*parse_dollar(t_cmds *cmds, char **line_list)
 		if ((*line_list)[i] == '$' && is_quote((*line_list)[i + 1]) &&
 		!cmds->ignore && ((i && !is_quote((*line_list)[i - 1])) || !i))
 			i++;
+		// manag_quotes_d(line_list, &cmds, &i, &is_in_dq);
 		if ((*line_list)[i] == '$' && !cmds->ignore && !cmds->quote)
 		{
 			// fct 2
