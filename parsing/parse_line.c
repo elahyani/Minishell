@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 09:43:28 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/22 12:23:27 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/23 08:36:14 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ void	parse_line(char **ln, t_cmds *cmds)
 	int			j;
 	t_cmd_list	*head;
 
-	// if (handle_stx_err(ln, cmds) || check_q(ln, cmds) || check_redir(ln, cmds))
-	// 	return ;
+	if (handle_stx_err(ln, cmds) || check_q(ln, cmds) || check_redir(ln, cmds))
+		return ;
 	ft_init(&cmds, &head, &i, &j);
 	while ((*ln)[++i])
 	{

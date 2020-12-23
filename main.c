@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/22 12:05:25 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/23 11:37:19 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,6 @@
 
 
 ////////////////////////////////////////////
-
-void	ft_free_arr(char **str)
-{
-	int		i;
-
-	i = -1;
-	while (str[++i])
-		ft_free_str(str[i]);
-	free(str);
-}
 
 int		ft_access(char *path, int mode)
 {
@@ -77,13 +67,13 @@ char	*get_bin_path(char *cmdfile, char **env)
 		{
 			if ((acc_path = try_path(cmdfile, split_path[i])))
 			{
-				ft_free_arr(split_path);
+				split_path = ft_free_arr(split_path);
 				return (acc_path);
 			}
 			i++;
 		}
 	}
-	ft_free_arr(split_path);
+	split_path = ft_free_arr(split_path);
 	return (cmdfile);
 }
 
@@ -375,28 +365,6 @@ t_cmd_list	*get_cmd(t_cmds *cmds, t_cmd_list *head)
 	return head;
 }
 
-void	free_cmd_list(t_cmds *cmds)
-{
-	int			i;
-	t_cmd_list	*tmp;
-
-	if (cmds->cmd_list)
-	{
-		while (cmds->cmd_list)
-		{
-			i = -1;
-			(cmds->cmd_list->line) ? ft_free_str(cmds->cmd_list->line) : 0;
-			(cmds->cmd_list->data) ? ft_free_str(cmds->cmd_list->data) : 0;
-			while (cmds->cmd_list->args && cmds->cmd_list->args[++i])
-				ft_free_str(cmds->cmd_list->args[i]);
-			free(cmds->cmd_list->args);
-			tmp = cmds->cmd_list->next;
-			free(cmds->cmd_list);
-			cmds->cmd_list = tmp;
-		}
-	}
-}
-
 void		sig_handle(int sig)
 {
 	if (sig == SIGINT)
@@ -431,6 +399,7 @@ void	initialization(t_cmds **cmds, char **envp)
 	(*cmds)->ignore = 0;
 	(*cmds)->ret = 0;
 	(*cmds)->sig = 0;
+	(*cmds)->allocated = 0;
 }
 
 int		main(int argc, char **argv, char **envp)

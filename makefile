@@ -6,7 +6,7 @@
 #    By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/12/21 14:37:54 by elahyani         ###   ########.fr        #
+#    Updated: 2020/12/23 08:54:47 by elahyani         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,8 @@ SRCS =	exp_cmd.c \
 		parsing/split_cmds.c \
 		parsing/check_for_q.c \
 		parsing/initializations.c \
+		parsing/dollar_utils.c \
+		ft_free_all.c \
 		errors.c \
 		io_redir.c \
 		execution.c \

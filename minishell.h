@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/22 11:56:25 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/23 12:42:47 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,14 @@ typedef struct	s_cmds
 
 	///////////////////////
 	int			quote;
+	char		**new_env;
+	char		**env_sort;
+	char		**cmp_tab;
 	int			ignore;
 	char		**cmd;
 	int			counter;
 	int			sep;
+	char		**str;
 	char		**envir;
 	char		**env_line;   //uninitialized
 	char		*env_arg;
@@ -93,8 +97,9 @@ typedef struct	s_cmds
 	char		**f_parse_line;
 	t_cmd_list	*cmd_list;
 	t_pipe		pipe;
-	t_inc		inc;
+	t_inc		*inc;
 	int			sig;
+	int			allocated;
 }				t_cmds;
 
 int				g_ret;
@@ -155,7 +160,8 @@ int			handle_stx_err(char **ln, t_cmds *cmds);
 int			check_redir(char **ln, t_cmds *cmds);
 int			check_q(char **ln, t_cmds *cmds);
 int			get_sy_err(t_cmds *cmds);
-void		ft_free_str(char *str);
+char	*ft_free_str(char *str);
+char	**ft_free_arr(char **str);
 void		free_cmd_list(t_cmds *cmds);
 void		sig_handle(int sig);
 void	exit_error(char *str, int status, t_cmds *cmds, t_cmd_list *list);
@@ -165,4 +171,6 @@ t_cmd_list *execute_cmd_by_order(t_cmds *cmds, t_cmd_list *list);
 void	exec_io_redi(t_cmds *cmds, t_cmd_list *list);
 void	redir_fd_io(t_cmds *cmds);
 //int		cmd_exit(t_cmds *cmds, t_cmd_list *list);
+void	set_env_val(char **line_list, t_cmds **cmds, int *i, int *l);
+void	manag_quotes_d(char **line_list, t_cmds **cmds, int *i, int *is_in_dq);
 #endif

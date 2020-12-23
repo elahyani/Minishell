@@ -113,3 +113,19 @@ signals:
 [🔶] try ctrl-C ctrl-\ ctrl-D in an empty prompt then check echo $?
 [🔶] try ctrl-C ctrl-\ ctrl-D after u wrote some stuff then check echo $?
 [🔶] try ctrl-C ctrl-\ ctrl-D after u run a blocking cmd like cat or wc or sleep 5 then check echo $?
+
+
+
+definitely lost: 2,664 bytes in 114 blocks
+indirectly lost: 3,705 bytes in 219 blocks
+--
+definitely lost: 48 bytes in 3 blocks
+indirectly lost: 6 bytes in 3 blocks
+
+export a=b c=d e=f
+export a=$c c=$f e=$a
+export
+
+export = = = = - + ! @ # $ % ^ & x=z
+export 
+exit
