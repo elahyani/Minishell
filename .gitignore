@@ -1,5 +1,4 @@
 *.o
-minishell*
 debuger
 debug
 libft/*.o
