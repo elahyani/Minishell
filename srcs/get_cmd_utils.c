@@ -6,11 +6,26 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/23 09:38:47 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/23 11:07:02 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 12:48:58 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
+
+void		get_home_env(t_cmds *cmds)
+{
+	int i;
+
+	i = 0;
+	while (cmds->envir[i] != NULL)
+	{
+		cmds->env_line = ft_split(cmds->envir[i], '=');
+		if (ft_strcmp(cmds->env_line[0], "HOME") == 0)
+			return ;
+		ft_free_arr(cmds->env_line);
+		i++;
+	}
+}
 
 int			is_builtin(char *cmd)
 {

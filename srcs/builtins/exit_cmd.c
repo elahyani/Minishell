@@ -6,11 +6,11 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 10:14:42 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/23 11:03:57 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 12:49:58 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 static int	valid_first_arg(char *arg)
 {
@@ -81,6 +81,8 @@ int			cmd_exit(t_cmd_list *list, t_cmds *cmds)
 		status = valid_status(list->args[1]);
 	ft_putstr_fd("exit\n", 2);
 	(status > 200 && status < 300) ? print_error("exit", list->args[1], 33) : 0;
+	if (cmds->envir && cmds->allocated == 1)
+		cmds->envir = ft_free_arr(cmds->envir);
 	free_cmd_list(cmds);
 	(cmds->allocated) ? ft_free_arr(cmds->envir) : 0;
 	(cmds->pwd) ? ft_free_str(cmds->pwd) : 0;

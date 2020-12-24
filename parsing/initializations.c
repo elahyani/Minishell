@@ -1,35 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_cmd.c                                          :+:      :+:    :+:   */
+/*   initializations.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/01 11:34:43 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/17 12:32:05 by ichejra          ###   ########.fr       */
+/*   Created: 2020/12/21 14:34:50 by elahyani          #+#    #+#             */
+/*   Updated: 2020/12/24 12:47:19 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
-int	cmd_env(t_cmds *cmds, t_cmd_list *list)
+void	ft_init_stx_err(char **iscmd, t_cmds **cmds)
 {
-	int	i;
-
-	i = 0;
-	if (list->args[1] != NULL)
-	{
-		print_error(list->args[0], list->args[1], 2);
-		return (127);
-	}
-	else
-	{
-		while (cmds->envir[i] != NULL)
-		{
-			if (ft_strchr(cmds->envir[i], '='))
-				ft_putendl_fd(cmds->envir[i], 1);
-			i++;
-		}
-	}
-	return (0);
+	(*cmds)->i = -1;
+	(*cmds)->j = -1;
+	*iscmd = NULL;
 }

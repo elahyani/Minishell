@@ -6,11 +6,11 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:33:32 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/17 12:01:10 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 12:49:54 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 int		check_n_flag(char *s, int *n)
 {

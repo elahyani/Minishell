@@ -6,11 +6,11 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/23 09:53:09 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/23 11:08:26 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 12:49:01 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 int		*pipe_file_des(int num_pipe, int *fds)
 {

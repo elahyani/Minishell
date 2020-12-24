@@ -6,11 +6,11 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/23 09:28:14 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/24 11:55:17 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 12:48:34 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 int				check_access(char *path, int mode)
 {

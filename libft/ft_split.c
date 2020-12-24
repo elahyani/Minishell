@@ -6,13 +6,12 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/19 12:45:33 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/12 11:59:33 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 12:39:16 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdio.h>
-
 
 static char		**ft_free(char **split)
 {
@@ -78,7 +77,6 @@ static int		len_wrd(char *str, char c)
 		len++;
 	return (len);
 }
-
 
 char			**ft_split(char const *str, char c)
 {

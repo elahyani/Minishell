@@ -6,36 +6,39 @@
 #    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/12/23 10:07:22 by ichejra          ###   ########.fr        #
+#    Updated: 2020/12/24 12:55:33 by ichejra          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell.a
 
-SRCS =	exp_cmd.c \
-		cd_cmd.c \
-		echo_cmd.c \
-		env_cmd.c \
-		pwd_cmd.c \
-		unset_cmd.c \
-		exec_child.c \
-		debug.c \
-		parsing/manag_list.c \
+SRCS =	parsing/manag_list.c \
 		parsing/parse_line.c \
 		parsing/parse_list_line.c \
 		parsing/parse_dollar.c \
 		parsing/manag_stx_err.c \
 		parsing/manag_quotes.c \
 		parsing/split_cmds.c \
-		errors.c \
-		io_redir.c \
-		execution.c \
-		get_cmd.c \
-		check_cmd.c \
-		get_cmd_utils.c \
-		io_pipe_utils.c \
-		# exit_cmd \
-		# cmds.c \
+		parsing/check_for_q.c \
+		parsing/initializations.c \
+		parsing/dollar_utils.c \
+		srcs/builtins/exp_cmd.c \
+		srcs/builtins/cd_cmd.c \
+		srcs/builtins/echo_cmd.c \
+		srcs/builtins/env_cmd.c \
+		srcs/builtins/pwd_cmd.c \
+		srcs/builtins/unset_cmd.c \
+		srcs/builtins/exit_cmd.c \
+		srcs/exec_child.c \
+		srcs/cd_utils.c \
+		srcs/export_utils.c \
+		srcs/ft_free_all.c \
+		srcs/errors.c \
+		srcs/io_redir.c \
+		srcs/get_cmd.c \
+		srcs/check_cmd.c \
+		srcs/get_cmd_utils.c \
+		srcs/io_pipe_utils.c \
 
 SRC_GNL = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
 
@@ -47,7 +50,7 @@ LIBFT = ./libft/libft.a
 
 MAIN = main.c
 
-HEADER = minishell.h
+HEADER = ./includes/minishell.h
 
 LINKERFLAG = -Wall -Wextra -Werror -c
 
@@ -65,6 +68,8 @@ $(NAME): $(OBJ) $(MAIN) $(OBJ_LIB) $(OBJ_GNL) $(HEADER)
 clean:
 		@rm -f libft/libft.a
 		@rm -f *.o
+		@rm -f srcs/builtins/*.o
+		@rm -f srcs/*.o
 		@rm -f libft/*.o
 		@rm -f get_next_line/*.o
 		@rm -f parsing/*.o

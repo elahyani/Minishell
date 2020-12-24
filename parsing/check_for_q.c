@@ -1,29 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcpy.c                                        :+:      :+:    :+:   */
+/*   check_for_q.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/27 10:49:59 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/24 12:38:49 by ichejra          ###   ########.fr       */
+/*   Created: 2020/12/21 13:58:21 by elahyani          #+#    #+#             */
+/*   Updated: 2020/12/24 12:47:09 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/minishell.h"
 
-char	*ft_strcpy(char *dst, const char *src)
+void		check_for_quote(t_cmds **cmds, char **ln, int *i)
 {
-	int i;
-
-	i = 0;
-	if (dst == NULL || src == NULL)
-		return (NULL);
-	while (src[i])
-	{
-		dst[i] = src[i];
-		i++;
-	}
-	dst[i] = '\0';
-	return (dst);
+	if ((*ln)[*i] == '\\' && (*cmds)->quote != 1)
+		(*cmds)->ignore = (*cmds)->ignore ? 0 : 1;
+	if (!(*cmds)->ignore && is_quote((*ln)[*i]))
+		(*cmds)->quote = quote_activer((*ln)[*i], (*cmds)->quote);
 }

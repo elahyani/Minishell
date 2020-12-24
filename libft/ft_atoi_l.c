@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 12:54:01 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/18 12:54:34 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 12:38:18 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static long	ft_check_long(long n, int sign)
 	return (n);
 }
 
-long	ft_atoi_l(const char *str)
+long		ft_atoi_l(const char *str)
 {
 	int			i;
 	long long	n;

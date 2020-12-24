@@ -6,11 +6,11 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 12:47:15 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/23 11:09:50 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 12:49:03 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 static int		open_input(char *file)
 {

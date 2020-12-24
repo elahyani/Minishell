@@ -6,46 +6,11 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:30:08 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/24 11:46:20 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 12:49:49 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-void	get_home_env(t_cmds *cmds)
-{
-	int i;
-
-	i = 0;
-	while (cmds->envir[i] != NULL)
-	{
-		cmds->env_line = ft_split(cmds->envir[i], '=');
-		if (ft_strcmp(cmds->env_line[0], "HOME") == 0)
-			return ;
-		ft_free_arr(cmds->env_line);
-		i++;
-	}
-}
-
-int		err_ret(t_cmd_list *list, t_cmds **cmds, int *r, int opt)
-{
-	int ret;
-	int err;
-
-	ret = 0;
-	err = 0;
-	if (opt == 1)
-		ret = chdir(list->args[1]);
-	else if (opt == 2)
-		ret = chdir((*cmds)->env_line[1]);
-	if (ret < 0)
-	{
-		*r = -1;
-		err = print_cd_error(list->args[1]);
-	}
-	ft_free_arr((*cmds)->env_line);
-	return (err);
-}
+#include "../../includes/minishell.h"
 
 int		cd_tilda(t_cmd_list *list, t_cmds **cmds)
 {

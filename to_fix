@@ -33,7 +33,7 @@
 [✅].\/Desktop
 
 ======================================================================================
-[❌] export a = b ==> then check env and export
+[✅] export a = b ==> then check env and export
 [✅] export a
 [✅] export a=
 [✅] export b=c
@@ -106,10 +106,26 @@
 [✅] exit MAX_LONG_INT + 1 ==> print Error msg eceho $? == 255
 [✅] exit MIN_LONG_INT ==> echo $? == 1
 [✅] exit g h and try exit 8 9
-
+ Try ctrl-\ in a prompt after you wrote some stuff
 ======================================================================================
 signals:
 [✅] try ctrl-C
 [🔶] try ctrl-C ctrl-\ ctrl-D in an empty prompt then check echo $?
 [🔶] try ctrl-C ctrl-\ ctrl-D after u wrote some stuff then check echo $?
 [🔶] try ctrl-C ctrl-\ ctrl-D after u run a blocking cmd like cat or wc or sleep 5 then check echo $?
+
+
+
+definitely lost: 2,664 bytes in 114 blocks
+indirectly lost: 3,705 bytes in 219 blocks
+--
+definitely lost: 48 bytes in 3 blocks
+indirectly lost: 6 bytes in 3 blocks
+
+export a=b c=d e=f
+export a=$c c=$f e=$a
+export
+
+export = = = = - + ! @ # $ % ^ & x=z
+export 
+exit

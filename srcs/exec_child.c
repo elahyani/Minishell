@@ -6,11 +6,11 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 10:26:16 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/23 11:03:34 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 12:48:39 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 void		redir_fd_io(t_cmds *cmds)
 {

@@ -6,44 +6,11 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/24 11:53:19 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 12:49:21 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-void	ft_free_arr(char **str)
-{
-	int		i;
-
-	i = -1;
-	while (str[++i])
-		if (str[i])
-			ft_free_str(str[i]);
-	free(str);
-}
-
-void	free_cmd_list(t_cmds *cmds)
-{
-	int			i;
-	t_cmd_list	*tmp;
-
-	if (cmds->cmd_list)
-	{
-		while (cmds->cmd_list)
-		{
-			i = -1;
-			(cmds->cmd_list->line) ? ft_free_str(cmds->cmd_list->line) : 0;
-			(cmds->cmd_list->data) ? ft_free_str(cmds->cmd_list->data) : 0;
-			while (cmds->cmd_list->args && cmds->cmd_list->args[++i])
-				ft_free_str(cmds->cmd_list->args[i]);
-			free(cmds->cmd_list->args);
-			tmp = cmds->cmd_list->next;
-			free(cmds->cmd_list);
-			cmds->cmd_list = tmp;
-		}
-	}
-}
+#include "./includes/minishell.h"
 
 void	sig_handle(int sig)
 {
@@ -62,23 +29,45 @@ void	sig_handle(int sig)
 	}
 }
 
-void	initialization(t_cmds **cmds, char **envp)
+void	initialization(t_cmds **cmds, char **envp, int *status, int *g_ret)
 {
 	*cmds = (t_cmds *)malloc(sizeof(t_cmds));
-	(*cmds)->cmd_list = NULL;
-	(*cmds)->index = 0;
 	(*cmds)->cd = 0;
-	(*cmds)->minus = 0;
-	(*cmds)->envir = envp;
-	(*cmds)->oldpwd = NULL;
-	(*cmds)->save_oldpwd = NULL;
-	(*cmds)->env_val = NULL;
-	(*cmds)->env_arg = NULL;
-	(*cmds)->quote = 0;
-	(*cmds)->ignore = 0;
 	(*cmds)->ret = 0;
 	(*cmds)->sig = 0;
+	(*cmds)->minus = 0;
+	(*cmds)->quote = 0;
+	(*cmds)->index = 0;
+	(*cmds)->ignore = 0;
+	(*cmds)->envir = envp;
 	(*cmds)->allocated = 0;
+	(*cmds)->oldpwd = NULL;
+	(*cmds)->env_val = NULL;
+	(*cmds)->env_arg = NULL;
+	(*cmds)->cmd_list = NULL;
+	(*cmds)->save_oldpwd = NULL;
+	*status = 1;
+	*g_ret = 0;
+}
+
+void	run_shell(char *line, t_cmds *cmds, t_cmd_list *list)
+{
+	if (ft_strcmp(line, ""))
+	{
+		parse_line(&line, cmds);
+		if (cmds->cmd_list)
+		{
+			g_ret = !g_ret ? 2 : g_ret;
+			list = cmds->cmd_list;
+			while (list)
+			{
+				parse_list_line(&list->line, list, cmds);
+				list = get_cmd(cmds, list);
+				list = list->next;
+			}
+			free_cmd_list(cmds);
+		}
+	}
 }
 
 int		main(int argc, char **argv, char **envp)
@@ -89,40 +78,20 @@ int		main(int argc, char **argv, char **envp)
 	t_cmd_list	*list;
 	int			i;
 
-	g_ret = 0;
-	status = 1;
-	initialization(&cmds, envp);
+	initialization(&cmds, envp, &status, &g_ret);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sig_handle);
 	while (status)
 	{
 		signal(SIGQUIT, sig_handle);
 		signal(SIGINT, sig_handle);
-		if (cmds->ret != 130)
-			ft_putstr_fd("\e[1;31mminishell~>\e[0m ", 1);
+		(cmds->ret != 130) ? ft_putstr_fd("\e[1;31mminishell~>\e[0m ", 1) : 0;
 		cmds->sig = 0;
 		status = get_next_line(0, &line);
 		cmds->line = line;
-		if (status == 0)
-			cmd_exit(list, cmds);
-		if (ft_strcmp(line, ""))
-		{
-			parse_line(&line, cmds);
-			if (cmds->cmd_list)
-			{
-				g_ret = !g_ret ? 2 : g_ret;
-				list = cmds->cmd_list;
-				while (list)
-				{
-					parse_list_line(&list->line, list, cmds);
-					list = get_cmd(cmds, list);
-					list = list->next;
-				}
-				// print_cmds(cmds->cmd_list);
-				free_cmd_list(cmds);
-			}
-			g_ret = 0;
-		}
+		(status == 0) ? cmd_exit(list, cmds) : 0;
+		run_shell(line, cmds, list);
+		g_ret = 0;
 		free(line);
 	}
 	return (0);

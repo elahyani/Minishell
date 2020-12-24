@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   manag_stx_err.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 13:10:55 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/19 10:27:02 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/24 12:47:27 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../includes/minishell.h"
 
 int		check_cmd_sep(char *cmd)
 {
@@ -58,10 +58,7 @@ int		check_redir(char **ln, t_cmds *cmds)
 	cmds->ignore = 0;
 	while ((*ln)[++i])
 	{
-		if ((*ln)[i] == '\\' && cmds->quote != 1)
-			cmds->ignore = cmds->ignore ? 0 : 1;
-		if (!cmds->ignore && is_quote((*ln)[i]))
-			cmds->quote = quote_activer((*ln)[i], cmds->quote);
+		check_for_quote(&cmds, ln, &i);
 		if (((*ln)[i] == '>' || (*ln)[i] == '<') &&
 		!cmds->ignore && !cmds->quote)
 		{
@@ -80,32 +77,28 @@ int		check_redir(char **ln, t_cmds *cmds)
 int		semi_pipe_stx_err(char **ln, t_cmds *cmds)
 {
 	char	*iscmd;
-	int		i;
-	int		j;
 
-	i = -1;
-	j = -1;
-	iscmd = NULL;
-	while ((*ln)[++i])
+	ft_init_stx_err(&iscmd, &cmds);
+	while ((*ln)[++cmds->i])
 	{
-		if (((*ln)[i] == ';' || (*ln)[i] == '|') &&
+		if (((*ln)[cmds->i] == ';' || (*ln)[cmds->i] == '|') &&
 		!cmds->ignore && !cmds->quote)
 		{
-			iscmd = ft_substr(*ln, j, i - j);
-			j = -1;
-			if ((*ln)[i] == '|' && !(*ln)[i + 1])
+			iscmd = ft_substr(*ln, cmds->j, cmds->i - cmds->j);
+			cmds->j = -1;
+			if ((*ln)[cmds->i] == '|' && !(*ln)[cmds->i + 1])
 			{
-				ft_free_str(iscmd);
+				iscmd = ft_free_str(iscmd);
 				return (get_sy_err(cmds));
 			}
 			else if (check_cmd_sep(iscmd))
 			{
-				ft_free_str(iscmd);
+				iscmd = ft_free_str(iscmd);
 				return (get_sy_err(cmds));
 			}
-			ft_free_str(iscmd);
+			iscmd = ft_free_str(iscmd);
 		}
-		(j == -1) ? j = i : 0;
+		(cmds->j == -1) ? cmds->j = cmds->i : 0;
 	}
 	return (0);
 }
@@ -123,10 +116,7 @@ int		handle_stx_err(char **ln, t_cmds *cmds)
 	iscmd = NULL;
 	while ((*ln)[++i])
 	{
-		if ((*ln)[i] == '\\' && cmds->quote != 1)
-			cmds->ignore = cmds->ignore ? 0 : 1;
-		if (!cmds->ignore && is_quote((*ln)[i]))
-			cmds->quote = quote_activer((*ln)[i], cmds->quote);
+		check_for_quote(&cmds, ln, &i);
 		if (((*ln)[i] == ';' || (*ln)[i] == '|') &&
 		!cmds->ignore && !cmds->quote)
 			return (semi_pipe_stx_err(ln, cmds));

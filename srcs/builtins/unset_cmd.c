@@ -6,11 +6,11 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:35:54 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/23 11:42:31 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 12:50:04 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 int		ft_isalnum_str(char *str)
 {
