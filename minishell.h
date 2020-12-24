@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/23 12:42:47 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/24 09:19:29 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,10 @@ typedef struct	s_cmds
 	t_inc		*inc;
 	int			sig;
 	int			allocated;
+	int			exp_err;
+	int			srch_dup;
+	int			sv_pos;
+	int			chk_if_eq;
 }				t_cmds;
 
 int				g_ret;
@@ -137,8 +141,10 @@ char	*get_bin_path(char *cmdfile, char **env);
 void		check_cmd(t_cmds *cmds, t_cmd_list *list);
 int		ft_arr_len(char **tab);
 //char		*ft_strcat(char *dest, char *src);
-
-
+void	check_if_oldpwd(t_cmds *cmds, int *i);
+void		ft_print_export(char **arr);
+char	**ft_sort_exp(char **envr);
+void	update_dup_export(t_cmd_list *list, t_cmds **cmds, int *i);
 ///////////////////////////////////////////////////
 //char	*get_bin_path(char *filename, char **env);
 //char	*try_path(char *filename, char *dir);

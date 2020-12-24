@@ -6,11 +6,29 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/23 08:39:28 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/23 11:33:15 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/24 08:57:08 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+char	*ft_get_first(const char *s, int c)
+{
+	char	r;
+	int		i;
+
+	r = (char)c;
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == r)
+			return (ft_substr(s, 0, i));
+		else if (s[i + 1] == '\0')
+			return (ft_substr(s, 0, i + 1));
+		i++;
+	}
+	return (0);
+}
 
 char	*get_env_val(t_cmds *cmds, char *join_arg)
 {
