@@ -6,51 +6,11 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 10:14:42 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/21 19:30:04 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/23 11:03:57 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-////////////// A Ajouter a libft //////////////////////
-
-// static long	ft_check_long(long n, int sign)
-// {
-// 	if (n < 0 && sign > 0)
-// 		return (-1);
-// 	if (n > 0 && sign < 0)
-// 		return (0);
-// 	return (n);
-// }
-
-// long	ft_atoi_l(const char *str)
-// {
-// 	int			i;
-// 	long long	n;
-// 	int			sign;
-
-// 	i = 0;
-// 	n = 0;
-// 	sign = 1;
-// 	while (str[i] == '\t' || str[i] == ' ' || str[i] == '\n' ||
-// 		str[i] == '\v' || str[i] == '\r' || str[i] == '\f')
-// 		i++;
-// 	if (str[i] == '-' || str[i] == '+')
-// 	{
-// 		if (str[i] == '-')
-// 			sign *= -1;
-// 		i++;
-// 	}
-// 	while (str[i] != '\0' && str[i] >= '0' && str[i] <= '9')
-// 	{
-// 		n = n * 10 + (str[i] - 48);
-// 		i++;
-// 	}
-// 	n = n * sign;
-// 	return (ft_check_long(n, sign));
-// }
-
-////////////// A Ajouter a libft //////////////////////
 
 static int	valid_first_arg(char *arg)
 {
@@ -123,6 +83,8 @@ int			cmd_exit(t_cmd_list *list, t_cmds *cmds)
 	(status > 200 && status < 300) ? print_error("exit", list->args[1], 33) : 0;
 	free_cmd_list(cmds);
 	(cmds->allocated) ? ft_free_arr(cmds->envir) : 0;
+	(cmds->pwd) ? ft_free_str(cmds->pwd) : 0;
+	(cmds->oldpwd) ? ft_free_str(cmds->oldpwd) : 0;
 	free(cmds->line);
 	free(cmds);
 	exit(status);

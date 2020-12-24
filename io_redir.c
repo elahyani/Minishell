@@ -6,15 +6,15 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 12:47:15 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/18 13:02:29 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/23 11:09:50 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int			open_input(char *file)
+static int		open_input(char *file)
 {
-	int		fd;
+	int			fd;
 
 	fd = 0;
 	if ((fd = open(file, O_RDONLY)) < 0)
@@ -25,11 +25,11 @@ static int			open_input(char *file)
 	return (fd);
 }
 
-static int			backward_redir(t_cmd_list *list)
+static int		backward_redir(t_cmd_list *list)
 {
-	int				i;
-	char			*file;
-	struct stat		file_stat;
+	int			i;
+	char		*file;
+	struct stat	file_stat;
 
 	i = -1;
 	while (list->args[++i])
@@ -46,11 +46,11 @@ static int			backward_redir(t_cmd_list *list)
 	return (open_input(file));
 }
 
-static int			open_output(t_cmd_list *list, char redir)
+static int		open_output(t_cmd_list *list, char redir)
 {
-	int				fd;
-	int				flag;
-	int				flag_mode;
+	int			fd;
+	int			flag;
+	int			flag_mode;
 
 	fd = 0;
 	flag = O_WRONLY | O_CREAT;
@@ -67,9 +67,9 @@ static int			open_output(t_cmd_list *list, char redir)
 	return (fd);
 }
 
-static int			forward_redir(t_cmd_list *tmp, t_cmd_list *list)
+static int		forward_redir(t_cmd_list *tmp, t_cmd_list *list)
 {
-	int				i;
+	int			i;
 
 	if (ft_arr_len(tmp->next->args) > 1 && !tmp->next->start)
 	{
@@ -83,9 +83,9 @@ static int			forward_redir(t_cmd_list *tmp, t_cmd_list *list)
 	return (open_output(tmp->next, tmp->redir));
 }
 
-void				exec_io_redi(t_cmds *cmds, t_cmd_list *list)
+void			exec_io_redi(t_cmds *cmds, t_cmd_list *list)
 {
-	t_cmd_list		*tmp;
+	t_cmd_list	*tmp;
 
 	tmp = list;
 	while (tmp && tmp->redir)

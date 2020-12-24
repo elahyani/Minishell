@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 10:25:11 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/18 11:18:25 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 11:54:30 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,13 @@ int		print_error(char *cmd, char *arg, int err)
 	}
 	if (err == 7)
 		ft_putendl_fd(strerror(err), 2);
+	return (1);
+}
+
+int		print_cd_error(char *str)
+{
+	ft_putstr_fd("minishell: cd: ", 1);
+	ft_putstr_fd(str, 1);
+	ft_putstr_fd(": No such file or directory\n", 1);
 	return (1);
 }

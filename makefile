@@ -6,7 +6,7 @@
 #    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/12/18 12:50:19 by ichejra          ###   ########.fr        #
+#    Updated: 2020/12/23 10:07:22 by ichejra          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,10 @@ SRCS =	exp_cmd.c \
 		errors.c \
 		io_redir.c \
 		execution.c \
+		get_cmd.c \
+		check_cmd.c \
+		get_cmd_utils.c \
+		io_pipe_utils.c \
 		# exit_cmd \
 		# cmds.c \
 

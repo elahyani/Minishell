@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/21 19:29:31 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/24 11:27:57 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ typedef struct	s_cmds
 	t_pipe		pipe;
 	int			sig;
 	int			allocated;
+	int			ret_old;
+	int			is_ret;
 }				t_cmds;
 
 int				g_ret;
@@ -149,8 +151,17 @@ void		sig_handle(int sig);
 void	exit_error(char *str, int status, t_cmds *cmds, t_cmd_list *list);
 int		exec_cmds(t_cmds *cmds, t_cmd_list *list);
 int		print_error(char *cmd, char *arg, int err);
-t_cmd_list *execute_cmd_by_order(t_cmds *cmds, t_cmd_list *list);
+t_cmd_list *starting_execution(t_cmds *cmds, t_cmd_list *list);
 void	exec_io_redi(t_cmds *cmds, t_cmd_list *list);
 void	redir_fd_io(t_cmds *cmds);
+void	close_pipes(int *fds, int num_pipe);
+void	create_io_fds_cpy(int *fds);
+int			*create_fds(t_cmd_list *list, int j, int *fds);
+int		is_builtin(char *cmd);
+int		*pipe_file_des(int num_pipe, int *fds);
+void			save_file_des(int *fds);
+t_cmd_list	*skip_redir(t_cmd_list *list);
+int		get_num_pipes(t_cmd_list *cmds);
+int		print_cd_error(char *str);
 //int		cmd_exit(t_cmds *cmds, t_cmd_list *list);
 #endif
