@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:35:54 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/24 12:50:04 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/25 19:33:20 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,28 +31,50 @@ int		valid_arg(char *val)
 	return (1);
 }
 
-void	remove_arg(t_cmds **cmds, char *arg)
+char		**remove_arg(t_cmds **cmds, char *arg)
 {
-	int j;
-	int i;
-
-	j = 0;
+	int		i;
+	int		len;
+	char	**new_arr;
+	int		str_len;
 	i = 0;
-	while ((*cmds)->envir[j] != NULL)
+	len = 0;
+	while ((*cmds)->envir[i] != NULL)
 	{
-		(*cmds)->env_line = ft_split((*cmds)->envir[j], '=');
+		(*cmds)->env_line = ft_split((*cmds)->envir[i], '=');
 		if (ft_strcmp((*cmds)->env_line[0], arg) == 0)
 		{
-			i = j;
-			while ((*cmds)->envir[i] != NULL)
-			{
-				(*cmds)->envir[i] = (*cmds)->envir[i + 1];
-				i++;
-			}
-			break ;
+			i++;
+			(*cmds)->env_line = ft_free_arr((*cmds)->env_line);
+			continue ;
 		}
-		j++;
+		(*cmds)->env_line = ft_free_arr((*cmds)->env_line);
+		len++;
+		i++;
 	}
+	if (!(new_arr = (char **)malloc(sizeof(char*) * (len))))
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		(*cmds)->env_line = ft_split((*cmds)->envir[i], '=');
+		if (ft_strcmp((*cmds)->env_line[0], arg) == 0)
+		{
+			i++;
+			(*cmds)->env_line = ft_free_arr((*cmds)->env_line);
+			continue ;
+		}
+		(*cmds)->env_line = ft_free_arr((*cmds)->env_line);
+		str_len = (int)ft_strlen((*cmds)->envir[i]);
+		if (!(new_arr[i] = (char *)malloc(sizeof(char) * (str_len + 1))))
+			return (NULL);
+		ft_strcpy(new_arr[i], (*cmds)->envir[i]);
+		i++;
+	}
+	new_arr[i] = NULL;
+	printf("unset => %d\n", len);
+	ft_free_arr((*cmds)->envir);
+	return(new_arr);
 }
 
 int		cmd_unset(t_cmd_list *list, t_cmds *cmds)
@@ -70,7 +92,7 @@ int		cmd_unset(t_cmd_list *list, t_cmds *cmds)
 			k++;
 			continue ;
 		}
-		remove_arg(&cmds, list->args[k]);
+		cmds->envir = remove_arg(&cmds, list->args[k]);
 		k++;
 	}
 	return (err);

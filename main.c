@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/24 12:49:21 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/25 18:48:11 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,25 +29,29 @@ void	sig_handle(int sig)
 	}
 }
 
-void	initialization(t_cmds **cmds, char **envp, int *status, int *g_ret)
+void	initialization(t_cmds **cmds, char **envp)
 {
-	*cmds = (t_cmds *)malloc(sizeof(t_cmds));
-	(*cmds)->cd = 0;
+	int		i;
+
+	i = -1;
 	(*cmds)->ret = 0;
-	(*cmds)->sig = 0;
-	(*cmds)->minus = 0;
 	(*cmds)->quote = 0;
-	(*cmds)->index = 0;
+	(*cmds)->pwd = NULL;
 	(*cmds)->ignore = 0;
-	(*cmds)->envir = envp;
-	(*cmds)->allocated = 0;
+	(*cmds)->envir = (char **)malloc(sizeof(char*) * (ft_arr_len(envp) + 1));
+	while (envp[++i])
+	{
+		if (ft_strncmp(envp[i], "OLDPWD=", 7) == 0)
+			(*cmds)->envir[i] = ft_strdup("OLDPWD");
+		else
+			(*cmds)->envir[i] = ft_strdup(envp[i]);
+	}
+	(*cmds)->envir[i] = NULL;
 	(*cmds)->oldpwd = NULL;
 	(*cmds)->env_val = NULL;
 	(*cmds)->env_arg = NULL;
 	(*cmds)->cmd_list = NULL;
 	(*cmds)->save_oldpwd = NULL;
-	*status = 1;
-	*g_ret = 0;
 }
 
 void	run_shell(char *line, t_cmds *cmds, t_cmd_list *list)
@@ -76,9 +80,11 @@ int		main(int argc, char **argv, char **envp)
 	char		*line;
 	t_cmds		*cmds;
 	t_cmd_list	*list;
-	int			i;
 
-	initialization(&cmds, envp, &status, &g_ret);
+	g_ret = 0;
+	status = 1;
+	cmds = (t_cmds *)malloc(sizeof(t_cmds));
+	initialization(&cmds, envp);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sig_handle);
 	while (status)
@@ -86,7 +92,6 @@ int		main(int argc, char **argv, char **envp)
 		signal(SIGQUIT, sig_handle);
 		signal(SIGINT, sig_handle);
 		(cmds->ret != 130) ? ft_putstr_fd("\e[1;31mminishell~>\e[0m ", 1) : 0;
-		cmds->sig = 0;
 		status = get_next_line(0, &line);
 		cmds->line = line;
 		(status == 0) ? cmd_exit(list, cmds) : 0;
