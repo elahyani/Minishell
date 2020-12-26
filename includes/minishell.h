@@ -6,23 +6,23 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:09:58 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/25 18:48:31 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/26 08:16:28 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <signal.h>
 # include <stdio.h>
+# include <signal.h>
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <sys/errno.h>
-# include "../get_next_line/get_next_line.h"
 # include "../libft/libft.h"
+# include "../get_next_line/get_next_line.h"
 
 typedef struct			s_pipe
 {

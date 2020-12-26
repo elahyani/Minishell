@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/01 11:35:54 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/25 19:33:20 by elahyani         ###   ########.fr       */
+/*   Created: 2020/12/26 08:13:40 by ichejra           #+#    #+#             */
+/*   Updated: 2020/12/26 08:55:52 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,69 +31,54 @@ int		valid_arg(char *val)
 	return (1);
 }
 
-char		**remove_arg(t_cmds **cmds, char *arg)
+char	**remove_arg(char **arr, int pos)
 {
 	int		i;
+	int		j;
 	int		len;
 	char	**new_arr;
-	int		str_len;
+
 	i = 0;
-	len = 0;
-	while ((*cmds)->envir[i] != NULL)
-	{
-		(*cmds)->env_line = ft_split((*cmds)->envir[i], '=');
-		if (ft_strcmp((*cmds)->env_line[0], arg) == 0)
-		{
-			i++;
-			(*cmds)->env_line = ft_free_arr((*cmds)->env_line);
-			continue ;
-		}
-		(*cmds)->env_line = ft_free_arr((*cmds)->env_line);
-		len++;
-		i++;
-	}
-	if (!(new_arr = (char **)malloc(sizeof(char*) * (len))))
-		return (NULL);
-	i = 0;
+	j = 0;
+	new_arr = NULL;
+	len = ft_arr_len(arr);
+	new_arr = (char **)malloc((sizeof(char *) * len));
 	while (i < len)
 	{
-		(*cmds)->env_line = ft_split((*cmds)->envir[i], '=');
-		if (ft_strcmp((*cmds)->env_line[0], arg) == 0)
+		if (i != pos)
 		{
-			i++;
-			(*cmds)->env_line = ft_free_arr((*cmds)->env_line);
-			continue ;
+			new_arr[j] = (char *)malloc(sizeof(char *) *
+			(ft_strlen(arr[i]) + 1));
+			ft_strcpy(new_arr[j], arr[i]);
+			j++;
 		}
-		(*cmds)->env_line = ft_free_arr((*cmds)->env_line);
-		str_len = (int)ft_strlen((*cmds)->envir[i]);
-		if (!(new_arr[i] = (char *)malloc(sizeof(char) * (str_len + 1))))
-			return (NULL);
-		ft_strcpy(new_arr[i], (*cmds)->envir[i]);
 		i++;
 	}
-	new_arr[i] = NULL;
-	printf("unset => %d\n", len);
-	ft_free_arr((*cmds)->envir);
-	return(new_arr);
+	ft_free_arr(arr);
+	new_arr[j] = NULL;
+	return (new_arr);
 }
 
 int		cmd_unset(t_cmd_list *list, t_cmds *cmds)
 {
-	int	k;
-	int	err;
+	int i;
+	int j;
+	int err;
 
-	k = 1;
+	i = 1;
+	j = 0;
 	err = 0;
-	while (list->args[k] != NULL)
+	while (list->args[i] != NULL)
 	{
-		if (!valid_arg(list->args[k]) || ft_strchr(list->args[k], '='))
+		if (!valid_arg(list->args[i]) || ft_strchr(list->args[i], '='))
 		{
-			err = print_error(list->args[0], list->args[k], 1);
-			k++;
+			err = print_error(list->args[0], list->args[i], 1);
+			i++;
 			continue ;
 		}
-		cmds->envir = remove_arg(&cmds, list->args[k]);
-		k++;
+		if ((j = ft_getenv(list->args[i], cmds->envir)) >= 0)
+			cmds->envir = remove_arg(cmds->envir, j);
+		i++;
 	}
 	return (err);
 }
