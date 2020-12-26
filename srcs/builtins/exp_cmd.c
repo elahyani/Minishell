@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 10:37:00 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/25 17:49:24 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/26 09:08:18 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	update_export_tab(t_cmds **cmds, int *j, int *i, t_cmd_list *list)
 {
-	while ((*cmds)->envir[++*j] != NULL && *j < (*cmds)->index)
+	while ((*cmds)->envir[++(*j)] != NULL)
 	{
 		(*cmds)->env_line = ft_split((*cmds)->envir[*j], '=');
 		if (ft_strcmp((*cmds)->env_line[0], (*cmds)->str[0]) == 0)
@@ -22,9 +22,9 @@ void	update_export_tab(t_cmds **cmds, int *j, int *i, t_cmd_list *list)
 			(*cmds)->str = ((*cmds)->str) ? ft_free_arr((*cmds)->str) : 0;
 			(*cmds)->env_line = ((*cmds)->env_line) ?
 			ft_free_arr((*cmds)->env_line) : 0;
-			if ((ft_strchr((*cmds)->envir[*j], '=') && (ft_strchr(
-				list->args[*i], '='))) || (!ft_strchr((*cmds)->envir[*j], '=')
-				&& (ft_strchr(list->args[*i], '='))))
+			if (((ft_strchr((*cmds)->envir[*j], '=') && (ft_strchr(
+			list->args[*i], '='))) || (!ft_strchr((*cmds)->envir[*j], '=')
+			&& (ft_strchr(list->args[*i], '=')))) && ((*cmds)->chk_if_eq = 1))
 			{
 				(*cmds)->envir[*j] = ((*cmds)->envir[*j]) ?
 				ft_free_str((*cmds)->envir[*j]) : 0;
@@ -43,11 +43,7 @@ void	update_export_tab(t_cmds **cmds, int *j, int *i, t_cmd_list *list)
 
 int		print_export_list(t_cmds *cmds, int *i)
 {
-	if (cmds->exp_oldp == 0)
-	{
-		cmds->envir[*i] = ft_strdup("OLDPWD");
-		cmds->envir[*i + 1] = NULL;
-	}
+	i = 0;
 	cmds->env_sort = ft_envdup(cmds->envir);
 	cmds->new_env = ft_sort_exp(cmds->env_sort);
 	ft_print_export(cmds->new_env);
@@ -63,13 +59,7 @@ void	add_to_export_list(t_cmds **cmds, t_cmd_list *list, int *i, int *j)
 	update_export_tab(&(*cmds), j, i, list);
 	(*cmds)->str = ((*cmds)->str) ? ft_free_arr((*cmds)->str) : 0;
 	if (!(*cmds)->chk_if_eq)
-	{
-		(*cmds)->envir[*j] = ((*cmds)->envir[*j]) ?
-		ft_free_str((*cmds)->envir[*j]) : 0;
-		(!(*cmds)->chk_if_eq) ? (*cmds)->envir[*j] =
-		ft_strdup(list->args[*i]) : 0;
-	}
-	(*cmds)->envir[(*cmds)->index + 1] = NULL;
+		(*cmds)->envir = ft_get_arr(list->args[*i], (*cmds)->envir);
 }
 
 void	loop_export_list(t_cmds **cmds, t_cmd_list *list, int *i, int *j)
@@ -85,9 +75,9 @@ void	loop_export_list(t_cmds **cmds, t_cmd_list *list, int *i, int *j)
 		}
 		if (!ft_isalpha(list->args[*i][0]) && list->args[*i][0] != '_')
 		{
-			ft_putstr_fd("minishell: export: `", 1);
-			ft_putstr_fd(list->args[*i], 1);
-			ft_putendl_fd("': Invalid identifier", 1);
+			ft_putstr_fd("minishell: export: `", 2);
+			ft_putstr_fd(list->args[*i], 2);
+			ft_putendl_fd("': Invalid identifier", 2);
 			(*cmds)->str = ((*cmds)->str) ? ft_free_arr((*cmds)->str) : 0;
 			(*cmds)->exp_err = 1;
 			(*i)++;
@@ -96,7 +86,6 @@ void	loop_export_list(t_cmds **cmds, t_cmd_list *list, int *i, int *j)
 		update_dup_export(list, &(*cmds), i);
 		*j = -1;
 		add_to_export_list(&(*cmds), list, i, j);
-		(*cmds)->index++;
 		(*i)++;
 	}
 }
@@ -116,12 +105,8 @@ int		cmd_export(t_cmd_list *list, t_cmds *cmds)
 	cmds->env_sort = NULL;
 	cmds->new_env = NULL;
 	cmds->exp_oldp = 0;
-	check_if_oldpwd(cmds, &i);
 	if (list->args[1] == NULL)
 		return (print_export_list(cmds, &i));
-	if (!cmds->index)
-		while (cmds->envir[cmds->index] != NULL)
-			cmds->index++;
 	i = 1;
 	loop_export_list(&cmds, list, &i, &j);
 	return (cmds->exp_err);

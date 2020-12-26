@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+         #
+#    By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 18:19:02 by elahyani          #+#    #+#              #
-#    Updated: 2020/12/24 12:55:33 by ichejra          ###   ########.fr        #
+#    Updated: 2020/12/26 09:02:58 by elahyani         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,7 @@ SRCS =	parsing/manag_list.c \
 		srcs/get_cmd_utils.c \
 		srcs/io_pipe_utils.c \
 
-SRC_GNL = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
+SRC_GNL = get_next_line/get_next_line.c
 
 OBJ = $(SRCS:.c=.o)
 

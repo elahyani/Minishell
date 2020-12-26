@@ -126,6 +126,6 @@ export a=b c=d e=f
 export a=$c c=$f e=$a
 export
 
-export = = = = - + ! @ # $ % ^ & x=z
+export = = = = - + ! @ $ % x=z
 export 
 exit

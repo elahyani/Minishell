@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 08:50:53 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/24 12:48:50 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/25 16:14:55 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,8 @@ void	check_if_oldpwd(t_cmds *cmds, int *i)
 {
 	while (cmds->envir[*i])
 	{
-		cmds->str = ft_split(cmds->envir[*i], '=');
-		if (ft_strcmp(cmds->str[0], "OLDPWD") == 0)
+		if (ft_strncmp(cmds->envir[*i], "OLDPWD=", 7) == 0)
 			cmds->exp_oldp = 1;
-		cmds->str = ft_free_arr(cmds->str);
 		(*i)++;
 	}
 }

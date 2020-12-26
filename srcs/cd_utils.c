@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 08:50:18 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/24 12:48:26 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/25 19:35:16 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,10 @@ char	**ft_get_arr(char *value, char **arr)
 	if (!(new_arr = (char **)malloc(sizeof(char*) * len)))
 		return (NULL);
 	while (arr[++i] != NULL)
-	{
 		new_arr[i] = ft_strdup(arr[i]);
-	}
 	new_arr[i] = ft_strdup(value);
 	new_arr[i + 1] = NULL;
+	ft_free_arr(arr);
 	return (new_arr);
 }
 
@@ -104,21 +103,21 @@ char	**ft_setenv(char *var, char *path, char **env)
 {
 	int		i;
 	int		len;
-	char	*record;
+	char	*value;
 
 	len = ft_strlen(var) + ft_strlen(path) + 2;
-	if (!(record = (char *)malloc(sizeof(char) * len)))
+	if (!(value = (char *)malloc(sizeof(char) * len)))
 		return (NULL);
-	ft_strcpy(record, var);
-	ft_strcat(record, "=");
-	ft_strcat(record, path);
+	ft_strcpy(value, var);
+	ft_strcat(value, "=");
+	ft_strcat(value, path);
 	if ((i = ft_getenv(var, env)) >= 0)
 	{
 		ft_bzero(env[i], ft_strlen(env[i]));
-		env[i] = ft_strdup(record);
-		record = ft_free_str(record);
+		ft_free_str(env[i]);
+		env[i] = value;
 	}
 	else
-		return (ft_add_to_arr(record, env));
+		return (ft_add_to_arr(value, env));
 	return (env);
 }

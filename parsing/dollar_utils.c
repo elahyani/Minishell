@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/23 08:39:28 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/24 12:47:17 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/26 08:53:54 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	*get_env_val(t_cmds *cmds, char *join_arg)
 	if (!ft_strcmp(cmds->join_arg, "$"))
 		return (ft_strdup("$"));
 	else if (cmds->join_arg[1] == '?')
-		return (ft_itoa(cmds->ret));
+		return (ft_itoa(cmds->ret = (g_ret == 1) ? g_ret : cmds->ret));
 	j = 0;
 	while (cmds->join_arg[++j])
 		if (ft_isalpha(cmds->join_arg[j]))
