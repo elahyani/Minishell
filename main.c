@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/24 12:49:21 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/25 19:14:27 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ int		main(int argc, char **argv, char **envp)
 	while (status)
 	{
 		signal(SIGQUIT, sig_handle);
-		signal(SIGINT, sig_handle);
 		(cmds->ret != 130) ? ft_putstr_fd("\e[1;31mminishell~>\e[0m ", 1) : 0;
 		cmds->sig = 0;
 		status = get_next_line(0, &line);

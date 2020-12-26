@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/23 08:46:24 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/24 12:48:54 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/26 08:42:32 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,7 @@ int			wait_child(t_cmds *cmds, pid_t pid)
 	else
 	{
 		while (++i < cmds->num_pipe + 1)
-		{
 			waitpid(cmds->pipe.pids[i], &status, 0);
-			if (status == 2)
-				if (i != cmds->num_pipe)
-					cmds->sig = 1;
-		}
 	}
 	return (status);
 }

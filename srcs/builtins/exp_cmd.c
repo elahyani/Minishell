@@ -6,7 +6,7 @@
 /*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 10:37:00 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/24 12:50:00 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/25 17:49:24 by ichejra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int		cmd_export(t_cmd_list *list, t_cmds *cmds)
 	int		i;
 
 	i = 0;
-	i = 0;
+	j = 0;
 	cmds->exp_err = 0;
 	cmds->sv_pos = 0;
 	cmds->srch_dup = 0;
