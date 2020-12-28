@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/23 08:46:24 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/26 08:15:32 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/28 12:26:20 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,19 @@ void		get_cmd_help(t_cmds *cmds, pid_t pid)
 	status = 0;
 	close_pipes(cmds->pipe.fds, cmds->num_pipe);
 	status = wait_child(cmds, pid);
-	if (status == 2 || status == 3)
-		cmds->ret = status + 128;
-	else
+	if (WIFSIGNALED(status))
 	{
-		if (WIFEXITED(status))
-			cmds->ret = WEXITSTATUS(status);
+		cmds->ret = WTERMSIG(status) + 128;
+		if (cmds->ret == 131)
+			ft_putstr_fd("Quit: 3\n", 2);
+		else if (cmds->ret == 130 && g_ret != 1)
+		{
+			ft_putstr_fd("\b\b  \b\b\n", 2);
+			ft_putstr_fd("\e[1;31mminishell\e[0m\033[0;33m~>\033[0m ", 2);
+		}
 	}
+	else if (WIFEXITED(status))
+		cmds->ret = WEXITSTATUS(status);
 	if (cmds->num_pipe)
 	{
 		free(cmds->pipe.fds);

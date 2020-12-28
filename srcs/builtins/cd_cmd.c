@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:30:08 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/25 18:38:50 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/28 08:44:21 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,22 @@
 
 int		cd_tilda(t_cmd_list *list, t_cmds **cmds)
 {
-	int	i;
-	int err;
+	int		i;
+	int		err;
+	int		ret;
+	char	*tmp;
 
 	i = 0;
 	err = 0;
+	ret = 0;
 	if (list->args[1][1] == ' ' || list->args[1][1] == '\0')
 		err = err_ret(list, cmds, 0, 2);
 	else if (list->args[1][1] == '/')
 	{
+		tmp = list->args[1];
 		list->args[1] = ft_strjoin((*cmds)->env_line[1], list->args[1] + 1);
-		err = err_ret(list, cmds, 0, 1);
+		ft_free_str(tmp);
+		err = err_ret(list, cmds, &ret, 1);
 	}
 	return (err);
 }

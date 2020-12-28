@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 10:25:11 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/24 12:48:36 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/28 09:27:24 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ int		print_error(char *cmd, char *arg, int err)
 
 int		print_cd_error(char *str)
 {
-	ft_putstr_fd("minishell: cd: ", 1);
-	ft_putstr_fd(str, 1);
-	ft_putstr_fd(": No such file or directory\n", 1);
+	ft_putstr_fd("minishell: cd: ", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd(": No such file or directory\n", 2);
 	return (1);
 }
 
@@ -65,8 +65,8 @@ int		err_ret(t_cmd_list *list, t_cmds **cmds, int *r, int opt)
 	int ret;
 	int err;
 
-	ret = 0;
 	err = 0;
+	ret = 0;
 	if (opt == 1)
 		ret = chdir(list->args[1]);
 	else if (opt == 2)
