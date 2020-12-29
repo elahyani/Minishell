@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 10:14:42 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/28 12:04:04 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/29 10:11:41 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,7 @@ static int	check_args_len(t_cmd_list *list)
 	return (1);
 }
 
-static int	ft_nbr_len(long n)
-{
-	int		i;
-
-	i = 1;
-	while (n / 10)
-	{
-		n /= 10;
-		i++;
-	}
-	return (i);
-}
-
-long		valid_status(char *arg)
+static long	valid_status(char *arg)
 {
 	int		i;
 	int		sign;
@@ -70,6 +57,16 @@ long		valid_status(char *arg)
 	return (0);
 }
 
+static void	free_all(t_cmds *cmds)
+{
+	free_cmd_list(cmds);
+	cmds->envir = (cmds->envir) ? ft_free_arr(cmds->envir) : 0;
+	cmds->pwd = (cmds->pwd) ? ft_free_str(cmds->pwd) : 0;
+	cmds->oldpwd = (cmds->oldpwd) ? ft_free_str(cmds->oldpwd) : 0;
+	free(cmds->line);
+	free(cmds);
+}
+
 int			cmd_exit(t_cmd_list *list, t_cmds *cmds)
 {
 	long	status;
@@ -87,14 +84,10 @@ int			cmd_exit(t_cmd_list *list, t_cmds *cmds)
 		else
 			status = valid_status(list->args[1]);
 	}
-	ft_putstr_fd("exit\n", 2);
+	(!cmds->num_pipe) ? ft_putstr_fd("exit\n", 2) : 0;
 	if (status == 255 && !valid_status(list->args[1]))
 		print_error("exit", list->args[1], 33);
-	free_cmd_list(cmds);
-	cmds->envir = (cmds->envir) ? ft_free_arr(cmds->envir) : 0;
-	cmds->pwd = (cmds->pwd) ? ft_free_str(cmds->pwd) : 0;
-	cmds->oldpwd = (cmds->oldpwd) ? ft_free_str(cmds->oldpwd) : 0;
-	free(cmds->line);
-	free(cmds);
+	if (!cmds->num_pipe)
+		free_all(cmds);
 	exit(status);
 }

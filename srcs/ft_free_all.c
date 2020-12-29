@@ -6,7 +6,7 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/23 08:41:13 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/25 14:49:32 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/29 08:51:37 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,12 @@ char	**ft_free_arr(char **str)
 	int		i;
 
 	i = -1;
-	while (str[++i])
-		str[i] = ft_free_str(str[i]);
-	free(str);
+	if (str)
+	{
+		while (str[++i])
+			str[i] = ft_free_str(str[i]);
+		free(str);
+	}
 	return (NULL);
 }
 
@@ -42,9 +45,8 @@ void	free_cmd_list(t_cmds *cmds)
 			i = -1;
 			cmds->cmd_list->line = ft_free_str(cmds->cmd_list->line);
 			cmds->cmd_list->data = ft_free_str(cmds->cmd_list->data);
-			while (cmds->cmd_list->args && cmds->cmd_list->args[++i])
-				cmds->cmd_list->args[i] = ft_free_str(cmds->cmd_list->args[i]);
-			free(cmds->cmd_list->args);
+			cmds->cmd_list->args = (cmds->cmd_list->args) ?
+			ft_free_arr(cmds->cmd_list->args) : 0;
 			tmp = cmds->cmd_list->next;
 			free(cmds->cmd_list);
 			cmds->cmd_list = tmp;

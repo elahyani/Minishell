@@ -6,13 +6,13 @@
 /*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/26 18:09:30 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/28 12:44:24 by elahyani         ###   ########.fr       */
+/*   Updated: 2020/12/29 10:31:14 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-void	sig_handle(int sig)
+static void	sig_handle(int sig)
 {
 	if (sig == SIGINT)
 	{
@@ -30,7 +30,7 @@ void	sig_handle(int sig)
 	}
 }
 
-void	initialization(t_cmds **cmds, char **envp)
+static void	main_init(t_cmds **cmds, char **envp, t_cmd_list **lst, char **tmp)
 {
 	int		i;
 
@@ -53,9 +53,11 @@ void	initialization(t_cmds **cmds, char **envp)
 	(*cmds)->env_arg = NULL;
 	(*cmds)->cmd_list = NULL;
 	(*cmds)->save_oldpwd = NULL;
+	*tmp = NULL;
+	*lst = NULL;
 }
 
-void	run_shell(char *line, t_cmds *cmds, t_cmd_list *list)
+static void	run_shell(char *line, t_cmds *cmds, t_cmd_list *list)
 {
 	if (ft_strcmp(line, ""))
 	{
@@ -75,27 +77,53 @@ void	run_shell(char *line, t_cmds *cmds, t_cmd_list *list)
 	}
 }
 
-int		main(int argc, char **argv, char **envp)
+static void	check_sig(t_cmds **cmds, char **tmp, char **line, int *st)
+{
+	char	*tmp1;
+
+	if (*tmp)
+	{
+		tmp1 = ft_strjoin(*tmp, *line);
+		*tmp = ft_free_str(*tmp);
+		ft_free_str(*line);
+		*line = tmp1;
+	}
+	(*cmds)->line = *line;
+	if (*st == 0)
+	{
+		if (!ft_strlen(*line))
+			cmd_exit((*cmds)->cmd_list, *cmds);
+		else
+		{
+			ft_putstr_fd("  \b\b", 1);
+			*tmp = ft_strdup(*line);
+		}
+	}
+}
+
+int			main(int argc, char **argv, char **envp)
 {
 	int			status;
 	char		*line;
+	char		*tmp;
 	t_cmds		*cmds;
 	t_cmd_list	*list;
 
 	g_ret = 0;
 	status = 1;
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
-	initialization(&cmds, envp);
+	main_init(&cmds, envp, &list, &tmp);
 	signal(SIGQUIT, sig_handle);
 	signal(SIGINT, sig_handle);
-	while (status)
+	while (1)
 	{
-		(cmds->ret != 130) ? ft_putstr_fd("\e[1;31mminishell~>\e[0m ", 2) : 0;
+		if (cmds->ret != 130 && !tmp)
+			ft_putstr_fd("\e[1;31mminishell~>\e[0m ", 2);
 		cmds->ret = 0;
 		status = get_next_line(0, &line);
-		cmds->line = line;
-		(status == 0) ? cmd_exit(list, cmds) : 0;
-		run_shell(line, cmds, list);
+		check_sig(&cmds, &tmp, &line, &status);
+		if (status)
+			run_shell(cmds->line, cmds, list);
 		g_ret = 0;
 		free(line);
 	}

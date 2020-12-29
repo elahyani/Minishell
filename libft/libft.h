@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:26:29 by elahyani          #+#    #+#             */
-/*   Updated: 2020/12/18 12:55:05 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/29 09:09:53 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,5 @@ t_list			*ft_lstmap(t_list *lst, void *(*f)(void*), void (*del)(void*));
 char			*ft_strcpy(char *dst, const char *src);
 char			*ft_strcat(char *dest, char *src);
 long			ft_atoi_l(const char *str);
-
+int				ft_nbr_len(long n);
 #endif
