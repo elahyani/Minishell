@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   io_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichejra <ichejra@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elahyani <elahyani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 12:47:15 by ichejra           #+#    #+#             */
-/*   Updated: 2020/12/24 12:49:03 by ichejra          ###   ########.fr       */
+/*   Updated: 2020/12/29 12:48:29 by elahyani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int		open_input(char *file)
 	fd = 0;
 	if ((fd = open(file, O_RDONLY)) < 0)
 	{
-		ft_putendl_fd("error opening file", 1);
+		ft_putendl_fd("error opening file", 2);
 		exit(1);
 	}
 	return (fd);
@@ -37,9 +37,9 @@ static int		backward_redir(t_cmd_list *list)
 		file = list->args[i];
 		if (stat(file, &file_stat) < 0)
 		{
-			ft_putstr_fd("minishell: ", 1);
-			ft_putstr_fd(file, 1);
-			ft_putendl_fd(": No such file or directory", 1);
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(file, 2);
+			ft_putendl_fd(": No such file or directory", 2);
 			exit(1);
 		}
 	}
@@ -61,7 +61,7 @@ static int		open_output(t_cmd_list *list, char redir)
 		flag = flag | O_TRUNC;
 	if ((fd = open(list->args[0], flag, flag_mode)) < 0)
 	{
-		ft_putendl_fd("error opening file", 1);
+		ft_putendl_fd("error opening file", 2);
 		exit(1);
 	}
 	return (fd);
