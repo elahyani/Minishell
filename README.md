@@ -1,5 +1,5 @@
 # Minishell
- The objective of this project is to create a simple shell. Yes, a little bash or zsh.
+ Create a simple shell. Yes, a little bash or zsh.
 ## Features
 - Show a prompt when waiting for a new command
 - Search and launch the right executable (based on the PATH variable or by using relative or absolute path) like in bash
