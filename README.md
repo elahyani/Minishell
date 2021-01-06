@@ -51,6 +51,6 @@
 * https://stackoverflow.com/questions/46746333/stat-st-mode-is-always-equal-to-16877
 * https://www.geeksforgeeks.org/wait-system-call-c/
 * https://man7.org/linux/man-pages/man2/fork.2.html
-## uthors
+## Authors
 - ***[elahyani](https://github.com/L-ELHASSANE)***
 - ***[ichejra](https://github.com/iTree-m)***
